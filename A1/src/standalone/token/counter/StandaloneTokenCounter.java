@@ -4,14 +4,16 @@ import java.util.*;
 
 public class StandaloneTokenCounter {
 	private static final String EXIT_MESSAGE = "quit"; 
+	private static final String DIRECTION = "Please enter quit or a line of tokens to be processed separated by spaces";
 	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		
 		while (true) {
+			System.out.println(DIRECTION);
 			String firstLine = scanner.nextLine();
 			
-			if (firstLine == EXIT_MESSAGE) {
+			if (firstLine.equals(EXIT_MESSAGE)) {
 				break;
 			}
 			
@@ -32,13 +34,14 @@ public class StandaloneTokenCounter {
 				String currentStringToOutput = myList[i];
 				
 				if (myMap.containsKey(currentStringToOutput)) {
-					finalOuput += (currentStringToOutput + "=" + myMap.get(currentStringToOutput));
+					finalOuput += (currentStringToOutput + "=" + myMap.get(currentStringToOutput));					
+					
+					if (myMap.size() != 1) {
+						finalOuput += ", ";
+					}
+					
 					myMap.remove(currentStringToOutput);
-				}
-				
-				if (i != (myList.length - 1)) {
-					finalOuput += ", ";
-				}
+				}				
 			}
 			
 			System.out.println(finalOuput);
