@@ -15,7 +15,7 @@ public class StandaloneTokenCounter {
 				break;
 			}
 			
-			String[] myList = firstLine.split(firstLine);
+			String[] myList = firstLine.split(" ");
 			HashMap<String, Integer> myMap = new HashMap<>();
 			String finalOuput = "";
 			
@@ -23,6 +23,8 @@ public class StandaloneTokenCounter {
 				String currentString = myList[i];
 				if (myMap.containsKey(currentString)) {
 					myMap.put(currentString, myMap.get(currentString) + 1);
+				} else {
+					myMap.put(currentString, 1);
 				}
 			}
 			
