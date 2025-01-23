@@ -35,6 +35,8 @@ public class StandaloneTokenCounter {
 				}
 			}
 			
+			System.out.println(finalOuput);
+			
 		}		
 		
 		scanner.close();
