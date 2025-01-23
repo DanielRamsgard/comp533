@@ -35,6 +35,10 @@ public class StandaloneTokenCounter {
 					finalOuput += (currentStringToOutput + "=" + myMap.get(currentStringToOutput));
 					myMap.remove(currentStringToOutput);
 				}
+				
+				if (i != (myList.length - 1)) {
+					finalOuput += " ";
+				}
 			}
 			
 			System.out.println(finalOuput);
