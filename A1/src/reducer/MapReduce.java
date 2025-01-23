@@ -1,6 +1,8 @@
 package reducer;
 
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
+import standalone.token.counter.StandaloneTokenCounter;
+
 import java.lang.Class;
 
 public class MapReduce implements MapReduceConfiguration {
@@ -46,7 +48,8 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 
 	public Class getStandAloneTokenCounter() {
-		return null;
+		
+		return StandaloneTokenCounter.class;
 	}
 
 	public Class getTokenCountingMapper() {
