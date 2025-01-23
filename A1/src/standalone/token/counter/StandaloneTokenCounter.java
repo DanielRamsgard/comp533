@@ -37,7 +37,7 @@ public class StandaloneTokenCounter {
 				}
 				
 				if (i != (myList.length - 1)) {
-					finalOuput += " ";
+					finalOuput += ", ";
 				}
 			}
 			
