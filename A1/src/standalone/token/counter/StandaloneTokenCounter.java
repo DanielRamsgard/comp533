@@ -3,15 +3,15 @@ package standalone.token.counter;
 import java.util.*;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
-public class StandaloneTokenCounter {
+public class StandaloneTokenCounter extends AMapReduceTracer {
 	private static final String EXIT_MESSAGE = "quit"; 
-	private static final String DIRECTION = "Please enter quit or a line of tokens to be processed separated by spaces";
 	
-	public static void main(String[] args) {
+	public void runLogic() {
 		Scanner scanner = new Scanner(System.in);
 		
 		while (true) {
-			System.out.println(DIRECTION);
+			super.traceNumbersPrompt();
+			
 			String firstLine = scanner.nextLine();
 			
 			if (firstLine.equals(EXIT_MESSAGE)) {
@@ -48,7 +48,13 @@ public class StandaloneTokenCounter {
 			System.out.println(finalOuput);
 			
 		}		
-		
+
 		scanner.close();
 	}
+	
+	public static void main(String[] args) {
+		StandaloneTokenCounter counter = new StandaloneTokenCounter();
+		counter.runLogic();
+	}
+	
 }
