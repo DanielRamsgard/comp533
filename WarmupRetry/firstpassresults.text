@@ -1,0 +1,7 @@
+Starting audit...
+[INFO] /Users/danielramsgard/comp533/eclipse-workspace-06/WarmupRetry/./src/greeting/RunA0Tests.java:10:33: Named Constant TIME_OUT defined. Good! [ConstantDefined]
+[INFO] /Users/danielramsgard/comp533/eclipse-workspace-06/WarmupRetry/./src/greeting/RunA0Tests.java:11:33: Named Constant MAX_TRACES defined. Good! [ConstantDefined]
+[INFO] /Users/danielramsgard/comp533/eclipse-workspace-06/WarmupRetry/./src/greeting/RunA0Tests.java:12:33: Named Constant MAX_PRINTED_TRACES defined. Good! [ConstantDefined]
+[INFO] /Users/danielramsgard/comp533/eclipse-workspace-06/WarmupRetry/./src/greeting/RunA0Tests.java:14:33: Final parameter args defined. Good! [FinalParameterDefined]
+[INFO] /Users/danielramsgard/comp533/eclipse-workspace-06/WarmupRetry/./src/classes/Hello.java:4:33: Final parameter args defined. Good! [FinalParameterDefined]
+Audit done.
