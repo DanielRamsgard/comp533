@@ -16,8 +16,8 @@ public class StandaloneTokenCounter {
 			}
 			
 			String[] myList = firstLine.split(firstLine);
-			
 			HashMap<String, Integer> myMap = new HashMap<>();
+			String finalOuput = "";
 			
 			for (int i = 0; i < myList.length; i++) {
 				String currentString = myList[i];
@@ -26,7 +26,14 @@ public class StandaloneTokenCounter {
 				}
 			}
 			
-			
+			for (int i = 0; i < myList.length; i++) {
+				String currentStringToOutput = myList[i];
+				
+				if (myMap.containsKey(currentStringToOutput)) {
+					finalOuput += (currentStringToOutput + "=" + myMap.get(currentStringToOutput));
+					myMap.remove(currentStringToOutput);
+				}
+			}
 			
 		}		
 		
