@@ -3,9 +3,15 @@ package model.view.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
+import key.value.KeyValue;
+import mapper.factory.MapperFactory;
+import reduce.factory.ReducerFactoryImpl;
 
 public class Model extends AMapReduceTracer {
 	
@@ -33,21 +39,15 @@ public class Model extends AMapReduceTracer {
 	
 	private void findNewResult(String inputString) {
 		String[] myList = inputString.split(" ");
-		HashMap<String, Integer> myMap = new HashMap<>();		
 		
-		for (int i = 0; i < myList.length; i++) {
-			String currentString = myList[i];
-			if (myMap.containsKey(currentString)) {
-				myMap.put(currentString, myMap.get(currentString) + 1);
-			} else {
-				myMap.put(currentString, 1);
-			}
-		}
+		List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
+				
+		Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
 		
 		setResult(myMap);
 	}
 	
-	private void setResult(HashMap<String, Integer> myMap) {
+	private void setResult(Map<String, Integer> myMap) {
 		PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
 		
 		
