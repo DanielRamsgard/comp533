@@ -29,7 +29,7 @@ public class KeyValueImpl<T, E> implements KeyValue<T, E> {
 	}
 	
 	public String toString() {
-		return "(" + key + ",1)";
+		return "(" + key + "," + value + ")";
 	}
 
 }
