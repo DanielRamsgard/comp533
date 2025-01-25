@@ -9,12 +9,16 @@ public class AssignmentMapperImpl extends AMapReduceTracer implements Assignment
 
 	@Override
 	public List<KeyValue<String, Integer>> map(List<String> aStrings) {
+		super.trace(aStrings.toString());
+		
 		// TODO Auto-generated method stub
 		List<KeyValue<String, Integer>> myList = new ArrayList<>();
 		
 		for (int i = 0; i < aStrings.size(); i++) {								
 			myList.add(new KeyValueImpl<String, Integer>(aStrings.get(i), 1));
 		}
+		
+		super.trace("Map:" + aStrings.toString() + myList.toString());
 		
 		return myList;
 	}

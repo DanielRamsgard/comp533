@@ -24,6 +24,8 @@ public class ReducerImpl extends AMapReduceTracer implements Reducer<String, Int
 			}
 		}		
 		
+		super.trace("Reduce:" + myList.toString() + myMap.toString());
+		
 		return myMap;
 	}
 	
