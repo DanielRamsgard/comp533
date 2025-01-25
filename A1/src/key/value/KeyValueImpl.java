@@ -22,14 +22,14 @@ public class KeyValueImpl<T, E> implements KeyValue<T, E> {
 	}
 
 	@Override
-	public void setKey(T newKey) {
+	public void setValue(E newValue) {
 		// TODO Auto-generated method stub
-		this.key = newKey;
+		this.value = newValue;
 		
 	}
 	
 	public String toString() {
-		return "(" + key + "," + 1 + ")";
+		return "(" + key + ",1)";
 	}
 
 }

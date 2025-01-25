@@ -5,6 +5,6 @@ public interface KeyValue<T, E> {
 	
 	public E getValue();
 	
-	public void setKey(T value);
+	public void setValue(E value);
 	
 }
