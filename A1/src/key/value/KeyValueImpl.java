@@ -1,12 +1,12 @@
 package key.value;
 
 public class KeyValueImpl<T, E> implements KeyValue<T, E> {
-	private T key;
+	private final T key;
 	private E value;
 	
-	public KeyValueImpl(T key, E value) {
-		this.key = key;
-		this.value = value;
+	public KeyValueImpl(final T k, final E v) {
+		this.key = k;
+		this.value = v;
 	}
 
 	@Override
@@ -22,12 +22,13 @@ public class KeyValueImpl<T, E> implements KeyValue<T, E> {
 	}
 
 	@Override
-	public void setValue(E newValue) {
+	public void setValue(final E newValue) {
 		// TODO Auto-generated method stub
 		this.value = newValue;
 		
 	}
 	
+	@Override
 	public String toString() {
 		return "(" + key + ", " + value + ")";
 	}

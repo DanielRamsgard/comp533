@@ -10,7 +10,7 @@ public class MapperSumFactory extends AMapReduceTracer {
 		if (mapperImplSingleton == null) {
 			mapperImplSingleton = new SumMapperImpl();
 			
-			MapperSumFactory factory = new MapperSumFactory();
+			final MapperSumFactory factory = new MapperSumFactory();
             factory.traceSingletonChange(MapperSumFactory.class, mapperImplSingleton);			
 		}				
 	}
