@@ -42,7 +42,7 @@ public class Model extends AMapReduceTracer {
 			} else {
 				myMap.put(currentString, 1);
 			}
-		}	
+		}
 		
 		setResult(myMap);
 	}
