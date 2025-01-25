@@ -44,10 +44,10 @@ public class StandaloneTokenCounter extends AMapReduceTracer {
 					myMap.remove(currentStringToOutput);
 				}				
 			}
+					
+			super.trace(finalOuput);
 			
-			System.out.println(finalOuput);
-			
-		}		
+		}				
 
 		scanner.close();
 	}
