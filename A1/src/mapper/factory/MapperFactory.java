@@ -1,21 +1,21 @@
 package mapper.factory;
 
+import assignment.mapper.AssignmentMapperImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
-import mapper.MapperImpl;
 
 public class MapperFactory extends AMapReduceTracer {
-	private static MapperImpl mapperImplSingleton;
+	private static AssignmentMapperImpl mapperImplSingleton;
 	
 	public static void setMapper() {
 		if (mapperImplSingleton == null) {
-			mapperImplSingleton = new MapperImpl();
+			mapperImplSingleton = new AssignmentMapperImpl();
 			
 			MapperFactory factory = new MapperFactory();
             factory.traceSingletonChange(MapperFactory.class, mapperImplSingleton);			
 		}				
 	}
 	
-	public static MapperImpl getMapper() {
+	public static AssignmentMapperImpl getMapper() {
 		setMapper();
 		
 		return mapperImplSingleton;

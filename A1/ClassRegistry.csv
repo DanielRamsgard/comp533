@@ -7,6 +7,4 @@ reducer.implementation.ReducerImpl,Reducer
 reducer.implementation.Reducer,Reducer
 reduce.factory.ReducerFactoryImpl,ReducerFactory
 model.view.controller.Connect,StandAloneTokenCounter
-mapper.MapperImpl,TokenCountingMapper
-mapper.Mapper,TokenCountingMapper
 model.view.controller.View,ViewClass

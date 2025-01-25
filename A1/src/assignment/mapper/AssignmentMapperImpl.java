@@ -1,11 +1,11 @@
-package mapper;
+package assignment.mapper;
 
 import java.util.*;
 
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.*;
 
-public class MapperImpl extends AMapReduceTracer implements Mapper<String, Integer> {
+public class AssignmentMapperImpl extends AMapReduceTracer implements AssignmentMapper<String, Integer> {
 
 	@Override
 	public List<KeyValue<String, Integer>> map(List<String> aStrings) {
