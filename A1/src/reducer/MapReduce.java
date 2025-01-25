@@ -1,9 +1,11 @@
 package reducer;
 
+import gradingTools.comp533s19.assignment0.testcases.factories.ReducerFactory;
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
 import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
 import model.view.controller.*;
+import reduce.factory.ReducerFactoryImpl;
 import standalone.token.counter.StandaloneTokenCounter;
 
 import java.lang.Class;
@@ -35,7 +37,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getReducer() {
-		return null;
+		return ReducerFactoryImpl.getReducer().getClass();
 	}
 	
 	public Class getReducerClass() {
@@ -43,7 +45,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getReducerFactory() {
-		return null;
+		return ReducerFactoryImpl.class;
 	}
 	
 	public Class getStandAloneIntegerSummer() {
