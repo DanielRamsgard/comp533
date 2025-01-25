@@ -1,4 +1,4 @@
-package reducer.implementation;
+package comp533.reducer.implementation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ReducerImpl extends AMapReduceTracer implements Reducer<String, Int
 			if (myMap.containsKey(currentString)) {
 				myMap.put(currentString, myMap.get(currentString) + myList.get(i).getValue());
 			} else {
-				myMap.put(currentString, 1);
+				myMap.put(currentString, myList.get(i).getValue());
 			}
 		}		
 		

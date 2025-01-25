@@ -12,7 +12,7 @@ public class Controller extends AMapReduceTracer {
 		this.model = model;
 	}
 	
-	public void gatherInput(Scanner scanner) {
+	public void gatherInput(Scanner scanner, boolean isSum) {
 		while (true) {
 			super.traceNumbersPrompt();
 			
@@ -23,6 +23,12 @@ public class Controller extends AMapReduceTracer {
 			}
 			
 			model.setInputString(firstLine);
+			
+			if (isSum) {
+				model.findNewResultSum(firstLine);
+			} else {			
+				model.findNewResult(firstLine);
+			}
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package reduce.factory;
 
+import comp533.reducer.implementation.ReducerImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
-import reducer.implementation.ReducerImpl;
 
 
 public class ReducerFactoryImpl extends AMapReduceTracer {

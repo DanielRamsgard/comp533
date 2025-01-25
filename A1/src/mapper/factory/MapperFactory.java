@@ -1,6 +1,6 @@
 package mapper.factory;
 
-import assignment.mapper.AssignmentMapperImpl;
+import comp533.assignment.mapper.AssignmentMapperImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class MapperFactory extends AMapReduceTracer {

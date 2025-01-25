@@ -11,6 +11,7 @@ import java.util.Map;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
 import mapper.factory.MapperFactory;
+import mapper.factory.MapperSumFactory;
 import reduce.factory.ReducerFactoryImpl;
 
 public class Model extends AMapReduceTracer {
@@ -32,15 +33,23 @@ public class Model extends AMapReduceTracer {
 	
 	public void setInputString(String inputString) {
 		PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
-		propertyChangeSupport.firePropertyChange(inputEvent);
-		
-		findNewResult(inputString);
+		propertyChangeSupport.firePropertyChange(inputEvent);		
 	}
 	
-	private void findNewResult(String inputString) {
+	public void findNewResult(String inputString) {
 		String[] myList = inputString.split(" ");
 		
 		List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
+				
+		Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
+		
+		setResult(myMap);
+	}
+	
+	public void findNewResultSum(String inputString) {
+		String[] myList = inputString.split(" ");
+		
+		List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(myList));
 				
 		Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
 		

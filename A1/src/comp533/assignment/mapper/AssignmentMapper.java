@@ -1,4 +1,4 @@
-package assignment.mapper;
+package comp533.assignment.mapper;
 
 import java.util.*;
 

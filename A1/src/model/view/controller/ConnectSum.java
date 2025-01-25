@@ -2,7 +2,7 @@ package model.view.controller;
 
 import java.util.Scanner;
 
-public class Connect {
+public class ConnectSum {
 	public static void main(String[] args) {
 		Model model = new Model();
 		View view = new View();
@@ -13,7 +13,7 @@ public class Connect {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		controller.gatherInput(scanner, false);
+		controller.gatherInput(scanner, true);
 		
 	}
 }

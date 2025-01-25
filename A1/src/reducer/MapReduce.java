@@ -1,14 +1,15 @@
 package reducer;
 
-import gradingTools.comp533s19.assignment0.testcases.factories.ReducerFactory;
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
 import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
+import mapper.factory.MapperSumFactory;
 import model.view.controller.*;
 import reduce.factory.ReducerFactoryImpl;
-import standalone.token.counter.StandaloneTokenCounter;
 
 import java.lang.Class;
+
+import comp533.assignment.mapper.SumMapperImpl;
 
 public class MapReduce implements MapReduceConfiguration {
 	
@@ -17,11 +18,11 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getIntSummingMapper() {
-		return null;
+		return MapperSumFactory.getMapper().getClass();
 	}
 	
 	public Class getIntSummingMapperClass() {
-		return null;
+		return MapperSumFactory.getMapper().getClass();
 	}
 	
 	public Class getKeyValueClass() {
@@ -41,7 +42,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getReducerClass() {
-		return null;
+		return ReducerFactoryImpl.getReducer().getClass();
 	}
 	
 	public Class getReducerFactory() {
@@ -49,11 +50,10 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getStandAloneIntegerSummer() {
-		return null;
+		return ConnectSum.class;
 	}
 
-	public Class getStandAloneTokenCounter() {
-		
+	public Class getStandAloneTokenCounter() {		
 		return Connect.class;
 	}
 
@@ -62,7 +62,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 
 	public Class getTokenCountingMapperClass() {
-		return null;
+		return MapperFactory.getMapper().getClass();
 	}
 	
 	public Class getViewClass() {
