@@ -1,4 +1,9 @@
 model.view.controller.Controller,ControllerClass
+key.value.KeyValueImpl,KeyValueClass
+key.value.KeyValue,KeyValueClass
+mapper.factory.MapperFactory,MapperFactory
 model.view.controller.Model,ModelClass
 model.view.controller.Connect,StandAloneTokenCounter
+mapper.MapperImpl,TokenCountingMapper
+mapper.Mapper,TokenCountingMapper
 model.view.controller.View,ViewClass

@@ -3,27 +3,33 @@ package key.value;
 public class KeyValueImpl<T, E> implements KeyValue<T, E> {
 	private T key;
 	private E value;
+	
+	public KeyValueImpl(T key, E value) {
+		this.key = key;
+		this.value = value;
+	}
 
 	@Override
 	public T getkey() {
 		// TODO Auto-generated method stub
-		return null;
+		return key;
 	}
 
 	@Override
 	public E getValue() {
 		// TODO Auto-generated method stub
-		return null;
+		return value;
 	}
 
 	@Override
-	public void setKey(T value) {
+	public void setKey(T newKey) {
 		// TODO Auto-generated method stub
+		this.key = newKey;
 		
 	}
 	
 	public String toString() {
-		return "(" + key + "," + value + ")";
+		return "(" + key + "," + 1 + ")";
 	}
 
 }

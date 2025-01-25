@@ -1,6 +1,8 @@
 package reducer;
 
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
+import key.value.KeyValueImpl;
+import mapper.factory.MapperFactory;
 import model.view.controller.*;
 import standalone.token.counter.StandaloneTokenCounter;
 
@@ -21,11 +23,11 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getKeyValueClass() {
-		return null;
+		return KeyValueImpl.class;
 	}
 	
 	public Class getMapperFactory() {
-		return null;
+		return MapperFactory.class;
 	}
 	
 	public Class getModelClass() {
@@ -54,7 +56,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 
 	public Class getTokenCountingMapper() {
-		return null;
+		return MapperFactory.getMapper().getClass();
 	}
 
 	public Class getTokenCountingMapperClass() {
