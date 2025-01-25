@@ -1,1 +1,4 @@
-standalone.token.counter.StandaloneTokenCounter,StandAloneTokenCounter
+model.view.controller.Controller,ControllerClass
+model.view.controller.Model,ModelClass
+model.view.controller.Connect,StandAloneTokenCounter
+model.view.controller.View,ViewClass

@@ -1,6 +1,7 @@
 package reducer;
 
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
+import model.view.controller.*;
 import standalone.token.counter.StandaloneTokenCounter;
 
 import java.lang.Class;
@@ -8,7 +9,7 @@ import java.lang.Class;
 public class MapReduce implements MapReduceConfiguration {
 	
 	public Class getControllerClass() {
-		return null;
+		return Controller.class;
 	}
 	
 	public Class getIntSummingMapper() {
@@ -28,7 +29,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getModelClass() {
-		return null;
+		return Model.class;
 	}
 	
 	public Class getReducer() {
@@ -49,7 +50,7 @@ public class MapReduce implements MapReduceConfiguration {
 
 	public Class getStandAloneTokenCounter() {
 		
-		return StandaloneTokenCounter.class;
+		return Connect.class;
 	}
 
 	public Class getTokenCountingMapper() {
@@ -61,7 +62,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getViewClass() {
-		return null;
+		return View.class;
 	}
 	
 	public Class getBarrier(int input) {
