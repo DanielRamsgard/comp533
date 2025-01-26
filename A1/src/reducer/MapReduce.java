@@ -9,6 +9,7 @@ import sum.mapper.MapperSumFactory;
 
 import java.lang.Class;
 
+import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
 
 public class MapReduce implements MapReduceConfiguration {
@@ -17,8 +18,8 @@ public class MapReduce implements MapReduceConfiguration {
 		return Controller.class;
 	}
 	
-	public Class getIntSummingMapper() {
-		return MapperSumFactory.getMapper().getClass();
+	public Object getIntSummingMapper() {
+		return MapperSumFactory.getMapper();
 	}
 	
 	public Class getIntSummingMapperClass() {
@@ -57,8 +58,8 @@ public class MapReduce implements MapReduceConfiguration {
 		return Connect.class;
 	}
 
-	public Class getTokenCountingMapper() {
-		return MapperFactory.getMapper().getClass();
+	public Object getTokenCountingMapper() {
+		return MapperFactory.getMapper();
 	}
 
 	public Class getTokenCountingMapperClass() {

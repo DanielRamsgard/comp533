@@ -1,7 +1,5 @@
 model.view.controller.Controller,ControllerClass
 model.view.controller.ControllerInterface,ControllerClass
-comp533.assignment.mapper.SumMapperImpl,IntSummingMapper
-comp533.assignment.mapper.AssignmentMapper,IntSummingMapper
 comp533.assignment.mapper.SumMapperImpl,IntSummingMapperClass
 comp533.assignment.mapper.AssignmentMapper,IntSummingMapperClass
 key.value.KeyValueImpl,KeyValueClass
@@ -16,8 +14,6 @@ comp533.reducer.implementation.Reducer,ReducerClass
 reduce.factory.ReducerFactoryImpl,ReducerFactory
 model.view.controller.ConnectSum,StandAloneIntegerSummer
 model.view.controller.Connect,StandAloneTokenCounter
-comp533.assignment.mapper.AssignmentMapperImpl,TokenCountingMapper
-comp533.assignment.mapper.AssignmentMapper,TokenCountingMapper
 comp533.assignment.mapper.AssignmentMapperImpl,TokenCountingMapperClass
 comp533.assignment.mapper.AssignmentMapper,TokenCountingMapperClass
 model.view.controller.View,ViewClass
