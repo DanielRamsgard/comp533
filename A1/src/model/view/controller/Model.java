@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,42 +21,43 @@ public class Model extends AMapReduceTracer {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
 	}
 	
-	public void addPropertyChangeListener(PropertyChangeListener newListener) {
+	public void addPropertyChangeListener(final PropertyChangeListener newListener) {
 		propertyChangeSupport.addPropertyChangeListener(newListener);
 	
 	}
 	
+	@Override
 	public String toString() {
 		return super.MODEL;
 	}
 	
-	public void setInputString(String inputString) {
-		PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
+	public void setInputString(final String inputString) {
+		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
 		propertyChangeSupport.firePropertyChange(inputEvent);		
 	}
 	
-	public void findNewResult(String inputString) {
-		String[] myList = inputString.split(" ");
+	public void findNewResult(final String inputString) {
+		final String[] myList = inputString.split(" ");
 		
-		List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
+		final List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
 				
-		Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
+		final Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
 		
 		setResult(myMap);
 	}
 	
-	public void findNewResultSum(String inputString) {
-		String[] myList = inputString.split(" ");
+	public void findNewResultSum(final String inputString) {
+		final String[] myList = inputString.split(" ");
 		
-		List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(myList));
+		final List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(myList));
 				
-		Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
+		final Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
 		
 		setResult(myMap);
 	}
 	
-	private void setResult(Map<String, Integer> myMap) {
-		PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
+	private void setResult(final Map<String, Integer> myMap) {
+		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
 		
 		
 		propertyChangeSupport.firePropertyChange(inputEvent);

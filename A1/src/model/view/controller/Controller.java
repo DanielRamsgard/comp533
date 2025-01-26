@@ -5,20 +5,20 @@ import java.util.Scanner;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class Controller extends AMapReduceTracer {
-	private Model model;
+	private final Model model;
 	private static final String EXIT_MESSAGE = "quit"; 
 	
-	public Controller(Model model) {
-		this.model = model;
+	public Controller(final Model m) {
+		this.model = m;
 	}
 	
-	public void gatherInput(Scanner scanner, boolean isSum) {
+	public void gatherInput(final Scanner scanner, final boolean isSum) {
 		while (true) {
 			super.traceNumbersPrompt();
 			
-			String firstLine = scanner.nextLine();
+			final String firstLine = scanner.nextLine();
 			
-			if (firstLine.equals(EXIT_MESSAGE)) {
+			if (EXIT_MESSAGE.equals(firstLine)) {
 				break;
 			}
 			
@@ -32,7 +32,8 @@ public class Controller extends AMapReduceTracer {
 		}
 	}
 	
+	@Override
 	public String toString() {
-		return super.CONTROLLER;
+		return this.CONTROLLER;
 	}
 }

@@ -24,13 +24,14 @@ public class ReducerImpl extends AMapReduceTracer implements Reducer<String, Int
 			}
 		}		
 		
-		super.trace("Reduce:" + myList.toString() + myMap.toString());
+		super.traceReduce(myList, myMap);
 		
 		return myMap;
 	}
 	
+	@Override
 	public String toString() {
-		return super.REDUCER;
+		return this.REDUCER;
 	}
 	
 }

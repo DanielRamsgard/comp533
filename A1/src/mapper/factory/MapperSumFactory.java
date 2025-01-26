@@ -1,21 +1,21 @@
 package mapper.factory;
 
+import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class MapperSumFactory extends AMapReduceTracer {
-	private static SumMapperImpl mapperImplSingleton;
+	private static AssignmentMapper mapperImplSingleton;
 	
 	public static void setMapper() {
 		if (mapperImplSingleton == null) {
 			mapperImplSingleton = new SumMapperImpl();
-			
-			final MapperSumFactory factory = new MapperSumFactory();
-            factory.traceSingletonChange(MapperSumFactory.class, mapperImplSingleton);			
+						
+			MapperSumFactory.traceSingletonChange(MapperSumFactory.class, mapperImplSingleton);			
 		}				
 	}
 	
-	public static SumMapperImpl getMapper() {
+	public static AssignmentMapper getMapper() {
 		setMapper();
 		
 		return mapperImplSingleton;

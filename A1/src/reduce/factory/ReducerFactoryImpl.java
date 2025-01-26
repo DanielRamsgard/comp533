@@ -1,22 +1,22 @@
 package reduce.factory;
 
+import comp533.reducer.implementation.Reducer;
 import comp533.reducer.implementation.ReducerImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 
 public class ReducerFactoryImpl extends AMapReduceTracer {
-	private static ReducerImpl reducerImplSingleton;
+	private static Reducer reducerImplSingleton;
 	
 	public static void setReducer() {
 		if (reducerImplSingleton == null) {
 			reducerImplSingleton = new ReducerImpl();
 			
-			ReducerFactoryImpl factory = new ReducerFactoryImpl();
-            factory.traceSingletonChange(ReducerFactoryImpl.class, reducerImplSingleton);			
+			ReducerFactoryImpl.traceSingletonChange(ReducerFactoryImpl.class, reducerImplSingleton);			
 		}				
 	}
 	
-	public static ReducerImpl getReducer() {
+	public static Reducer getReducer() {
 		setReducer();
 		
 		return reducerImplSingleton;

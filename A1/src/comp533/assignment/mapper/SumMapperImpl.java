@@ -10,20 +10,21 @@ import key.value.KeyValueImpl;
 public class SumMapperImpl extends AMapReduceTracer implements AssignmentMapper<String, Integer> {
 	private static final String RESULT_KEY = "ResultKey";
 	@Override
-	public List<KeyValue<String, Integer>> map(List<String> aStrings) {		
+	public List<KeyValue<String, Integer>> map(final List<String> aStrings) {		
 		
 		// TODO Auto-generated method stub
-		List<KeyValue<String, Integer>> myList = new ArrayList<>();
+		final List<KeyValue<String, Integer>> myList = new ArrayList<>();
 		
 		for (int i = 0; i < aStrings.size(); i++) {								
 			myList.add(new KeyValueImpl<String, Integer>(RESULT_KEY, Integer.parseInt(aStrings.get(i))));
 		}	
-		
-		super.trace("Map:" + aStrings.toString() + myList.toString());
+				
+		super.traceMap(aStrings, myList);
 		
 		return myList;
 	}
 	
+	@Override
 	public String toString() {
 		return super.INT_SUMMING_MAPPER;
 	}

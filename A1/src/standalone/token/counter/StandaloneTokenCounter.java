@@ -1,29 +1,30 @@
 package standalone.token.counter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Scanner;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class StandaloneTokenCounter extends AMapReduceTracer {
 	private static final String EXIT_MESSAGE = "quit"; 
 	
 	public void runLogic() {
-		Scanner scanner = new Scanner(System.in);
+		final Scanner scanner = new Scanner(System.in);
 		
 		while (true) {
 			super.traceNumbersPrompt();
 			
-			String firstLine = scanner.nextLine();
+			final String firstLine = scanner.nextLine();
 			
-			if (firstLine.equals(EXIT_MESSAGE)) {
+			if (EXIT_MESSAGE.equals(firstLine)) {
 				break;
 			}
 			
-			String[] myList = firstLine.split(" ");
-			HashMap<String, Integer> myMap = new HashMap<>();
+			final String[] myList = firstLine.split(" ");
+			final HashMap<String, Integer> myMap = new HashMap<>();
 			String finalOuput = "";
 			
 			for (int i = 0; i < myList.length; i++) {
-				String currentString = myList[i];
+				final String currentString = myList[i];
 				if (myMap.containsKey(currentString)) {
 					myMap.put(currentString, myMap.get(currentString) + 1);
 				} else {
@@ -32,7 +33,7 @@ public class StandaloneTokenCounter extends AMapReduceTracer {
 			}
 			
 			for (int i = 0; i < myList.length; i++) {
-				String currentStringToOutput = myList[i];
+				final String currentStringToOutput = myList[i];
 				
 				if (myMap.containsKey(currentStringToOutput)) {
 					finalOuput += (currentStringToOutput + "=" + myMap.get(currentStringToOutput));					
@@ -52,8 +53,8 @@ public class StandaloneTokenCounter extends AMapReduceTracer {
 		scanner.close();
 	}
 	
-	public static void main(String[] args) {
-		StandaloneTokenCounter counter = new StandaloneTokenCounter();
+	public static void main(final String[] args) {
+		final StandaloneTokenCounter counter = new StandaloneTokenCounter();
 		counter.runLogic();
 	}
 	

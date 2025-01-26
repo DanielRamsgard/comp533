@@ -3,17 +3,20 @@ package model.view.controller;
 import java.util.Scanner;
 
 public class ConnectSum {
-	public static void main(String[] args) {
-		Model model = new Model();
-		View view = new View();
+	private final static void start() {
+		final Model model = new Model();
+		final View view = new View();
 		
 		model.addPropertyChangeListener(view);
 		
-		Controller controller = new Controller(model);
+		final Controller controller = new Controller(model);
 		
-		Scanner scanner = new Scanner(System.in);
+		final Scanner scanner = new Scanner(System.in);
 		
 		controller.gatherInput(scanner, true);
-		
+	}
+	
+ 	public static void main(final String[] args) {		
+ 		start();
 	}
 }

@@ -19,12 +19,13 @@ public class AssignmentMapperImpl extends AMapReduceTracer implements Assignment
 		for (int i = 0; i < aStrings.size(); i++) {								
 			myList.add(new KeyValueImpl<String, Integer>(aStrings.get(i), 1));
 		}
-		
-		super.trace("Map:" + aStrings.toString() + myList.toString());
+				
+		super.traceMap(aStrings, myList);
 		
 		return myList;
 	}
 	
+	@Override
 	public String toString() {
 		return super.TOKEN_COUNTING_MAPPER;
 	}
