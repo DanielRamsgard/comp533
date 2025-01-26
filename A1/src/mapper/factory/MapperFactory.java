@@ -15,6 +15,11 @@ public class MapperFactory extends AMapReduceTracer {
 		}				
 	}
 	
+	public static void setMapper(final AssignmentMapper newMapper) {
+		mapper = newMapper;
+	    MapperFactory.traceSingletonChange(MapperFactory.class, mapper);
+	}
+	
 	public static AssignmentMapper getMapper() {
 		setMapper();
 		

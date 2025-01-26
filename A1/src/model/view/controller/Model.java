@@ -10,10 +10,11 @@ import java.util.Map;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
 import mapper.factory.MapperFactory;
-import mapper.factory.MapperSumFactory;
 import reduce.factory.ReducerFactoryImpl;
+import sum.mapper.MapperSumFactory;
 
-public class Model extends AMapReduceTracer {
+public class Model extends AMapReduceTracer implements ModelInterface{
+	private static final String BAR = " ";
 	
 	private PropertyChangeSupport propertyChangeSupport;
 	
@@ -37,7 +38,7 @@ public class Model extends AMapReduceTracer {
 	}
 	
 	public void findNewResult(final String inputString) {
-		final String[] myList = inputString.split(" ");
+		final String[] myList = inputString.split(BAR);
 		
 		final List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
 				
@@ -47,7 +48,7 @@ public class Model extends AMapReduceTracer {
 	}
 	
 	public void findNewResultSum(final String inputString) {
-		final String[] myList = inputString.split(" ");
+		final String[] myList = inputString.split(BAR);
 		
 		final List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(myList));
 				

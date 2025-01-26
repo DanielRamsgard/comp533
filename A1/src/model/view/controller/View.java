@@ -8,12 +8,12 @@ import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 public class View extends AMapReduceTracer implements PropertyChangeListener {
 	@Override
 	public String toString() {
-		return super.VIEW;
+		return this.VIEW;
 	}
 
 	@Override
 	public void propertyChange(final PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub	
-		super.trace(evt.toString());
+		super.tracePropertyChange(evt);
 	}
 }

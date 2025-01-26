@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
-public class Controller extends AMapReduceTracer {
+public class Controller extends AMapReduceTracer implements ControllerInterface {
 	private final Model model;
 	private static final String EXIT_MESSAGE = "quit"; 
 	
@@ -12,13 +12,14 @@ public class Controller extends AMapReduceTracer {
 		this.model = m;
 	}
 	
-	public void gatherInput(final Scanner scanner, final boolean isSum) {
+	public void gatherInputFromScanner(final Scanner scanner, final boolean isSum) {
 		while (true) {
 			super.traceNumbersPrompt();
 			
 			final String firstLine = scanner.nextLine();
 			
 			if (EXIT_MESSAGE.equals(firstLine)) {
+				super.traceQuit();
 				break;
 			}
 			
@@ -30,10 +31,12 @@ public class Controller extends AMapReduceTracer {
 				model.findNewResult(firstLine);
 			}
 		}
+		
+		scanner.close();
 	}
 	
 	@Override
 	public String toString() {
-		return this.CONTROLLER;
+		return super.CONTROLLER;
 	}
 }

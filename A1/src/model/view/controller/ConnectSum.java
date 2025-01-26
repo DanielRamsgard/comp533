@@ -1,11 +1,12 @@
 package model.view.controller;
 
 import java.util.Scanner;
+import java.beans.PropertyChangeListener;
 
 public class ConnectSum {
 	private final static void start() {
 		final Model model = new Model();
-		final View view = new View();
+		final PropertyChangeListener view = new View();
 		
 		model.addPropertyChangeListener(view);
 		
@@ -13,7 +14,7 @@ public class ConnectSum {
 		
 		final Scanner scanner = new Scanner(System.in);
 		
-		controller.gatherInput(scanner, true);
+		controller.gatherInputFromScanner(scanner, true);
 	}
 	
  	public static void main(final String[] args) {		

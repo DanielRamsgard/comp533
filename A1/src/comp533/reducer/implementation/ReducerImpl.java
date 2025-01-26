@@ -15,7 +15,7 @@ public class ReducerImpl extends AMapReduceTracer implements Reducer<String, Int
 		final Map<String, Integer> myMap = new HashMap<>();		
 		
 		for (int i = 0; i < myList.size(); i++) {
-			final String currentString = myList.get(i).getkey();
+			final String currentString = myList.get(i).getKey();
 			
 			if (myMap.containsKey(currentString)) {
 				myMap.put(currentString, myMap.get(currentString) + myList.get(i).getValue());

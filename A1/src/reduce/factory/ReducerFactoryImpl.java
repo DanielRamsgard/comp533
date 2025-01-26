@@ -16,6 +16,10 @@ public class ReducerFactoryImpl extends AMapReduceTracer {
 		}				
 	}
 	
+	public static void setReducer(final Reducer reducer) {
+		reducerImplSingleton = reducer;
+	}
+	
 	public static Reducer getReducer() {
 		setReducer();
 		

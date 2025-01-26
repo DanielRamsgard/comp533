@@ -10,7 +10,7 @@ public class KeyValueImpl<T, E> implements KeyValue<T, E> {
 	}
 
 	@Override
-	public T getkey() {
+	public T getKey() {
 		// TODO Auto-generated method stub
 		return key;
 	}

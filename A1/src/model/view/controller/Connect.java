@@ -1,11 +1,12 @@
 package model.view.controller;
 
 import java.util.Scanner;
+import java.beans.PropertyChangeListener;
 
 public class Connect {
 	private static void start() {
 		final Model model = new Model();
-		final View view = new View();
+		final PropertyChangeListener view = new View();
 		
 		model.addPropertyChangeListener(view);
 		
@@ -13,7 +14,7 @@ public class Connect {
 		
 		final Scanner scanner = new Scanner(System.in);
 		
-		controller.gatherInput(scanner, false);
+		controller.gatherInputFromScanner(scanner, false);
 	}
 	
 	public static void main(final String[] args) {

@@ -3,9 +3,9 @@ package reducer;
 import gradingTools.comp533s21.assignment1.interfaces.MapReduceConfiguration;
 import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
-import mapper.factory.MapperSumFactory;
 import model.view.controller.*;
 import reduce.factory.ReducerFactoryImpl;
+import sum.mapper.MapperSumFactory;
 
 import java.lang.Class;
 
