@@ -12,6 +12,8 @@ import java.lang.Class;
 
 import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
+import comp533.partitioner.PartitionerFactory;
+import comp533.partitioner.PartitionerImpl;
 
 public class MapReduce implements MapReduceConfiguration {
 	
@@ -91,16 +93,16 @@ public class MapReduce implements MapReduceConfiguration {
 		return null;
 	}
 	
-	public Class getPartitioner() {
-		return null;
+	public Object getPartitioner() {
+		return PartitionerFactory.getPartitioner();
 	}
 	
 	public Class getPartitionerClass() {
-		return null;
+		return PartitionerImpl.class;
 	}
 	
 	public Class getPartitionerFactory() {
-		return null;
+		return PartitionerFactory.class;
 	}
 	
 	public Class getRemoteClientFacebookMapReduce() {

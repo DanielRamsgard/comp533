@@ -1,4 +1,4 @@
-package partitioner;
+package comp533.partitioner;
 
 public class PartitionerImpl<V> implements Partitioner<String, V> {
 	public int getPartition(String key, V value, int numberOfPartitions) {
@@ -11,11 +11,7 @@ public class PartitionerImpl<V> implements Partitioner<String, V> {
 			int offset = firstLetter - 'a';
 			
 			double maxPartitionSize = Math.ceil(('z' - 'a' + 1) / ((double) numberOfPartitions));
-			double calculatedPartition = Math.floor((offset + 1) / ((double) numberOfPartitions));
-			
-			if (calculatedPartition > maxPartitionSize) {
-				return (int) maxPartitionSize;
-			}
+			double calculatedPartition = Math.floor((offset + 1) / maxPartitionSize);
 			
 			return (int) calculatedPartition;
 		} else {
