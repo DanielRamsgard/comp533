@@ -43,8 +43,8 @@ public class MapReduce implements MapReduceConfiguration {
 		return Model.class;
 	}
 	
-	public Class getReducer() {
-		return ReducerFactoryImpl.getReducer().getClass();
+	public Object getReducer() {
+		return ReducerFactoryImpl.getReducer();
 	}
 	
 	public Class getReducerClass() {

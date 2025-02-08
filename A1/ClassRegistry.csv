@@ -14,8 +14,6 @@ model.view.controller.ModelInterface,ModelClass
 comp533.partitioner.PartitionerImpl,PartitionerClass
 comp533.partitioner.Partitioner,PartitionerClass
 comp533.partitioner.PartitionerFactory,PartitionerFactory
-comp533.reducer.implementation.ReducerImpl,Reducer
-comp533.reducer.implementation.Reducer,Reducer
 comp533.reducer.implementation.ReducerImpl,ReducerClass
 comp533.reducer.implementation.Reducer,ReducerClass
 reduce.factory.ReducerFactoryImpl,ReducerFactory
