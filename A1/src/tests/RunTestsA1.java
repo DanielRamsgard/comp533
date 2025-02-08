@@ -4,6 +4,7 @@ package tests;
 
 import grader.basics.execution.BasicProjectExecution;
 import gradingTools.comp533s25.assignment1.S25Assignment1Suite;
+import gradingTools.comp533s25.assignment2.S25Assignment2Suite;
 import trace.grader.basics.GraderBasicsTraceUtility;
 
 public class RunTestsA1 {
@@ -24,6 +25,6 @@ public class RunTestsA1 {
 		// Change this number if your process times out prematurely
 		BasicProjectExecution.setProcessTimeOut(TIME_OUT);
 		// You need to always call such a method
-		S25Assignment1Suite.main(args);
+		S25Assignment2Suite.main(args);
 	}
 }
