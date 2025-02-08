@@ -5,11 +5,19 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
+import comp533.barrier.Barrier;
+import comp533.barrier.BarrierImpl;
+import comp533.joiner.Joiner;
+import comp533.joiner.JoinerImpl;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
+import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
 import reduce.factory.ReducerFactoryImpl;
 import slave.Slave;
@@ -19,7 +27,21 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	private static final String BAR = " ";
 	private static final String SLAVE = "Slave";
 	private int numThreads;
-	private final List<Thread> threads;
+	private final List<Thread> threads;	
+	private PropertyChangeSupport propertyChangeSupport;
+	private final BlockingQueue<KeyValueImpl> keyValueQueue;
+	private final List<LinkedList> reductionQueueList;
+	private final Joiner joiner;
+	private final Barrier barrier;
+	
+	public Model() {
+		this.propertyChangeSupport = new PropertyChangeSupport(this);
+		this.threads = new ArrayList<Thread>();
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
+		this.reductionQueueList = new ArrayList<>();
+		this.joiner = new JoinerImpl(0);
+		this.barrier = new BarrierImpl(0);
+	}
 	
 	public int getNumThreads() {
 		return numThreads;
@@ -42,6 +64,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			thread.setName(SLAVE + i);
 			
 			threads.add(thread);
+			reductionQueueList.add(new LinkedList(null));
 			
 		}		
 		
@@ -51,14 +74,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	
 	public List<Thread> getThreads() {
 		return threads;
-	}
-	
-	private PropertyChangeSupport propertyChangeSupport;
-	
-	public Model() {
-		this.propertyChangeSupport = new PropertyChangeSupport(this);
-		this.threads = new ArrayList<Thread>();
-	}
+	}	
 	
 	public void addPropertyChangeListener(final PropertyChangeListener newListener) {
 		propertyChangeSupport.addPropertyChangeListener(newListener);
