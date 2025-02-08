@@ -26,13 +26,14 @@ import sum.mapper.MapperSumFactory;
 public class Model extends AMapReduceTracer implements ModelInterface{
 	private static final String BAR = " ";
 	private static final String SLAVE = "Slave";
-	private int numThreads;
-	private final List<Thread> threads;	
 	private PropertyChangeSupport propertyChangeSupport;
-	private final BlockingQueue<KeyValueImpl> keyValueQueue;
-	private final List<LinkedList> reductionQueueList;
-	private final Joiner joiner;
-	private final Barrier barrier;
+	
+	private int numThreads;
+	private List<Thread> threads;
+	private BlockingQueue<KeyValue<String, Integer>> keyValueQueue;
+	private List<LinkedList> reductionQueueList;
+	private Joiner joiner;
+	private Barrier barrier;
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
@@ -87,34 +88,39 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	}
 	
 	public void setInputString(final String inputString) {
+		// send event
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
-		propertyChangeSupport.firePropertyChange(inputEvent);		
-	}
-	
-	public void findNewResult(final String inputString) {
-		final String[] myList = inputString.split(BAR);
+		propertyChangeSupport.firePropertyChange(inputEvent);	
 		
-		final List<KeyValue<String, Integer>> intermediate = MapperFactory.getMapper().map(Arrays.asList(myList));
+		// initialize next round of processing
+		this.threads = new ArrayList<Thread>();
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
+		this.reductionQueueList = new ArrayList<>();
+		this.joiner = new JoinerImpl(0);
+		this.barrier = new BarrierImpl(0);
+		
+		final String[] inputList = inputString.split(BAR);
+		
+		final List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(inputList));
+		
+		for (int i = 0; i < intermediate.size(); i++) {
+			try {
+				KeyValue<String, Integer> current = intermediate.get(i);
 				
-		final Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
+				super.traceEnqueueRequest(current);
+				keyValueQueue.put(current);
+				super.traceEnqueue(keyValueQueue);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}	
 		
-		setResult(myMap);
-	}
-	
-	public void findNewResultSum(final String inputString) {
-		final String[] myList = inputString.split(BAR);
+		setNumThreads(intermediate.size());
 		
-		final List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(myList));
-				
-		final Map<String, Integer> myMap = ReducerFactoryImpl.getReducer().reduce(intermediate);
+		joiner.join();
 		
-		setResult(myMap);
-	}
-	
-	private void setResult(final Map<String, Integer> myMap) {
-		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
-		
-		
+		final PropertyChangeEvent outputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
 		propertyChangeSupport.firePropertyChange(inputEvent);
+		
 	}
 }

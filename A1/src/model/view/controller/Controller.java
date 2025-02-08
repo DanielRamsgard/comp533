@@ -30,12 +30,6 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 			}
 			
 			model.setInputString(firstLine);
-			
-			if (isSum) {
-				model.findNewResultSum(firstLine);
-			} else {			
-				model.findNewResult(firstLine);
-			}
 		}
 		
 		scanner.close();
