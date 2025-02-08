@@ -13,6 +13,12 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 	}
 	
 	public void gatherInputFromScanner(final Scanner scanner, final boolean isSum) {
+		super.traceThreadPrompt();
+		
+		final int numThreads = scanner.nextInt();
+		
+		model.setNumThreads(numThreads);
+		
 		while (true) {
 			super.traceNumbersPrompt();
 			

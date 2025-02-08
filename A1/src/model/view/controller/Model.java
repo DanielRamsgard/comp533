@@ -32,13 +32,21 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "NumThreads", oldValue, newValue);
 		propertyChangeSupport.firePropertyChange(inputEvent);
 		
+		final List<Thread> oldThreads = threads;
+		threads.clear();
+		
 		for (int i = 0; i < newValue; i++) {
 			Slave slave = new Slave(i, this);
 			Thread thread = new Thread(slave);
 			
 			thread.setName(SLAVE + i);
 			
-		}
+			threads.add(thread);
+			
+		}		
+		
+		final PropertyChangeEvent threadInputEvent = new PropertyChangeEvent(this, "Threads", oldThreads, threads);
+		propertyChangeSupport.firePropertyChange(threadInputEvent);
 	}
 	
 	public List<Thread> getThreads() {
