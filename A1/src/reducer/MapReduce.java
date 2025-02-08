@@ -12,6 +12,8 @@ import java.lang.Class;
 
 import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
+import comp533.barrier.BarrierImpl;
+import comp533.joiner.JoinerImpl;
 import comp533.partitioner.PartitionerFactory;
 import comp533.partitioner.PartitionerImpl;
 
@@ -73,24 +75,24 @@ public class MapReduce implements MapReduceConfiguration {
 		return View.class;
 	}
 	
-	public Class getBarrier(int input) {
-		return null;
+	public Object getBarrier(int input) {
+		return new BarrierImpl(input);
 	}
 	
 	public Class getBarrierClass() {
-		return null;
+		return BarrierImpl.class;
 	}
 	
 	public Class getClientTokenCounter() {
 		return null;
 	}
 	
-	public Class getJoiner(int input) {
-		return null;
+	public Object getJoiner(int input) {
+		return new JoinerImpl(input);
 	}
 	
 	public Class getJoinerClass() {
-		return null;
+		return JoinerImpl.class;
 	}
 	
 	public Object getPartitioner() {

@@ -1,7 +1,11 @@
+comp533.barrier.BarrierImpl,BarrierClass
+comp533.barrier.Barrier,BarrierClass
 model.view.controller.Controller,ControllerClass
 model.view.controller.ControllerInterface,ControllerClass
 comp533.assignment.mapper.SumMapperImpl,IntSummingMapperClass
 comp533.assignment.mapper.AssignmentMapper,IntSummingMapperClass
+comp533.joiner.JoinerImpl,JoinerClass
+comp533.joiner.Joiner,JoinerClass
 key.value.KeyValueImpl,KeyValueClass
 key.value.KeyValue,KeyValueClass
 mapper.factory.MapperFactory,MapperFactory
