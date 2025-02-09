@@ -39,7 +39,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		
 		// update reduction queue with final values
 		subMap.forEach((key, value) -> {
-			synchronized (model.getReductionQueueList()) {
+			synchronized (model.getReductionQueueList().get(identifier)) {
 				model.getReductionQueueList().get(identifier).add(new KeyValueImpl(key, value));
 			}			
 		});
@@ -49,10 +49,8 @@ public class Slave extends AMapReduceTracer implements Runnable {
 	}
 	
 	public void run() {
-		boolean itemsLeft = true;
-		
 		// get items
-		while (itemsLeft) {
+		while (true) {
 			KeyValue<String, Integer> currentKeyValue = null;
 			
 			try {
@@ -66,7 +64,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			if (currentKeyValue != null && currentKeyValue.getKey() != null && currentKeyValue.getValue() != null) {
 				inputList.add(currentKeyValue);
 			} else if (currentKeyValue != null) {
-				itemsLeft = false;
+				break;
 			}
 		}
 		

@@ -139,12 +139,10 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		this.threads = new ArrayList<Thread>();
 		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
 		this.reductionQueueList = new ArrayList<>();
-		this.joiner = new JoinerImpl(currentSize);
-		this.barrier = new BarrierImpl(currentSize);
+		this.joiner = new JoinerImpl(numThreads);
+		this.barrier = new BarrierImpl(numThreads);
 		
 		super.traceBarrierCreated(this.barrier, numThreads);
-		
-		setNumThreads(intermediate.size());
 		
 		// run the threads
 		runThreads();
@@ -160,12 +158,18 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-		}	
+		}
 		
-		try {
-			keyValueQueue.put(new KeyValueImpl(null, null));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		for (int i = 0; i < currentSize; i++) {
+			try {
+				KeyValue<String, Integer> current = new KeyValueImpl(null, null);
+				
+				super.traceEnqueueRequest(current);
+				keyValueQueue.put(current);
+				super.traceEnqueue(keyValueQueue);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
 		
 		// wait for threads to finish execution
