@@ -102,18 +102,11 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		for (int i = 0; i < reductionQueueList.size(); i++) {
 			List<KeyValue<String, Integer>> currentList = reductionQueueList.get(i);
 			
-			for (int j = 0; j < currentList.size(); j++) {
-				final String currentString = currentList.get(j).getKey();
-				
-				if (myMap.containsKey(currentString)) {
-					myMap.put(currentString, myMap.get(currentString) + currentList.get(j).getValue());
-				} else {
-					myMap.put(currentString, currentList.get(j).getValue());
-				}
-			}	
+			Map<String, Integer> currentMap = ReducerFactoryImpl.getReducer().reduce(currentList);
 			
-			// first argument should be a map?
-			super.traceAddedToMap(currentList, myMap);
+			myMap.putAll(currentMap);
+			
+			super.traceAddedToMap(currentMap, myMap);
 		}				
 		
 		return myMap;
