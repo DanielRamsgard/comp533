@@ -25,6 +25,7 @@ public class BarrierImpl extends AMapReduceTracer implements Barrier {
 			}
 		}
 		
+		super.traceNotify();
 		this.notifyAll();	
 		super.traceBarrierReleaseAll(BARRIER, count, count);
 	}

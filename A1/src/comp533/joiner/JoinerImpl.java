@@ -27,6 +27,7 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 			}
 		}
 		
+		super.traceNotify();
 		notifyAll();
 		super.traceJoinerRelease(JOINER, count, count);
 	}

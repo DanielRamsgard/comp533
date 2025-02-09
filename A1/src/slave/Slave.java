@@ -29,7 +29,9 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		currentMap.forEach((key, value) -> {
 			int partition = PartitionerFactory.getPartitioner().getPartition(key, value, model.getNumThreads());
 			
-			model.getReductionQueueList().get(partition).add(new KeyValueImpl(key, value));
+			synchronized (model.getReductionQueueList().get(partition)) {
+				model.getReductionQueueList().get(partition).add(new KeyValueImpl(key, value));
+			}			
 		});
 		
 		model.getBarrier().barrier();
@@ -40,6 +42,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		// update reduction queue with final values
 		subMap.forEach((key, value) -> {
 			synchronized (model.getReductionQueueList().get(identifier)) {
+				model.getReductionQueueList().get(identifier).clear();
 				model.getReductionQueueList().get(identifier).add(new KeyValueImpl(key, value));
 			}			
 		});
