@@ -2,10 +2,14 @@ package slave;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
+import key.value.KeyValueImpl;
 import model.view.controller.Model;
+import reduce.factory.ReducerFactoryImpl;
+import comp533.partitioner.PartitionerFactory;
 
 public class Slave extends AMapReduceTracer implements Runnable {
 	public static String SLAVE = "Slave";
@@ -20,7 +24,15 @@ public class Slave extends AMapReduceTracer implements Runnable {
 	}
 	
 	private void produceMap() {
+		final Map<String, Integer> currentMap = ReducerFactoryImpl.getReducer().reduce(inputList);
 		
+		currentMap.forEach((key, value) -> {
+			int partition = PartitionerFactory.getPartitioner().getPartition("", 1, model.getNumThreads());
+			
+			model.getReductionQueueList().get(partition).add(new KeyValueImpl(key, value));
+		});
+		
+		model.getBarrier().barrier();
 	}
 	
 	public void run() {

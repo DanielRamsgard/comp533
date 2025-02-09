@@ -63,7 +63,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			thread.setName(SLAVE + i);
 			
 			threads.add(thread);
-			reductionQueueList.add(new LinkedList(null));
+			reductionQueueList.add(new LinkedList());
 			
 		}		
 		
