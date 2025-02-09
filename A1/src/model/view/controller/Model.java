@@ -111,7 +111,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			
 			myMap.putAll(currentMap);
 			
-			super.traceAddedToMap(currentMap, myMap);
+			super.traceAddedToMap(myMap, currentList);
 		}				
 		
 		return myMap;
@@ -136,12 +136,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		int currentSize = intermediate.size();
 		
 		// initialize next round of processing
-		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
-		this.reductionQueueList = new ArrayList<>();
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);		
 		this.joiner = new JoinerImpl(numThreads);
 		this.barrier = new BarrierImpl(numThreads);
 		
 		super.traceBarrierCreated(this.barrier, numThreads);
+		super.traceJoinerCreated(this.joiner, numThreads);
 		
 		// run the threads
 		runThreads();

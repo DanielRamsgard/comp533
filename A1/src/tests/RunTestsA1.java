@@ -3,7 +3,6 @@ package tests;
 
 
 import grader.basics.execution.BasicProjectExecution;
-import gradingTools.comp533s25.assignment1.S25Assignment1Suite;
 import gradingTools.comp533s25.assignment2.S25Assignment2Suite;
 import trace.grader.basics.GraderBasicsTraceUtility;
 
