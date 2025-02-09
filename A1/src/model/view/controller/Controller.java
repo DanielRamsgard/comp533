@@ -13,9 +13,12 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 	}
 	
 	public void gatherInputFromScanner(final Scanner scanner, final boolean isSum) {
+		model.setSum(isSum);
+		
 		super.traceThreadPrompt();
 		
 		final int numThreads = scanner.nextInt();
+		scanner.nextLine();
 		
 		model.setNumThreads(numThreads);
 		
@@ -27,9 +30,7 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 			if (EXIT_MESSAGE.equals(firstLine)) {
 				super.traceQuit();
 				break;
-			}
-			
-			model.setSum(isSum);
+			}			
 			
 			model.setInputString(firstLine);
 		}

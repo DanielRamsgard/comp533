@@ -40,6 +40,11 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
+		this.threads = new ArrayList<Thread>();
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
+		this.reductionQueueList = new ArrayList<>();
+		this.joiner = new JoinerImpl(0);
+		this.barrier = new BarrierImpl(0);
 	}
 	
 	public int getNumThreads() {
