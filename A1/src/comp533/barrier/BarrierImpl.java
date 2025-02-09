@@ -4,13 +4,17 @@ import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class BarrierImpl extends AMapReduceTracer implements Barrier {
 	private int count;
+	private int threadsWaiting;
 	
 	public BarrierImpl(int count) {
 		this.count = count;
+		this.threadsWaiting = 0;
 	}
 	
 	public synchronized void barrier() {
-		while (count == 0) {
+		threadsWaiting++;
+		
+		while (threadsWaiting < count) {
 			try {
 				super.traceBarrierWaitStart(BARRIER, count, count);
 				this.wait();

@@ -13,21 +13,21 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 	
 	public synchronized void finished() {
 		super.traceJoinerFinishedTask(JOINER, count, count);
-		this.count -= 1;		
+		this.count -= 1;
 	}
 	
 	public synchronized void join() {
-		while (count != 0) {
+		while (count > 0) {
 			try {
 				super.traceJoinerWaitStart(JOINER, count, count);
 				this.wait();
-				super.traceJoinerWaitStart(JOINER, count, count);
+				super.traceJoinerWaitEnd(JOINER, count, count);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 		
-		notify();
+		notifyAll();
 		super.traceJoinerRelease(JOINER, count, count);
 	}
 	

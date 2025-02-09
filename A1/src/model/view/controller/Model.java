@@ -131,20 +131,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			intermediate = MapperSumFactory.getMapper().map(Arrays.asList(inputList));
 		} else {
 			intermediate = MapperFactory.getMapper().map(Arrays.asList(inputList));
-		}
-		
-		// building the buffer
-		for (int i = 0; i < intermediate.size(); i++) {
-			try {
-				KeyValue<String, Integer> current = intermediate.get(i);
-				
-				super.traceEnqueueRequest(current);
-				keyValueQueue.put(current);
-				super.traceEnqueue(keyValueQueue);
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}	
+		}		
 		
 		int currentSize = intermediate.size();
 		
@@ -161,6 +148,19 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		
 		// run the threads
 		runThreads();
+		
+		// building the buffer
+		for (int i = 0; i < currentSize; i++) {
+			try {
+				KeyValue<String, Integer> current = intermediate.get(i);
+				
+				super.traceEnqueueRequest(current);
+				keyValueQueue.put(current);
+				super.traceEnqueue(keyValueQueue);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
 		
 		// wait for threads to finish execution
 		joiner.join();
