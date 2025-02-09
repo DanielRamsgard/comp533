@@ -168,6 +168,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		
 	}
 	
+	public void terminate() {
+		for (Thread thread : threads) {
+			thread.interrupt();
+		}
+	}
+	
 	public Joiner getJoiner() {
 		return joiner;
 	}

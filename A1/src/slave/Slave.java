@@ -44,6 +44,13 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		
 		// wait
 		model.getJoiner().finished();
+		
+		try {
+			this.wait();
+		} catch (InterruptedException e) {
+			super.traceQuit();
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
@@ -56,7 +63,9 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			try {
 				currentKeyValue = model.getBlockingQueue().take();
 			} catch (InterruptedException e) {
+				super.traceQuit();
 				e.printStackTrace();
+				break;
 			}
 			
 			if (currentKeyValue != null && currentKeyValue.getKey() != null && currentKeyValue.getValue() != null) {

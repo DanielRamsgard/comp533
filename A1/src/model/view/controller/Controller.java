@@ -34,6 +34,9 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 			model.setInputString(firstLine);
 		}
 		
+		model.terminate();
+		super.traceQuit();
+		
 		scanner.close();
 	}
 	
