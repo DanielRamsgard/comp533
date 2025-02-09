@@ -33,6 +33,17 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		});
 		
 		model.getBarrier().barrier();
+		
+		// process via .reduce
+		final Map<String, Integer> subMap = ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));
+		
+		// update reduction queue with final values
+		subMap.forEach((key, value) -> {
+			model.getReductionQueueList().get(identifier).add(new KeyValueImpl(key, value));
+		});
+		
+		// wait
+		model.getJoiner().finished();
 	}
 	
 	public void run() {
