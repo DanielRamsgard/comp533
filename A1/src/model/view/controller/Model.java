@@ -31,20 +31,17 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	
 	private int numThreads;
 	private List<Thread> threads;
+	private List<Slave> slaves;
 	private BlockingQueue<KeyValue<String, Integer>> keyValueQueue;
 	private List<LinkedList<KeyValue<String, Integer>>> reductionQueueList;
 	private Joiner joiner;
 	private Barrier barrier;
+	private boolean alreadyStarted = false;
 	
 	private boolean isSum;
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
-		this.threads = new ArrayList<Thread>();
-		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
-		this.reductionQueueList = new ArrayList<>();
-		this.joiner = new JoinerImpl(0);
-		this.barrier = new BarrierImpl(0);
 	}
 	
 	public int getNumThreads() {
@@ -58,11 +55,15 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "NumThreads", oldValue, newValue);
 		propertyChangeSupport.firePropertyChange(inputEvent);
 		
-		final List<Thread> oldThreads = threads;
-		threads.clear();
+		threads = new ArrayList<>();
+		slaves = new ArrayList<>();
+		reductionQueueList = new ArrayList<>();
 		
 		for (int i = 0; i < newValue; i++) {
 			Slave slave = new Slave(i, this);
+			
+			slaves.add(slave);
+			
 			Thread thread = new Thread(slave);
 			
 			thread.setName(SLAVE + i);
@@ -72,7 +73,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			
 		}		
 		
-		final PropertyChangeEvent threadInputEvent = new PropertyChangeEvent(this, "Threads", oldThreads, threads);
+		final PropertyChangeEvent threadInputEvent = new PropertyChangeEvent(this, "Threads", null, threads);
 		propertyChangeSupport.firePropertyChange(threadInputEvent);
 	}
 	
@@ -95,9 +96,17 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	}
 	
 	private void runThreads() {
-		for (Thread thread : threads) {
-			thread.start();
-		}
+		if (alreadyStarted) {
+			for (Slave slave : slaves) {
+				super.traceNotify();
+				slave.notifySlave();
+			}
+		} else {
+			for (Thread thread : threads) {
+				thread.start();
+			}
+			alreadyStarted = true;
+		}		
 	}
 	
 	private Map<String, Integer> gatherResults() {
@@ -111,8 +120,8 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			
 			myMap.putAll(currentMap);
 			
-			super.traceAddedToMap(myMap, currentList);
-		}				
+			super.traceAddedToMap(myMap, currentMap);
+		}			
 		
 		return myMap;
 	}

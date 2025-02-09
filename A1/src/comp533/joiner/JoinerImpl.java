@@ -12,7 +12,7 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 	}
 	
 	public synchronized void finished() {
-		super.traceJoinerFinishedTask(JOINER, count, count);
+		super.traceJoinerFinishedTask(JOINER, count, count);		
 		this.count -= 1;
 	}
 	
@@ -28,7 +28,7 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 		}
 		
 		super.traceNotify();
-		notifyAll();
+		notify();
 		super.traceJoinerRelease(JOINER, count, count);
 	}
 	

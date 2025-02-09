@@ -23,7 +23,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		this.inputList = new ArrayList<>();
 	}
 	
-	private void produceMap() {
+	private synchronized void produceMap() {
 		final Map<String, Integer> currentMap = ReducerFactoryImpl.getReducer().reduce(inputList);
 		
 		currentMap.forEach((key, value) -> {
@@ -50,18 +50,19 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		// wait
 		model.getJoiner().finished();
 		
-//		try {
-//			this.wait();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			super.traceWait();
+			this.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-//	public void notifySlave() {
-//		super.traceNotify();
-//		this.notify();
-//	}
+	public synchronized void notifySlave() {
+		super.traceNotify();
+		this.notify();
+	}
 	
 	public void run() {
 		// get items
