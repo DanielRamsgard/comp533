@@ -112,7 +112,8 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 				}
 			}	
 			
-			super.traceReduce(currentList, myMap);
+			// first argument should be a map?
+			super.traceAddedToMap(currentList, myMap);
 		}				
 		
 		return myMap;
