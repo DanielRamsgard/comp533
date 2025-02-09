@@ -29,6 +29,8 @@ public class Controller extends AMapReduceTracer implements ControllerInterface 
 				break;
 			}
 			
+			model.setSum(isSum);
+			
 			model.setInputString(firstLine);
 		}
 		

@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,11 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	private int numThreads;
 	private List<Thread> threads;
 	private BlockingQueue<KeyValue<String, Integer>> keyValueQueue;
-	private List<LinkedList> reductionQueueList;
+	private List<LinkedList<KeyValue<String, Integer>>> reductionQueueList;
 	private Joiner joiner;
 	private Barrier barrier;
+	
+	private boolean isSum;
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
@@ -82,24 +85,56 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		return super.MODEL;
 	}
 	
+	public void setSum(boolean isSum) {
+		this.isSum = isSum;
+	}
+	
+	private void runThreads() {
+		for (Thread thread : threads) {
+			thread.start();
+		}
+	}
+	
+	private Map<String, Integer> gatherResults() {
+		// TODO Auto-generated method stub
+		final Map<String, Integer> myMap = new HashMap<>();		
+		
+		for (int i = 0; i < reductionQueueList.size(); i++) {
+			List<KeyValue<String, Integer>> currentList = reductionQueueList.get(i);
+			
+			for (int j = 0; j < currentList.size(); j++) {
+				final String currentString = currentList.get(j).getKey();
+				
+				if (myMap.containsKey(currentString)) {
+					myMap.put(currentString, myMap.get(currentString) + currentList.get(j).getValue());
+				} else {
+					myMap.put(currentString, currentList.get(j).getValue());
+				}
+			}	
+			
+			super.traceReduce(currentList, myMap);
+		}				
+		
+		return myMap;
+	}
+	
 	public void setInputString(final String inputString) {
 		// send event
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
-		propertyChangeSupport.firePropertyChange(inputEvent);	
-		
-		// initialize next round of processing
-		this.threads = new ArrayList<Thread>();
-		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
-		this.reductionQueueList = new ArrayList<>();
-		this.joiner = new JoinerImpl(0);
-		this.barrier = new BarrierImpl(0);
-		
-		super.traceBarrierCreated(this.barrier, numThreads);
+		propertyChangeSupport.firePropertyChange(inputEvent);			
 		
 		final String[] inputList = inputString.split(BAR);
 		
-		final List<KeyValue<String, Integer>> intermediate = MapperSumFactory.getMapper().map(Arrays.asList(inputList));
+		final List<KeyValue<String, Integer>> intermediate; 
 		
+		// two implements for if sum or not
+		if (isSum) {
+			intermediate = MapperSumFactory.getMapper().map(Arrays.asList(inputList));
+		} else {
+			intermediate = MapperFactory.getMapper().map(Arrays.asList(inputList));
+		}
+		
+		// building the buffer
 		for (int i = 0; i < intermediate.size(); i++) {
 			try {
 				KeyValue<String, Integer> current = intermediate.get(i);
@@ -112,12 +147,46 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			}
 		}	
 		
+		int currentSize = intermediate.size();
+		
+		// initialize next round of processing
+		this.threads = new ArrayList<Thread>();
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
+		this.reductionQueueList = new ArrayList<>();
+		this.joiner = new JoinerImpl(currentSize);
+		this.barrier = new BarrierImpl(currentSize);
+		
+		super.traceBarrierCreated(this.barrier, numThreads);
+		
 		setNumThreads(intermediate.size());
 		
+		// run the threads
+		runThreads();
+		
+		// wait for threads to finish execution
 		joiner.join();
 		
-		final PropertyChangeEvent outputEvent = new PropertyChangeEvent(this, "Result", null, myMap);
-		propertyChangeSupport.firePropertyChange(inputEvent);
+		// gather the result into one output
+		Map<String, Integer> resultMap = gatherResults();
 		
+		final PropertyChangeEvent outputEvent = new PropertyChangeEvent(this, "Result", null, resultMap);
+		propertyChangeSupport.firePropertyChange(outputEvent);
+		
+	}
+	
+	public Joiner getJoiner() {
+		return joiner;
+	}
+	
+	public Barrier getBarrier() {
+		return barrier;
+	}
+	
+	public BlockingQueue<KeyValue<String, Integer>> getBlockingQueue() {
+		return keyValueQueue;
+	}
+	
+	public List<LinkedList<KeyValue<String, Integer>>> getReductionQueueList() {
+		return reductionQueueList;
 	}
 }
