@@ -160,6 +160,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
+		}	
+		
+		try {
+			keyValueQueue.put(new KeyValueImpl(null, null));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		
 		// wait for threads to finish execution
