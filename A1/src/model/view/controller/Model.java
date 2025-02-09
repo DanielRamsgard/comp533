@@ -136,7 +136,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		int currentSize = intermediate.size();
 		
 		// initialize next round of processing
-		this.threads = new ArrayList<Thread>();
 		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);
 		this.reductionQueueList = new ArrayList<>();
 		this.joiner = new JoinerImpl(numThreads);
