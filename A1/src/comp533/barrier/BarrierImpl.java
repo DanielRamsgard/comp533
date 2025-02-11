@@ -34,4 +34,8 @@ public class BarrierImpl extends AMapReduceTracer implements Barrier {
 	public String toString() {
 		return super.BARRIER;
 	}
+	
+	public void resetThreadCount() {
+		threadsWaiting = 0;
+	}
 }

@@ -73,7 +73,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			thread.setName(SLAVE + i);
 			thread.start();
 			threads.add(thread);			
-			reductionQueueList.add(new LinkedList());
+			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
 			
 		}		
 		
@@ -116,7 +116,22 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		return myMap;
 	}
 	
-	public void setInputString(final String inputString) {		
+	public void resetInput() {
+		joiner.resetThreadCount();
+		barrier.resetThreadCount();
+		reductionQueueList.clear();
+		keyValueQueue.clear();
+		
+		for (int i = 0; i < threads.size(); i++) {			
+			slaves.get(i).clearInput();
+			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
+			
+		}	
+	}
+	
+	public void setInputString(final String inputString) {
+		resetInput();
+		
 		for (Slave slave : slaves) {
 			slave.notifySlave();
 		}
@@ -176,7 +191,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		Map<String, Integer> resultMap = gatherResults();
 		
 		final PropertyChangeEvent outputEvent = new PropertyChangeEvent(this, "Result", null, resultMap);
-		propertyChangeSupport.firePropertyChange(outputEvent);
+		propertyChangeSupport.firePropertyChange(outputEvent);		
 		
 	}
 	

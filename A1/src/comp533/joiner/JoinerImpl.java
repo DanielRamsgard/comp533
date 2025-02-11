@@ -41,4 +41,8 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 	public String toString() {
 		return super.JOINER;
 	}
+	
+	public void resetThreadCount() {
+		currentThreadCount = 0; 
+	}
 }
