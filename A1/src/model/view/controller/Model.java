@@ -163,6 +163,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 				super.traceEnqueueRequest(current);
 				keyValueQueue.put(current);
 				super.traceEnqueue(keyValueQueue);
+				
+				for (Slave slave : slaves) {
+					super.traceNotify();
+					slave.notifySlave();
+				}
+								
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -175,6 +181,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 				super.traceEnqueueRequest(current);
 				keyValueQueue.put(current);
 				super.traceEnqueue(keyValueQueue);
+				
+				for (Slave slave : slaves) {
+					super.traceNotify();
+					slave.notifySlave();
+				}
+				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

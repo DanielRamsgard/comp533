@@ -51,18 +51,31 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		// wait
 		model.getJoiner().finished();
 		
-		try {
-			super.traceWait();
-			this.wait();
-		} catch (InterruptedException e) {
-			super.traceQuit();
-			exitEarly = true;
-		}
+//		try {
+//			super.traceWait();
+//			this.wait();
+//		} catch (InterruptedException e) {
+//			super.traceQuit();
+//			exitEarly = true;
+//		}
 	}
 	
 	public synchronized void notifySlave() {
 		super.traceNotify();
 		this.notify();
+	}
+	
+	private synchronized void waitForBuffer() {
+		while (model.getBlockingQueue().size() == 0) {
+			try {
+				super.traceWait();
+				this.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				this.exitEarly = true;
+			}
+		}
 	}
 	
 	public void run() {
@@ -76,6 +89,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 				KeyValue<String, Integer> currentKeyValue = null;
 				
 				try {
+					waitForBuffer();
 					currentKeyValue = model.getBlockingQueue().take();
 					super.traceDequeue(currentKeyValue);
 				} catch (InterruptedException e) {
