@@ -50,14 +50,6 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		
 		// wait
 		model.getJoiner().finished();
-		
-//		try {
-//			super.traceWait();
-//			this.wait();
-//		} catch (InterruptedException e) {
-//			super.traceQuit();
-//			exitEarly = true;
-//		}
 	}
 	
 	public synchronized void notifySlave() {
@@ -66,16 +58,16 @@ public class Slave extends AMapReduceTracer implements Runnable {
 	}
 	
 	private synchronized void waitForBuffer() {
-		while (model.getBlockingQueue().size() == 0) {
-			try {
-				super.traceWait();
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				this.exitEarly = true;
-			}
+		
+		try {
+			super.traceWait();
+			this.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			this.exitEarly = true;
 		}
+		
 	}
 	
 	public void run() {
@@ -88,8 +80,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			while (true) {
 				KeyValue<String, Integer> currentKeyValue = null;
 				
-				try {
-					waitForBuffer();
+				try {					
 					currentKeyValue = model.getBlockingQueue().take();
 					super.traceDequeue(currentKeyValue);
 				} catch (InterruptedException e) {
@@ -108,6 +99,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			
 			// produce partially reduced map
 			produceMap();
+			waitForBuffer();
 		}		
 	}
 	

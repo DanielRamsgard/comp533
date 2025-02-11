@@ -36,7 +36,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	private List<LinkedList<KeyValue<String, Integer>>> reductionQueueList;
 	private Joiner joiner;
 	private Barrier barrier;
-	private boolean alreadyStarted = false;
 	
 	private boolean isSum;
 	
@@ -67,8 +66,8 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			Thread thread = new Thread(slave);
 			
 			thread.setName(SLAVE + i);
-			
-			threads.add(thread);
+			thread.start();
+			threads.add(thread);			
 			reductionQueueList.add(new LinkedList());
 			
 		}		
@@ -95,20 +94,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		this.isSum = isSum;
 	}
 	
-	private void runThreads() {
-		if (alreadyStarted) {
-			for (Slave slave : slaves) {
-				super.traceNotify();
-				slave.notifySlave();
-			}
-		} else {
-			for (Thread thread : threads) {
-				thread.start();
-			}
-			alreadyStarted = true;
-		}		
-	}
-	
 	private Map<String, Integer> gatherResults() {
 		// TODO Auto-generated method stub
 		final Map<String, Integer> myMap = new HashMap<>();		
@@ -126,7 +111,8 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		return myMap;
 	}
 	
-	public void setInputString(final String inputString) {
+	public void setInputString(final String inputString) {		
+		
 		// send event
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
 		propertyChangeSupport.firePropertyChange(inputEvent);			
@@ -152,9 +138,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		super.traceBarrierCreated(this.barrier, numThreads);
 		super.traceJoinerCreated(this.joiner, numThreads);
 		
-		// run the threads
-		runThreads();
-		
 		// building the buffer
 		for (int i = 0; i < currentSize; i++) {
 			try {
@@ -162,12 +145,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 				
 				super.traceEnqueueRequest(current);
 				keyValueQueue.put(current);
-				super.traceEnqueue(keyValueQueue);
-				
-				for (Slave slave : slaves) {
-					super.traceNotify();
-					slave.notifySlave();
-				}
+				super.traceEnqueue(keyValueQueue);			
 								
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -181,11 +159,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 				super.traceEnqueueRequest(current);
 				keyValueQueue.put(current);
 				super.traceEnqueue(keyValueQueue);
-				
-				for (Slave slave : slaves) {
-					super.traceNotify();
-					slave.notifySlave();
-				}
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
