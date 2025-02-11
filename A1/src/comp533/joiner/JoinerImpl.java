@@ -16,22 +16,22 @@ public class JoinerImpl extends AMapReduceTracer implements Joiner {
 	
 	public synchronized void finished() {
 		currentThreadCount += 1;
-		super.traceJoinerFinishedTask(JOINER, currentThreadCount, currentThreadCount);
+		super.traceJoinerFinishedTask(JOINER, threadCount, currentThreadCount);
 		
 		if (currentThreadCount == threadCount) {
 			super.traceNotify();
 			notify();
-			super.traceJoinerRelease(JOINER, currentThreadCount, currentThreadCount);
+			super.traceJoinerRelease(JOINER, threadCount, currentThreadCount);
 		}		
 	}
 	
 	public synchronized void join() {
 		if (currentThreadCount < threadCount) {
 			try {				
-				super.traceJoinerWaitStart(JOINER, currentThreadCount, currentThreadCount);
+				super.traceJoinerWaitStart(JOINER, threadCount, currentThreadCount);
 				super.traceWait();
 				this.wait();
-				super.traceJoinerWaitEnd(JOINER, currentThreadCount, currentThreadCount);
+				super.traceJoinerWaitEnd(JOINER, threadCount, currentThreadCount);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

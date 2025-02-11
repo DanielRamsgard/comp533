@@ -41,7 +41,6 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 		model.getBarrier().barrier();
 		
 		super.traceSplitAfterBarrier(identifier, inputList);
-//		super.traceBarrierWaitEnd(model.getBarrier(), model.getNumThreads(), model.getBarrier().getThreadsWaiting());
 		
 		// process via .reduce
 		final Map<String, Integer> subMap = ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));
@@ -55,9 +54,7 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 		});
 		
 		// wait
-		model.getJoiner().finished();
-		
-		super.traceJoinerFinishedTask(model.getJoiner(), model.getNumThreads(), model.getJoiner().getFinishedThreads());
+		model.getJoiner().finished();	
 	}
 	
 	public synchronized void notifySlave() {
