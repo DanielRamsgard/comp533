@@ -37,7 +37,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			}			
 		});
 		
-		model.getBarrier().barrier();
+		model.getBarrier().barrier();	
 		
 		// process via .reduce
 		final Map<String, Integer> subMap = ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));

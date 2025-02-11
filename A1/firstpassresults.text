@@ -66,5 +66,5 @@ Starting audit...
 [WARN] /Users/danielramsgard/comp533/eclipse-workspace-06/A1/./src/model/view/controller/Model.java:139:21: Variable 'currentSize' should be declared final. [FinalLocalVariable]
 [WARN] /Users/danielramsgard/comp533/eclipse-workspace-06/A1/./src/model/view/controller/Model.java:147:59: Variable 'current' should be declared final. [FinalLocalVariable]
 [WARN] /Users/danielramsgard/comp533/eclipse-workspace-06/A1/./src/model/view/controller/Model.java:160:59: Variable 'current' should be declared final. [FinalLocalVariable]
-[WARN] /Users/danielramsgard/comp533/eclipse-workspace-06/A1/./src/model/view/controller/Model.java:183:38: Variable 'resultMap' should be declared final. [FinalLocalVariable]
+[WARN] /Users/danielramsgard/comp533/eclipse-workspace-06/A1/./src/model/view/controller/Model.java:176:38: Variable 'resultMap' should be declared final. [FinalLocalVariable]
 Audit done.

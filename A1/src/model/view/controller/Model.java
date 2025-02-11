@@ -169,14 +169,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		}
 		
 		// wait for threads to finish execution
-		joiner.join();
-		
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}		
+		joiner.join();	
 		
 		
 		// gather the result into one output
