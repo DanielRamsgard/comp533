@@ -12,7 +12,6 @@ import reduce.factory.ReducerFactoryImpl;
 import comp533.partitioner.PartitionerFactory;
 
 public class SlaveImpl extends AMapReduceTracer implements Runnable {
-	public static String SLAVE = "Slave";
 	private final int identifier;
 	private final Model model;
 	private final List<KeyValue<String, Integer>> inputList;
@@ -112,7 +111,7 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 	}
 	
 	public String toString() {
-		return SLAVE;
+		return super.SLAVE;
 	}
 	
 	public void clearInput() {
