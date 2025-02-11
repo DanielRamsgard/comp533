@@ -21,7 +21,7 @@ import key.value.KeyValue;
 import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
 import reduce.factory.ReducerFactoryImpl;
-import slave.Slave;
+import slave.SlaveImpl;
 import sum.mapper.MapperSumFactory;
 
 public class Model extends AMapReduceTracer implements ModelInterface{
@@ -31,7 +31,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	
 	private int numThreads;
 	private List<Thread> threads;
-	private List<Slave> slaves;
+	private List<SlaveImpl> slaves;
 	private BlockingQueue<KeyValue<String, Integer>> keyValueQueue;
 	private List<LinkedList<KeyValue<String, Integer>>> reductionQueueList;
 	private Joiner joiner;
@@ -64,7 +64,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		this.barrier = new BarrierImpl(numThreads);
 		
 		for (int i = 0; i < newValue; i++) {
-			Slave slave = new Slave(i, this);
+			SlaveImpl slave = new SlaveImpl(i, this);
 			
 			slaves.add(slave);
 			
@@ -132,7 +132,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	public void setInputString(final String inputString) {
 		resetInput();
 		
-		for (Slave slave : slaves) {
+		for (SlaveImpl slave : slaves) {
 			slave.notifySlave();
 		}
 		

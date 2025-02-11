@@ -5,7 +5,7 @@ import key.value.KeyValueImpl;
 import mapper.factory.MapperFactory;
 import model.view.controller.*;
 import reduce.factory.ReducerFactoryImpl;
-import slave.Slave;
+import slave.SlaveImpl;
 import sum.mapper.MapperSumFactory;
 
 import java.lang.Class;
@@ -132,7 +132,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getSlaveClass() {
-		return Slave.class;
+		return SlaveImpl.class;
 	}
 	
 	public Class getStandAloneFacebookMapReduce() {

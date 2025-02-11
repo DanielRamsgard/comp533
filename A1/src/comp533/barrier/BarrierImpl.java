@@ -38,4 +38,8 @@ public class BarrierImpl extends AMapReduceTracer implements Barrier {
 	public void resetThreadCount() {
 		threadsWaiting = 0;
 	}
+	
+	public int getThreadsWaiting() {
+		return threadsWaiting;
+	}
 }

@@ -11,14 +11,14 @@ import model.view.controller.Model;
 import reduce.factory.ReducerFactoryImpl;
 import comp533.partitioner.PartitionerFactory;
 
-public class Slave extends AMapReduceTracer implements Runnable {
+public class SlaveImpl extends AMapReduceTracer implements Runnable {
 	public static String SLAVE = "Slave";
 	private final int identifier;
 	private final Model model;
 	private final List<KeyValue<String, Integer>> inputList;
 	private boolean exitEarly = false;
 	
-	public Slave(int identifier, Model model) {
+	public SlaveImpl(int identifier, Model model) {
 		this.identifier = identifier;
 		this.model = model;
 		this.inputList = new ArrayList<>();
@@ -35,9 +35,14 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			synchronized (model.getReductionQueueList().get(partition)) {
 				model.getReductionQueueList().get(partition).add(new KeyValueImpl(key, value));
 			}			
-		});
+		});		
+		
+		super.traceWait();
 		
 		model.getBarrier().barrier();
+		
+		super.traceSplitAfterBarrier(identifier, inputList);
+//		super.traceBarrierWaitEnd(model.getBarrier(), model.getNumThreads(), model.getBarrier().getThreadsWaiting());
 		
 		// process via .reduce
 		final Map<String, Integer> subMap = ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));
@@ -52,6 +57,8 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		
 		// wait
 		model.getJoiner().finished();
+		
+		super.traceJoinerFinishedTask(model.getJoiner(), model.getNumThreads(), model.getJoiner().getFinishedThreads());
 	}
 	
 	public synchronized void notifySlave() {
@@ -66,6 +73,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			this.exitEarly = true;
+			super.traceQuit();
 		}
 		
 	}
@@ -80,7 +88,7 @@ public class Slave extends AMapReduceTracer implements Runnable {
 			while (true) {
 				KeyValue<String, Integer> currentKeyValue = null;
 				
-				try {					
+				try {
 					currentKeyValue = model.getBlockingQueue().take();
 					super.traceDequeue(currentKeyValue);
 				} catch (InterruptedException e) {
