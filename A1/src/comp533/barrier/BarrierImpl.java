@@ -12,18 +12,19 @@ public class BarrierImpl extends AMapReduceTracer implements Barrier {
 	}
 	
 	public synchronized void barrier() {
-		threadsWaiting++;
+		threadsWaiting++;		
 		
 		while (threadsWaiting < count) {
 			try {
 				super.traceBarrierWaitStart(BARRIER, count, count);
+				super.traceWait();
 				this.wait();
 				super.traceBarrierWaitEnd(BARRIER, count, count);
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-		}
+		}	
 		
 		super.traceNotify();
 		this.notify();	

@@ -19,7 +19,8 @@ public class PartitionerFactory extends AMapReduceTracer {
 		setPartitioner();
 		
 		PartitionerFactory factory = new PartitionerFactory();
-		factory.tracePartitionAssigned(factory, factory, 0, 0);
+//		factory.tracePartitionAssigned(factory, factory, 0, 0);
+		factory.traceSingletonChange(PartitionerFactory.class, partitioner);
 		
 		return partitioner;
 	}

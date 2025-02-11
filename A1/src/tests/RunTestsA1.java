@@ -7,7 +7,7 @@ import gradingTools.comp533s25.assignment2.S25Assignment2Suite;
 import trace.grader.basics.GraderBasicsTraceUtility;
 
 public class RunTestsA1 {
-	public static final int TIME_OUT = 15;
+	public static final int TIME_OUT = 5;
 	public static final int MAX_TRACES = 2000;
 	public static final int MAX_PRINTED_TRACES = 600;
 	

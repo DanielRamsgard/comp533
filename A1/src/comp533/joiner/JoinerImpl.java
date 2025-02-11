@@ -3,33 +3,39 @@ package comp533.joiner;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 
 public class JoinerImpl extends AMapReduceTracer implements Joiner {
-	private int count;
+	private int threadCount;
+	private int currentThreadCount;
 	
-	public JoinerImpl(int count) {
-		this.count = count;
+	
+	public JoinerImpl(int threadCount) {
+		this.threadCount = threadCount;
+		this.currentThreadCount = 0;
 		
-		super.traceJoinerCreated(JOINER, count);
+		super.traceJoinerCreated(JOINER, threadCount);
 	}
 	
 	public synchronized void finished() {
-		super.traceJoinerFinishedTask(JOINER, count, count);		
-		this.count -= 1;
+		currentThreadCount += 1;
+		super.traceJoinerFinishedTask(JOINER, currentThreadCount, currentThreadCount);
+		
+		if (currentThreadCount == threadCount) {
+			super.traceNotify();
+			notify();
+			super.traceJoinerRelease(JOINER, currentThreadCount, currentThreadCount);
+		}		
 	}
 	
 	public synchronized void join() {
-		while (count > 0) {
+		if (currentThreadCount < threadCount) {
 			try {				
-				super.traceJoinerWaitStart(JOINER, count, count);
+				super.traceJoinerWaitStart(JOINER, currentThreadCount, currentThreadCount);
+				super.traceWait();
 				this.wait();
-				super.traceJoinerWaitEnd(JOINER, count, count);
+				super.traceJoinerWaitEnd(JOINER, currentThreadCount, currentThreadCount);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-		}
-		
-		super.traceNotify();
-		notify();
-		super.traceJoinerRelease(JOINER, count, count);
+		}		
 	}
 	
 	public String toString() {

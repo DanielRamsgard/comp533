@@ -24,11 +24,13 @@ public class Slave extends AMapReduceTracer implements Runnable {
 		this.inputList = new ArrayList<>();
 	}
 	
-	private synchronized void produceMap() {
+	private void produceMap() {
 		final Map<String, Integer> currentMap = ReducerFactoryImpl.getReducer().reduce(inputList);
 		
 		currentMap.forEach((key, value) -> {
 			int partition = PartitionerFactory.getPartitioner().getPartition(key, value, model.getNumThreads());
+			
+			super.tracePartitionAssigned(key, value, partition, partition);
 			
 			synchronized (model.getReductionQueueList().get(partition)) {
 				model.getReductionQueueList().get(partition).add(new KeyValueImpl(key, value));
@@ -58,13 +60,11 @@ public class Slave extends AMapReduceTracer implements Runnable {
 	}
 	
 	private synchronized void waitForBuffer() {
-		
 		try {
 			super.traceWait();
 			this.wait();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			this.exitEarly = true;
 		}
 		

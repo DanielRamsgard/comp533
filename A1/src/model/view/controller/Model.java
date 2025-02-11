@@ -58,6 +58,11 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		slaves = new ArrayList<>();
 		reductionQueueList = new ArrayList<>();
 		
+		// initialize next round of processing
+		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);		
+		this.joiner = new JoinerImpl(numThreads);
+		this.barrier = new BarrierImpl(numThreads);
+		
 		for (int i = 0; i < newValue; i++) {
 			Slave slave = new Slave(i, this);
 			
@@ -112,6 +117,9 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	}
 	
 	public void setInputString(final String inputString) {		
+		for (Slave slave : slaves) {
+			slave.notifySlave();
+		}
 		
 		// send event
 		final PropertyChangeEvent inputEvent = new PropertyChangeEvent(this, "InputString", null, inputString);
@@ -130,11 +138,6 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		
 		int currentSize = intermediate.size();
 		
-		// initialize next round of processing
-		this.keyValueQueue = new ArrayBlockingQueue<>(super.BUFFER_SIZE, true);		
-		this.joiner = new JoinerImpl(numThreads);
-		this.barrier = new BarrierImpl(numThreads);
-		
 		super.traceBarrierCreated(this.barrier, numThreads);
 		super.traceJoinerCreated(this.joiner, numThreads);
 		
@@ -152,7 +155,7 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 			}
 		}
 		
-		for (int i = 0; i < currentSize; i++) {
+		for (int i = 0; i < threads.size(); i++) {
 			try {
 				KeyValue<String, Integer> current = new KeyValueImpl(null, null);
 				
@@ -167,6 +170,14 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		
 		// wait for threads to finish execution
 		joiner.join();
+		
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}		
+		
 		
 		// gather the result into one output
 		Map<String, Integer> resultMap = gatherResults();
