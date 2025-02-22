@@ -34,6 +34,7 @@ public class ClientImpl extends AMapReduceTracer implements Client {
 	}
 	
 	public synchronized void quit() {
+		super.traceQuit();
 		super.traceNotify();
 		this.notify();
 	}
