@@ -122,6 +122,18 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 		return myMap;
 	}
 	
+	public int slaveNeedsClient() {
+		int i = 0;
+		for (SlaveImpl slave : slaves) {
+			if (slave.needsClient()) {
+				return i;
+			}
+			i++;
+		}
+		
+		return -1;
+	}	
+	
 	public void resetInput() {
 		joiner.resetThreadCount();
 		barrier.resetThreadCount();
@@ -138,8 +150,10 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 		int i = 0;
 		
 		for (Client client : clients.keySet()) {
-		    if (clients.get(client) == null && i < threads.size()) {
-		    	SlaveImpl currentSlave = slaves.get(i);
+			int currentSlaveIndex = slaveNeedsClient();
+			
+		    if (clients.get(client) == null && i < threads.size() && currentSlaveIndex != -1) {
+		    	SlaveImpl currentSlave = slaves.get(currentSlaveIndex);
 		    	currentSlave.addRemoteClient(client);
 		    	clients.put(client, currentSlave);
 		    }
@@ -233,6 +247,10 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 	}
 	
 	public List<LinkedList<KeyValue<String, Integer>>> getReductionQueueList() {
+		return reductionQueueList;
+	}
+	
+	public List<LinkedList<KeyValue<String, Integer>>> getReductionQueueListRemote() {
 		return reductionQueueList;
 	}
 

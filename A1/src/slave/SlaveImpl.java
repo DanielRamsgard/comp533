@@ -13,7 +13,7 @@ import model.view.controller.Model;
 import reduce.factory.ReducerFactoryImpl;
 import comp533.partitioner.PartitionerFactory;
 
-public class SlaveImpl extends AMapReduceTracer implements Runnable {
+public class SlaveImpl extends AMapReduceTracer implements Runnable, RemoteSlave {
 	private final int identifier;
 	private final Model model;
 	private final List<KeyValue<String, Integer>> inputList;
@@ -46,9 +46,42 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 		
 		super.traceSplitAfterBarrier(identifier, inputList);
 		
-		// process via .reduce
-		final Map<String, Integer> subMap = ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));
+		Map<String, Integer> subMap = null;
 		
+		// trace the input
+		super.traceRemoteList(model.getReductionQueueList().get(identifier));
+		
+		// if we have a client -> produce the reduction on the client
+		if (this.client != null) {
+			subMap = remoteCallReduce();
+		} else {
+			subMap = localCallReduce();
+		}
+		
+		// trace the result
+		super.traceRemoteResult(subMap);
+		
+		finish(subMap);
+		
+		// wait
+		model.getJoiner().finished();	
+	}
+	
+	public Map<String, Integer> remoteCallReduce() {
+		try {
+			return client.reduce(model.getReductionQueueList().get(identifier));
+		} catch (RemoteException e) {
+			System.out.println(e.getMessage());
+			return localCallReduce(); 
+		}
+	}
+	
+	public Map<String, Integer> localCallReduce() {
+		// process via .reduce
+		return ReducerFactoryImpl.getReducer().reduce(model.getReductionQueueList().get(identifier));
+	}
+	
+	private void finish(Map<String, Integer> subMap) {
 		// update reduction queue with final values
 		subMap.forEach((key, value) -> {
 			synchronized (model.getReductionQueueList().get(identifier)) {
@@ -56,18 +89,7 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 				model.getReductionQueueList().get(identifier).add(new KeyValueImpl(key, value));
 			}			
 		});
-		
-		// wait
-		model.getJoiner().finished();	
-	}
-	
-	private void remoteCallProduceMap() {
-		try {
-			client.remoteProduceMap(inputList);
-		} catch (RemoteException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+	}	
 	
 	public synchronized void notifySlave() {
 		super.traceNotify();
@@ -113,12 +135,8 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 				}
 			}
 			
-			// if we have a client -> produce the reduction on the client
-			if (this.client != null) {
-				remoteCallProduceMap();
-			} else {
-				produceMap();
-			}			
+			// produce the reduction on the client
+			produceMap();			
 			waitForBuffer();
 		}		
 	}
@@ -137,6 +155,10 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 	
 	public void addRemoteClient(Client client) {
 		this.client = client;
+	}
+	
+	public boolean needsClient() {
+		return client == null;
 	}
 
 }

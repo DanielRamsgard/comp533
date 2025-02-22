@@ -1,6 +1,8 @@
 package key.value;
 
-public interface KeyValue<T, E> {
+import java.io.Serializable;
+
+public interface KeyValue<T, E> extends Serializable {
 	public T getKey();
 	
 	public E getValue();

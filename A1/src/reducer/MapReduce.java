@@ -10,6 +10,8 @@ import sum.mapper.MapperSumFactory;
 
 import java.lang.Class;
 
+import client.Client;
+import client.ClientImpl;
 import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
 import comp533.barrier.BarrierImpl;
@@ -84,7 +86,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getClientTokenCounter() {
-		return null;
+		return RemoteConnect.class;
 	}
 	
 	public Object getJoiner(int input) {
@@ -112,23 +114,23 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getRemoteClientObjectClass() {
-		return null;
+		return ClientImpl.class;
 	}
 	
 	public Class getRemoteClientObjectInterface() {
-		return null;
+		return Client.class;
 	}
 	
 	public Class getRemoteModelInterface() {
-		return null;
+		return RemoteModel.class;
 	}
 	
 	public Class getServerIntegerSummer() {
-		return null;
+		return RemoteConnectSum.class;
 	}
 	
 	public Class getServerTokenCounter() {
-		return null;
+		return RemoteConnect.class;
 	}
 	
 	public Class getSlaveClass() {
