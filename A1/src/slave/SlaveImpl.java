@@ -154,6 +154,7 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable, RemoteSlave
 	}
 	
 	public void addRemoteClient(Client client) {
+		super.traceClientAssignment(client);
 		this.client = client;
 	}
 	

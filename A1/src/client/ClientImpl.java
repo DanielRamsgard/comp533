@@ -34,12 +34,15 @@ public class ClientImpl extends AMapReduceTracer implements Client {
 	}
 	
 	public synchronized void quit() {
+		super.traceNotify();
 		this.notify();
 	}
 	
 	public synchronized void block() {
 		try {
+			super.traceWait();
 			this.wait();
+			super.traceExit(getClass());
 			System.exit(0);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

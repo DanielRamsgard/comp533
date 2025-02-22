@@ -240,6 +240,7 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 
 	@Override
 	public void registerRemoteClient(Client client) throws RemoteException {
+		super.traceRegister(client);
 		clientList.add(client);
 		clientStack.push(client);
 		match();
@@ -254,6 +255,7 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 				System.out.println(e.getMessage());
 			}
 		}
+		super.traceExit(getClass());
 		System.exit(0);
 	}
 	
