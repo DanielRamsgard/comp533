@@ -3,6 +3,10 @@ package model.view.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import client.Client;
 import comp533.barrier.Barrier;
 import comp533.barrier.BarrierImpl;
 import comp533.joiner.Joiner;
@@ -24,7 +29,7 @@ import reduce.factory.ReducerFactoryImpl;
 import slave.SlaveImpl;
 import sum.mapper.MapperSumFactory;
 
-public class Model extends AMapReduceTracer implements ModelInterface{
+public class Model extends AMapReduceTracer implements ModelInterface, RemoteModel {
 	private static final String BAR = " ";
 	private static final String SLAVE = "Slave";
 	private PropertyChangeSupport propertyChangeSupport;
@@ -36,11 +41,12 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	private List<LinkedList<KeyValue<String, Integer>>> reductionQueueList;
 	private Joiner joiner;
 	private Barrier barrier;
-	
 	private boolean isSum;
+	private Map<Client, SlaveImpl> clients = new HashMap<>();
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
+	
 	}
 	
 	public int getNumThreads() {
@@ -124,9 +130,22 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 		
 		for (int i = 0; i < threads.size(); i++) {			
 			slaves.get(i).clearInput();
+			slaves.get(i).resetClient();
 			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
 			
 		}	
+		
+		int i = 0;
+		
+		for (Client client : clients.keySet()) {
+		    if (clients.get(client) == null && i < threads.size()) {
+		    	SlaveImpl currentSlave = slaves.get(i);
+		    	currentSlave.addRemoteClient(client);
+		    	clients.put(client, currentSlave);
+		    }
+		    
+		    i++;
+		}
 	}
 	
 	public void setInputString(final String inputString) {
@@ -215,5 +234,10 @@ public class Model extends AMapReduceTracer implements ModelInterface{
 	
 	public List<LinkedList<KeyValue<String, Integer>>> getReductionQueueList() {
 		return reductionQueueList;
+	}
+
+	@Override
+	public void registerRemoteClient(Client client) throws RemoteException {
+		clients.put(client, null);
 	}
 }

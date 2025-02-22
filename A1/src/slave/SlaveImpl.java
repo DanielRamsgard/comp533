@@ -1,9 +1,11 @@
 package slave;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import client.Client;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
 import key.value.KeyValueImpl;
@@ -16,11 +18,13 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 	private final Model model;
 	private final List<KeyValue<String, Integer>> inputList;
 	private boolean exitEarly = false;
+	private Client client;
 	
 	public SlaveImpl(int identifier, Model model) {
 		this.identifier = identifier;
 		this.model = model;
 		this.inputList = new ArrayList<>();
+		this.client = null;
 	}
 	
 	private void produceMap() {
@@ -55,6 +59,14 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 		
 		// wait
 		model.getJoiner().finished();	
+	}
+	
+	private void remoteCallProduceMap() {
+		try {
+			client.remoteProduceMap(inputList);
+		} catch (RemoteException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public synchronized void notifySlave() {
@@ -101,8 +113,12 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 				}
 			}
 			
-			// produce partially reduced map
-			produceMap();
+			// if we have a client -> produce the reduction on the client
+			if (this.client != null) {
+				remoteCallProduceMap();
+			} else {
+				produceMap();
+			}			
 			waitForBuffer();
 		}		
 	}
@@ -113,6 +129,14 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable {
 	
 	public void clearInput() {
 		this.inputList.clear();
+	}
+	
+	public void resetClient() {
+		this.client = null;
+	}
+	
+	public void addRemoteClient(Client client) {
+		this.client = client;
 	}
 
 }
