@@ -83,9 +83,10 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable, RemoteSlave
 	
 	private void finish(Map<String, Integer> subMap) {
 		// update reduction queue with final values
+		model.getReductionQueueList().get(identifier).clear();
+		
 		subMap.forEach((key, value) -> {
-			synchronized (model.getReductionQueueList().get(identifier)) {
-				model.getReductionQueueList().get(identifier).clear();
+			synchronized (model.getReductionQueueList().get(identifier)) {				
 				model.getReductionQueueList().get(identifier).add(new KeyValueImpl(key, value));
 			}			
 		});
@@ -149,17 +150,9 @@ public class SlaveImpl extends AMapReduceTracer implements Runnable, RemoteSlave
 		this.inputList.clear();
 	}
 	
-	public void resetClient() {
-		this.client = null;
-	}
-	
 	public void addRemoteClient(Client client) {
 		super.traceClientAssignment(client);
 		this.client = client;
-	}
-	
-	public boolean needsClient() {
-		return client == null;
 	}
 
 }

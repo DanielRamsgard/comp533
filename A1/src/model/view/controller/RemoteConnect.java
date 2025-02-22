@@ -8,7 +8,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class RemoteConnect {
-	public static int SERVER_PORT = 4999;
+	public static int SERVER_PORT = 30000;
 	public static String MODEL_NAME = "model";
 	
 	private static void start() {

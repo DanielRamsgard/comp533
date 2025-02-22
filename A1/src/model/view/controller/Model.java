@@ -138,7 +138,6 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 		
 		for (int i = 0; i < threads.size(); i++) {			
 			slaves.get(i).clearInput();
-			slaves.get(i).resetClient();
 			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
 			
 		}
