@@ -258,6 +258,10 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 	}
 	
 	public void match() {
-		
+		if (!clientStack.empty() && !slaveStack.empty()) {
+			// bind a slave and a client
+			SlaveImpl currentSlave = slaveStack.pop();
+			currentSlave.addRemoteClient(clientStack.pop());
+		}
 	}
 }
