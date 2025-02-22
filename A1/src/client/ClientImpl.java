@@ -33,9 +33,9 @@ public class ClientImpl extends AMapReduceTracer implements Client {
 		return subMap;
 	}
 	
-	public synchronized void quit() {		
+	public synchronized void quit() {
 		super.traceNotify();
-		this.notifyAll();
+		this.notify();
 	}
 	
 	public synchronized void block() {

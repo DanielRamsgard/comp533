@@ -17,9 +17,7 @@ public class MainClient {
 		    RemoteModel remoteModel = (RemoteModel) rmiRegistry.lookup(RemoteConnect.MODEL_NAME);
 		    Client client = new ClientImpl(remoteModel);
 		    remoteModel.registerRemoteClient(client);
-		    synchronized (client) {
-		    	client.block();
-		    }
+		    client.block();
 		    			
 		} catch (RemoteException e) {
 			e.printStackTrace();
