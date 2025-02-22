@@ -232,6 +232,8 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 		for (Thread thread : threads) {
 			thread.interrupt();
 		}
+		
+		quit();
 	}
 	
 	public Joiner getJoiner() {
@@ -257,5 +259,17 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 	@Override
 	public void registerRemoteClient(Client client) throws RemoteException {
 		clients.put(client, null);
+	}
+	
+	@Override
+	public void quit() {
+		for (Client client : clients.keySet()) {
+			try {
+				client.quit();
+			} catch (RemoteException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		System.exit(0);
 	}
 }

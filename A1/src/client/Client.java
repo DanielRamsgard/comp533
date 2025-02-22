@@ -8,4 +8,6 @@ import key.value.KeyValue;
 
 public interface Client {
 	Map<String, Integer> reduce(List<KeyValue<String, Integer>> myList) throws RemoteException;
+	void quit() throws RemoteException;
+	void block();
 }

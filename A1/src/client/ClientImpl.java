@@ -16,19 +16,11 @@ import model.view.controller.RemoteModel;
 import reduce.factory.ReducerFactoryImpl;
 
 public class ClientImpl extends AMapReduceTracer implements Client {
-	static String SERVER_HOST_NAME = "localhost";
 	private RemoteModel remoteModel;
 
 	
-	public ClientImpl() throws NotBoundException {
-		try {
-			Registry rmiRegistry = LocateRegistry.getRegistry(SERVER_HOST_NAME, RemoteConnect.SERVER_PORT);
-		    RemoteModel remoteModel = (RemoteModel) rmiRegistry.lookup(RemoteConnect.MODEL_NAME);
-		    remoteModel.registerRemoteClient(this);
-		    this.remoteModel = remoteModel;
-		} catch (RemoteException e) {
-			System.out.println(e.getMessage());
-		}
+	public ClientImpl(RemoteModel remoteModel) {
+		this.remoteModel = remoteModel;
 	}
 	
 	public Map<String, Integer> reduce(List<KeyValue<String, Integer>> myList) {
@@ -39,5 +31,19 @@ public class ClientImpl extends AMapReduceTracer implements Client {
 		super.traceRemoteResult(subMap);
 		
 		return subMap;
+	}
+	
+	public synchronized void quit() {
+		this.notify();
+	}
+	
+	public synchronized void block() {
+		try {
+			this.wait();
+			System.exit(0);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}		
 	}
 }
