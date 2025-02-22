@@ -44,6 +44,7 @@ public class ClientImpl extends AMapReduceTracer implements Client {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}		
 	}
 }

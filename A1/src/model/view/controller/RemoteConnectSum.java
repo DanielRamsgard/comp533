@@ -19,7 +19,7 @@ public class RemoteConnectSum {
 			UnicastRemoteObject.exportObject(model, 0);
 			rmiRegistry.rebind(MODEL_NAME, model);
 		} catch (RemoteException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 			

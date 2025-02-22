@@ -1,6 +1,6 @@
 comp533.barrier.BarrierImpl,BarrierClass
 comp533.barrier.Barrier,BarrierClass
-model.view.controller.RemoteConnect,ClientTokenCounter
+client.MainClient,ClientTokenCounter
 model.view.controller.Controller,ControllerClass
 model.view.controller.ControllerInterface,ControllerClass
 comp533.assignment.mapper.SumMapperImpl,IntSummingMapperClass
@@ -11,8 +11,8 @@ key.value.KeyValueImpl,KeyValueClass
 key.value.KeyValue,KeyValueClass
 mapper.factory.MapperFactory,MapperFactory
 model.view.controller.Model,ModelClass
-model.view.controller.ModelInterface,ModelClass
 model.view.controller.RemoteModel,ModelClass
+model.view.controller.ModelInterface,ModelClass
 comp533.partitioner.PartitionerImpl,PartitionerClass
 comp533.partitioner.Partitioner,PartitionerClass
 comp533.partitioner.PartitionerFactory,PartitionerFactory

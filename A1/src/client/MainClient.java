@@ -19,7 +19,7 @@ public class MainClient {
 		    remoteModel.registerRemoteClient(client);
 		    client.block();
 		} catch (RemoteException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

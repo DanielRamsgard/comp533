@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -42,7 +43,9 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 	private Joiner joiner;
 	private Barrier barrier;
 	private boolean isSum;
-	private Map<Client, SlaveImpl> clients = new HashMap<>();
+	private Stack<Client> clientStack = new Stack<>();
+	private Stack<SlaveImpl> slaveStack = new Stack<>();
+	private List<Client> clientList = new ArrayList<>();
 	
 	public Model() {
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
@@ -73,6 +76,7 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			SlaveImpl slave = new SlaveImpl(i, this);
 			
 			slaves.add(slave);
+			slaveStack.add(slave);
 			
 			Thread thread = new Thread(slave);
 			
@@ -82,6 +86,10 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
 			
 		}		
+		
+		for (int i = 0; i < newValue; i++) {
+			match();
+		}
 		
 		final PropertyChangeEvent threadInputEvent = new PropertyChangeEvent(this, "Threads", null, threads);
 		propertyChangeSupport.firePropertyChange(threadInputEvent);
@@ -122,18 +130,6 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 		return myMap;
 	}
 	
-	public int slaveNeedsClient() {
-		int i = 0;
-		for (SlaveImpl slave : slaves) {
-			if (slave.needsClient()) {
-				return i;
-			}
-			i++;
-		}
-		
-		return -1;
-	}	
-	
 	public void resetInput() {
 		joiner.resetThreadCount();
 		barrier.resetThreadCount();
@@ -145,20 +141,6 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			slaves.get(i).resetClient();
 			reductionQueueList.add(new LinkedList<KeyValue<String, Integer>>());
 			
-		}	
-		
-		int i = 0;
-		
-		for (Client client : clients.keySet()) {
-			int currentSlaveIndex = slaveNeedsClient();
-			
-		    if (clients.get(client) == null && i < threads.size() && currentSlaveIndex != -1) {
-		    	SlaveImpl currentSlave = slaves.get(currentSlaveIndex);
-		    	currentSlave.addRemoteClient(client);
-		    	clients.put(client, currentSlave);
-		    }
-		    
-		    i++;
 		}
 	}
 	
@@ -258,12 +240,14 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 
 	@Override
 	public void registerRemoteClient(Client client) throws RemoteException {
-		clients.put(client, null);
+		clientList.add(client);
+		clientStack.push(client);
+		match();
 	}
 	
 	@Override
 	public void quit() {
-		for (Client client : clients.keySet()) {
+		for (Client client : clientList) {
 			try {
 				client.quit();
 			} catch (RemoteException e) {
@@ -271,5 +255,9 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			}
 		}
 		System.exit(0);
+	}
+	
+	public void match() {
+		
 	}
 }

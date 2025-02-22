@@ -19,7 +19,7 @@ public class RemoteConnect {
 			UnicastRemoteObject.exportObject(model, 0);
 			rmiRegistry.rebind(MODEL_NAME, model);
 		} catch (RemoteException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		final PropertyChangeListener view = new View();
