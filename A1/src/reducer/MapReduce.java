@@ -12,6 +12,7 @@ import java.lang.Class;
 
 import client.Client;
 import client.ClientImpl;
+import client.MainClient;
 import comp533.assignment.mapper.AssignmentMapper;
 import comp533.assignment.mapper.SumMapperImpl;
 import comp533.barrier.BarrierImpl;
@@ -86,7 +87,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getClientTokenCounter() {
-		return RemoteConnect.class;
+		return MainClient.class;
 	}
 	
 	public Object getJoiner(int input) {
