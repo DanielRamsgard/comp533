@@ -76,7 +76,7 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			SlaveImpl slave = new SlaveImpl(i, this);
 			
 			slaves.add(slave);
-			slaveStack.add(slave);
+			slaveStack.push(slave);
 			
 			Thread thread = new Thread(slave);
 			
@@ -252,7 +252,7 @@ public class Model extends AMapReduceTracer implements ModelInterface, RemoteMod
 			try {
 				client.quit();
 			} catch (RemoteException e) {
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		super.traceExit(getClass());
