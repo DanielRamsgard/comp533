@@ -27,6 +27,7 @@ model.view.controller.RemoteConnectSum,ServerIntegerSummer
 model.view.controller.RemoteConnect,ServerTokenCounter
 slave.SlaveImpl,SlaveClass
 slave.RemoteSlave,SlaveClass
+facebook.StandaloneFacebookMapReduce,StandAloneFacebookMapReduce
 model.view.controller.ConnectSum,StandAloneIntegerSummer
 model.view.controller.Connect,StandAloneTokenCounter
 comp533.assignment.mapper.AssignmentMapperImpl,TokenCountingMapperClass

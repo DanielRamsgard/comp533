@@ -19,6 +19,7 @@ import comp533.barrier.BarrierImpl;
 import comp533.joiner.JoinerImpl;
 import comp533.partitioner.PartitionerFactory;
 import comp533.partitioner.PartitionerImpl;
+import facebook.StandaloneFacebookMapReduce;
 
 public class MapReduce implements MapReduceConfiguration {
 	
@@ -139,7 +140,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getStandAloneFacebookMapReduce() {
-		return null;
+		return StandaloneFacebookMapReduce.class;
 	}
 	
 	public Class getServerFacebookMapReduce() {
