@@ -83,7 +83,7 @@ public class StandaloneFacebookMapReduce extends AMapReduceTracer {
 		                }
 					}
 					
-					// take intersection
+					// take intersection if there is anything to intersect with
 					if (toIntersect != null) {
 						finalReductionResult.put(key, toIntersect);
 					} else {
