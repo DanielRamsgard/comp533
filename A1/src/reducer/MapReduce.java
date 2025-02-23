@@ -19,6 +19,8 @@ import comp533.barrier.BarrierImpl;
 import comp533.joiner.JoinerImpl;
 import comp533.partitioner.PartitionerFactory;
 import comp533.partitioner.PartitionerImpl;
+import facebook.MainFacebookClient;
+import facebook.RemoteFacebookEntry;
 import facebook.StandaloneFacebookMapReduce;
 
 public class MapReduce implements MapReduceConfiguration {
@@ -112,7 +114,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getRemoteClientFacebookMapReduce() {
-		return null;
+		return MainFacebookClient.class;
 	}
 	
 	public Class getRemoteClientObjectClass() {
@@ -144,7 +146,7 @@ public class MapReduce implements MapReduceConfiguration {
 	}
 	
 	public Class getServerFacebookMapReduce() {
-		return null;
+		return RemoteFacebookEntry.class;
 	}
 
 }
