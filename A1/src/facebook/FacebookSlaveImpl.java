@@ -78,7 +78,7 @@ public class FacebookSlaveImpl extends AMapReduceTracer implements Runnable, Fac
 	
 	public Map<String, List<String>> localCallReduce() {
 		// process via .reduce
-		return ReducerFactoryImpl.getReducer().reduce(facebookModel.getReductionQueueList().get(identifier));
+		return FacebookReducer.reduce(facebookModel.getReductionQueueList().get(identifier));
 	}
 	
 	private void finish(Map<String, List<String>> subMap) {
