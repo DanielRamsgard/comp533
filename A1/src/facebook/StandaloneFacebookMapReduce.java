@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
+import key.value.KeyValue;
 
 public class StandaloneFacebookMapReduce extends AMapReduceTracer {
 	private static final String EXIT_MESSAGE = "quit"; 
@@ -19,7 +20,9 @@ public class StandaloneFacebookMapReduce extends AMapReduceTracer {
 				break;
 			}
 			
-			List<Map<String, List<String>>> finalMappingResult = FacebookMapper.map(firstLine);
+			List<KeyValue<String, List<String>>> finalMappingResult = FacebookMapper.map(firstLine);
+			
+			System.out.println(finalMappingResult);
 		
 			final Map<String, List<String>> finalReductionResult = FacebookReducer.reduce(finalMappingResult);
 			
