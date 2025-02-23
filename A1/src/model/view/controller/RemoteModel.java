@@ -9,7 +9,7 @@ import java.util.List;
 import client.Client;
 import key.value.KeyValue;
 
-public interface RemoteModel extends Remote, Serializable {
+public interface RemoteModel extends Remote {
 	public void registerRemoteClient(Client client) throws RemoteException;
 	public List<LinkedList<KeyValue<String, Integer>>> getReductionQueueListRemote() throws RemoteException;
 	public void quit() throws RemoteException;

@@ -1,5 +1,6 @@
 package client;
 
+import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +16,7 @@ import model.view.controller.RemoteConnect;
 import model.view.controller.RemoteModel;
 import reduce.factory.ReducerFactoryImpl;
 
-public class ClientImpl extends AMapReduceTracer implements Client {
+public class ClientImpl extends AMapReduceTracer implements Client, Serializable {
 	private RemoteModel remoteModel;
 
 	

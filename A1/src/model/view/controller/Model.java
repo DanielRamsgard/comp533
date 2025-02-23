@@ -3,6 +3,7 @@ package model.view.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -30,7 +31,7 @@ import reduce.factory.ReducerFactoryImpl;
 import slave.SlaveImpl;
 import sum.mapper.MapperSumFactory;
 
-public class Model extends AMapReduceTracer implements ModelInterface, RemoteModel {
+public class Model extends AMapReduceTracer implements ModelInterface, RemoteModel, Serializable {
 	private static final String BAR = " ";
 	private static final String SLAVE = "Slave";
 	private PropertyChangeSupport propertyChangeSupport;
