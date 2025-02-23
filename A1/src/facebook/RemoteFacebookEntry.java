@@ -14,28 +14,28 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class RemoteFacebookEntry {
 	public static int SERVER_PORT = 50000;
-	public static String MODEL_NAME = "model";
+	public static String MODEL_NAME = "facebookModel";
 	
 	private static void start() {
-		final Model model = new Model();
+		final FacebookModel facebookModel = new FacebookModel();
 		
 		try {
 			Registry rmiRegistry = LocateRegistry.createRegistry(SERVER_PORT);
-			UnicastRemoteObject.exportObject(model, 0);
-			rmiRegistry.rebind(MODEL_NAME, model);
+			UnicastRemoteObject.exportObject(facebookModel, 0);
+			rmiRegistry.rebind(MODEL_NAME, facebookModel);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 		
 		final PropertyChangeListener view = new View();
 		
-		model.addPropertyChangeListener(view);
+		facebookModel.addPropertyChangeListener(view);
 		
-		final Controller controller = new Controller(model);
+		final FacebookController facebookController = new FacebookController(facebookModel);
 		
 		final Scanner scanner = new Scanner(System.in);
 		
-		controller.gatherInputFromScanner(scanner, false);
+		facebookController.gatherInputFromScanner(scanner);
 	}
 	
 	public static void main(final String[] args) {

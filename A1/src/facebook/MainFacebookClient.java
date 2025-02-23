@@ -15,12 +15,12 @@ public class MainFacebookClient {
 	public static void main(String[] args) throws NotBoundException {
 		try {			
 			Registry rmiRegistry = LocateRegistry.getRegistry(SERVER_HOST_NAME, RemoteFacebookEntry.SERVER_PORT);
-		    RemoteModel remoteModel = (RemoteModel) rmiRegistry.lookup(RemoteFacebookEntry.MODEL_NAME);
-		    FacebookClientImpl facebookClientImpl = new FacebookClientImpl(remoteModel);
+		    FacebookRemoteModelInterface facebookRemoteModel = (FacebookRemoteModelInterface) rmiRegistry.lookup(RemoteFacebookEntry.MODEL_NAME);
+		    FacebookClientImpl facebookClientImpl = new FacebookClientImpl();
 		    
-		    FacebookClient client = (FacebookClient) UnicastRemoteObject.exportObject(facebookClientImpl, 0);
+		    FacebookClient facebookClient = (FacebookClient) UnicastRemoteObject.exportObject(facebookClientImpl, 0);
 		    
-//		    remoteModel.registerRemoteClient(facebookClientImpl);
+		    facebookRemoteModel.registerRemoteClient(facebookClient);
 		    facebookClientImpl.block();
 		    			
 		} catch (RemoteException e) {

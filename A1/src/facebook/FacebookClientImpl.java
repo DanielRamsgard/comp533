@@ -11,20 +11,15 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 
 import gradingTools.comp533s19.assignment0.AMapReduceTracer;
+import key.value.KeyValue;
 import model.view.controller.RemoteModel;
 
 public class FacebookClientImpl extends AMapReduceTracer implements FacebookClient, Serializable {
-	private RemoteModel remoteModel;
-
 	
-	public FacebookClientImpl(RemoteModel remoteModel) {
-		this.remoteModel = remoteModel;
-	}
-	
-	public Map<String, List<String>> reduce(List<Map<String, List<String>>> finalMappingResult) {
+	public Map<String, List<String>> reduce(List<KeyValue<String, List<String>>> finalMappingResult) {
 		super.traceRemoteList(finalMappingResult);
 		
-		Map<String, List<String>> interumResult = FacebookReducer.reduce(finalMappingResult);
+		final Map<String, List<String>> interumResult = FacebookReducer.reduce(finalMappingResult);
 
 		super.traceRemoteResult(interumResult);
 		
