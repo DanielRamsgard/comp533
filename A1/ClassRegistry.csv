@@ -11,8 +11,8 @@ key.value.KeyValueImpl,KeyValueClass
 key.value.KeyValue,KeyValueClass
 mapper.factory.MapperFactory,MapperFactory
 model.view.controller.Model,ModelClass
-model.view.controller.ModelInterface,ModelClass
 model.view.controller.RemoteModel,ModelClass
+model.view.controller.ModelInterface,ModelClass
 comp533.partitioner.PartitionerImpl,PartitionerClass
 comp533.partitioner.Partitioner,PartitionerClass
 comp533.partitioner.PartitionerFactory,PartitionerFactory

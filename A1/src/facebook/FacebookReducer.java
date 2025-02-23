@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gradingTools.comp533s19.assignment0.AMapReduceTracer;
 import key.value.KeyValue;
 
-public class FacebookReducer {
+public class FacebookReducer extends AMapReduceTracer {
 	public static Map<String, List<String>> reduce(List<KeyValue<String, List<String>>> finalMappingResult) {
 		// reduction
 		final Map<String, List<String>> finalReductionResult = new HashMap<>();
@@ -45,6 +46,13 @@ public class FacebookReducer {
 				
 		}
 		
+		FacebookReducer currentReducer = new FacebookReducer();
+		currentReducer.traceReduction(finalMappingResult, finalReductionResult);
+		
 		return finalReductionResult;
+	}
+	
+	public void traceReduction(List<KeyValue<String, List<String>>> finalMappingResult, Map<String, List<String>> finalReductionResult) {
+		super.traceReduce(finalMappingResult, finalReductionResult);
 	}
 }
