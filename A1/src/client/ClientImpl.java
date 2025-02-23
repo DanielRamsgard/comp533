@@ -35,9 +35,9 @@ public class ClientImpl extends AMapReduceTracer implements Client, Serializable
 	}
 	
 	public synchronized void quit() {
+		super.traceQuit();
 		super.traceNotify();
-		this.notify();
-		super.traceQuit();		
+		this.notify();		
 	}
 	
 	public synchronized void block() {
