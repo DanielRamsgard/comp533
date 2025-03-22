@@ -1,11 +1,24 @@
 package registry;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+
+import assignments.util.mainArgs.RegistryArgsProcessor;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
+import util.trace.port.rpc.rmi.RMIRegistryCreated;
 
 @Tags({DistributedTags.REGISTRY, DistributedTags.RMI})
 public class Main {
 	public static void main(String[] args) {
-		(new Registry()).processInit(args);
+		int port = RegistryArgsProcessor.getRegistryPort(args);
+		
+		try {
+			LocateRegistry.createRegistry(port);
+			RMIRegistryCreated.newCase(Main.class, port);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
