@@ -14,9 +14,11 @@ public class Main {
 		// initialize variables to work with RMI
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);
+		String clientName = ClientArgsProcessor.getClientName(args);
 
 		// initialize object to do work
 		CoupledClientSimulation coupledClientSimulation = new CoupledClientSimulation();
+		coupledClientSimulation.setClientName(clientName);
 		
 		// initialize RMI registry and export
 		try {
