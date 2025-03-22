@@ -6,6 +6,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import assignments.util.mainArgs.ServerArgsProcessor;
+import util.trace.port.rpc.rmi.RMIObjectRegistered;
+import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 public class Main {
 	public static String SERVER_NAME = "SERVER";
@@ -21,8 +23,10 @@ public class Main {
 		// initialize RMI registry and export
 		try {
 			Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
+			RMIRegistryLocated.newCase(coupledServerSimulation, serverHost, serverPort, rmiRegistry);
 			ICoupledServerSimulation iCoupledServerSimulation = (ICoupledServerSimulation) UnicastRemoteObject.exportObject(coupledServerSimulation, 0);
 			rmiRegistry.rebind(SERVER_NAME, iCoupledServerSimulation);
+			RMIObjectRegistered.newCase(coupledServerSimulation, SERVER_NAME, iCoupledServerSimulation, rmiRegistry);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

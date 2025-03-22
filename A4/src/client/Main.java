@@ -8,6 +8,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.ICoupledServerSimulation;
+import util.trace.port.rpc.rmi.RMIObjectLookedUp;
+import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 public class Main {
 	public static void main (String[] args) throws NotBoundException {
@@ -23,8 +25,14 @@ public class Main {
 		// initialize RMI registry and export
 		try {
 			Registry rmiRegistry = LocateRegistry.getRegistry(clientHost, clientPort);
+			RMIRegistryLocated.newCase(coupledClientSimulation, clientHost, clientPort, rmiRegistry);
 			ICoupledClientSimulation coupledClientSimulationRemote = (ICoupledClientSimulation) UnicastRemoteObject.exportObject(coupledClientSimulation, 0);
 			ICoupledServerSimulation coupledServerSimulation = (ICoupledServerSimulation) rmiRegistry.lookup(broadcast.Main.SERVER_NAME);
+			
+			//
+			RMIObjectLookedUp.newCase(coupledClientSimulationRemote, coupledServerSimulation, coupledClientSimulation.getClientName(), rmiRegistry);
+			//
+			
 			coupledServerSimulation.registerClient(coupledClientSimulationRemote);
 			
 		} catch (RemoteException e) {
