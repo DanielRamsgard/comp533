@@ -1,20 +1,20 @@
 package broadcast;
-
-import java.util.List;
 import client.ICoupledClientSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
+import util.annotations.Tags;
+import util.tags.DistributedTags;
 
+@Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
-	private List<ICoupledClientSimulation> clients;
-	
+	private ServerConfigurer configurer;
 	
 	public CoupledServerSimulation() {
-		
+		this.configurer = new ServerConfigurer();
 	}
 	
 	@Override
 	public void registerClient(ICoupledClientSimulation o) {
-		clients.add(o);
+		configurer.addClient(o);
 	}
 
 }

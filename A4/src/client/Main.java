@@ -11,6 +11,10 @@ import broadcast.ICoupledServerSimulation;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
+import util.annotations.Tags;
+import util.tags.DistributedTags;
+
+@Tags({DistributedTags.CLIENT, DistributedTags.RMI})
 public class Main {
 	public static void main (String[] args) throws NotBoundException {
 		// initialize variables to work with RMI
@@ -34,6 +38,7 @@ public class Main {
 			//
 			
 			coupledServerSimulation.registerClient(coupledClientSimulationRemote);
+			coupledClientSimulation.setConfigurer(coupledServerSimulation);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
