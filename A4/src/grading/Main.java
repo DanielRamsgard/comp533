@@ -24,7 +24,7 @@ public class Main {
 		// Change this number if your process times out prematurely
 		Assignment4Suite.setProcessTimeOut(TIME_OUT);
 		// change port numbers
-		PortNumbers.setTestPortNIOStart(1100);
+//		PortNumbers.setTestPortNIOStart(1100);
 		// You need to always call such a method
 		S25Assignment4Suite.main(args);
 	}

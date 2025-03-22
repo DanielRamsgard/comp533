@@ -1,15 +1,20 @@
 package broadcast;
 
-import java.rmi.RemoteException;
-
+import java.util.List;
+import client.ICoupledClientSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
-
-	@Override
-	public void registerClient(Object o) throws RemoteException {
-		// TODO Auto-generated method stub
+	private List<ICoupledClientSimulation> clients;
+	
+	
+	public CoupledServerSimulation() {
 		
+	}
+	
+	@Override
+	public void registerClient(ICoupledClientSimulation o) {
+		clients.add(o);
 	}
 
 }

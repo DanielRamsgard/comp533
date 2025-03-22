@@ -3,6 +3,8 @@ package broadcast;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import client.ICoupledClientSimulation;
+
 public interface ICoupledServerSimulation extends Remote {
-	void registerClient(Object o) throws RemoteException;
+	void registerClient(ICoupledClientSimulation o) throws RemoteException;
 }
