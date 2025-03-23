@@ -11,6 +11,8 @@ import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.port.consensus.ProposalLearnedNotificationReceived;
+import util.trace.port.consensus.ProposedStateSet;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
@@ -66,7 +68,11 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 
 	@Override
 	public void notifyNewCommand(String command) throws RemoteException {
+		ProposalLearnedNotificationReceived.newCase(this, clientName, -1, command);
+		
 		commandProcessor1.processCommand(command);
 		commandProcessor2.processCommand(command);
+		
+		ProposedStateSet.newCase(this, clientName, -1, command);
 	}
 }
