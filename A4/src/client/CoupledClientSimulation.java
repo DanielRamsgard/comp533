@@ -27,10 +27,12 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	HalloweenCommandProcessor commandProcessor1; 
 	HalloweenCommandProcessor commandProcessor2;
 	
+	@Override
 	public void setClientName(String name) {
 		clientName = name;
 	}
 	
+	@Override
 	public String getClientName() {
 		return clientName;
 	}

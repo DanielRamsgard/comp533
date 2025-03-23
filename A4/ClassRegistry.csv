@@ -1,0 +1,10 @@
+client.Main,@DistributedTags.CLIENT+@DistributedTags.RMI
+broadcast.ICoupledServerSimulation,@DistributedTags.SERVER_REMOTE_INTERFACE+@DistributedTags.RMI
+client.ClientConfigurer,@DistributedTags.CLIENT_CONFIGURER+@DistributedTags.RMI
+client.ICoupledClientSimulation,@DistributedTags.CLIENT_REMOTE_INTERFACE+@DistributedTags.RMI
+registry.Main,@DistributedTags.REGISTRY+@DistributedTags.RMI
+client.CoupledClientSimulation,@DistributedTags.CLIENT_REMOTE_OBJECT+@DistributedTags.RMI
+client.OutCoupler,@DistributedTags.CLIENT_OUT_COUPLER+@DistributedTags.RMI
+broadcast.Main,@DistributedTags.SERVER+@DistributedTags.RMI
+broadcast.CoupledServerSimulation,@DistributedTags.SERVER_REMOTE_OBJECT+@DistributedTags.RMI
+broadcast.ServerConfigurer,@DistributedTags.SERVER_CONFIGURER+@DistributedTags.RMI
