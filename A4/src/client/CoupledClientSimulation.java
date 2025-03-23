@@ -1,5 +1,7 @@
 package client;
 
+import java.rmi.RemoteException;
+
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.ICoupledServerSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
@@ -14,15 +16,8 @@ import util.tags.DistributedTags;
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
 	private String clientName;
 	private ClientConfigurer configurer;
-	private HalloweenCommandProcessor halloweenCommandProcessor;
-	private HalloweenCommandProcessor halloweenCommandProcessorTwo;
 	HalloweenCommandProcessor commandProcessor1; 
 	HalloweenCommandProcessor commandProcessor2;
-	
-	public CoupledClientSimulation() {
-		this.halloweenCommandProcessor = super.createSimulation1(clientName);
-		this.halloweenCommandProcessorTwo = super.createSimulation2(clientName);
-	}
 	
 	public void setClientName(String name) {
 		clientName = name;
@@ -34,12 +29,6 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public void setConfigurer(ICoupledServerSimulation server) {
 		this.configurer = new ClientConfigurer(server);
-	}
-	
-	public void notifyNewCommand(String command) {
-		// must somehow notify the simulation and process the command
-		halloweenCommandProcessor.processCommand(command);
-		halloweenCommandProcessorTwo.processCommand(command);		
 	}
 	
 	private void processArgsCustom(String[] args) {	
@@ -73,5 +62,11 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		SimulationParametersControllerFactory.getSingleton().addSimulationParameterListener(this);
 		// use the calling back library
 		SimulationParametersControllerFactory.getSingleton().processCommands();
+	}
+
+	@Override
+	public void notifyNewCommand(String command) throws RemoteException {
+		commandProcessor1.processCommand(command);
+		commandProcessor2.processCommand(command);
 	}
 }
