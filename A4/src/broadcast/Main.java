@@ -16,8 +16,6 @@ import util.tags.DistributedTags;
 
 @Tags({DistributedTags.SERVER, DistributedTags.RMI})
 public class Main {
-	public static String SERVER_NAME = "SERVER";
-	
 	public static void main (String[] args) {
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
@@ -28,11 +26,9 @@ public class Main {
 		
 		// initialize RMI registry and export
 		try {
-			Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
-			RMIRegistryLocated.newCase(coupledServerSimulation, serverHost, serverPort, rmiRegistry);
-			ICoupledServerSimulation iCoupledServerSimulation = (ICoupledServerSimulation) UnicastRemoteObject.exportObject(coupledServerSimulation, 0);
-			rmiRegistry.rebind(SERVER_NAME, iCoupledServerSimulation);
-			RMIObjectRegistered.newCase(coupledServerSimulation, SERVER_NAME, iCoupledServerSimulation, rmiRegistry);
+			Registry rmiRegistry = coupledServerSimulation.setupConnection(serverHost, serverPort);
+			ICoupledServerSimulation coupledServerSimulationProxy = (ICoupledServerSimulation) UnicastRemoteObject.exportObject(coupledServerSimulation, 0);
+			coupledServerSimulation.performRebind(rmiRegistry, coupledServerSimulationProxy);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -40,7 +36,7 @@ public class Main {
 		}
 		
 		// run the object after exporting it
-		coupledServerSimulation.startCustom(args);
+		coupledServerSimulation.start(args);
 	}
 
 }

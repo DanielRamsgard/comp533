@@ -28,14 +28,9 @@ public class Main {
 		
 		// initialize RMI registry and export
 		try {
-			Registry rmiRegistry = LocateRegistry.getRegistry(clientHost, clientPort);
-			RMIRegistryLocated.newCase(coupledClientSimulation, clientHost, clientPort, rmiRegistry);
+			Registry rmiRegistry = coupledClientSimulation.setupConnection(clientHost, clientPort);
 			ICoupledClientSimulation coupledClientSimulationRemote = (ICoupledClientSimulation) UnicastRemoteObject.exportObject(coupledClientSimulation, 0);
-			ICoupledServerSimulation coupledServerSimulation = (ICoupledServerSimulation) rmiRegistry.lookup(broadcast.Main.SERVER_NAME);
-			coupledClientSimulation.setConfigurer(coupledServerSimulation);
-			//
-			RMIObjectLookedUp.newCase(coupledClientSimulationRemote, coupledServerSimulation, coupledClientSimulation.getClientName(), rmiRegistry);
-			//
+			ICoupledServerSimulation coupledServerSimulation = coupledClientSimulation.performLookup(rmiRegistry);
 			
 			coupledServerSimulation.registerClient(coupledClientSimulationRemote);
 			coupledClientSimulation.setConfigurer(coupledServerSimulation);

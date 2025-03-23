@@ -1,6 +1,10 @@
 package client;
 
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.ICoupledServerSimulation;
@@ -13,6 +17,8 @@ import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
 import util.trace.port.consensus.ProposalLearnedNotificationReceived;
 import util.trace.port.consensus.ProposedStateSet;
+import util.trace.port.rpc.rmi.RMIObjectLookedUp;
+import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
@@ -74,5 +80,21 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		commandProcessor2.processCommand(command);
 		
 		ProposedStateSet.newCase(this, clientName, -1, command);
+	}
+	
+	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
+		Registry rmiRegistry = LocateRegistry.getRegistry(clientHost, clientPort);
+		RMIRegistryLocated.newCase(this, clientHost, clientPort, rmiRegistry);
+		
+		return rmiRegistry;
+	}
+	
+	public ICoupledServerSimulation performLookup(Registry rmiRegistry) throws AccessException, RemoteException, NotBoundException {
+		ICoupledServerSimulation coupledServerSimulation = (ICoupledServerSimulation) rmiRegistry.lookup(broadcast.CoupledServerSimulation.SERVER_NAME);
+		//
+		RMIObjectLookedUp.newCase(this, coupledServerSimulation, this.getClientName(), rmiRegistry);
+		//
+		
+		return coupledServerSimulation;
 	}
 }

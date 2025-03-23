@@ -1,4 +1,10 @@
 package broadcast;
+import java.rmi.AccessException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
 import assignments.util.mainArgs.ClientArgsProcessor;
 import client.ICoupledClientSimulation;
 import client.OutCoupler;
@@ -8,9 +14,12 @@ import coupledsims.Simulation2;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.port.rpc.rmi.RMIObjectRegistered;
+import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
+	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	
 	public CoupledServerSimulation() {
@@ -46,6 +55,18 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		SimulationParametersControllerFactory.getSingleton().addSimulationParameterListener(this);
 		// use the calling back library
 		SimulationParametersControllerFactory.getSingleton().processCommands();
+	}
+	
+	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {
+		Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
+		RMIRegistryLocated.newCase(this, serverHost, serverPort, rmiRegistry);
+		
+		return rmiRegistry;
+	}
+	
+	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation) throws AccessException, RemoteException {
+		rmiRegistry.rebind(SERVER_NAME, iCoupledServerSimulation);
+		RMIObjectRegistered.newCase(this, SERVER_NAME, iCoupledServerSimulation, rmiRegistry);
 	}
 
 }
