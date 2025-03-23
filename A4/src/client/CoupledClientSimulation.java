@@ -26,8 +26,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	private String clientName;
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
-	HalloweenCommandProcessor commandProcessor1; 
-	HalloweenCommandProcessor commandProcessor2;
+	HalloweenCommandProcessor commandProcessor1;
 	
 	public CoupledClientSimulation() {
 		this.configurer = new ClientConfigurer();
@@ -64,12 +63,9 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		setTracing();
 		processArgsCustom(args);
 		//Ideally the prefixes should be main arguments
-		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);	
-		commandProcessor2 = createSimulation2(Simulation2.SIMULATION2_PREFIX);
+		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);
 		simulation1Coupler = new OutCoupler(commandProcessor1, clientName, server);
-		simulation2Coupler = new OutCoupler(commandProcessor2, clientName, server);
-		commandProcessor1.addPropertyChangeListener(simulation2Coupler);
-		commandProcessor2.addPropertyChangeListener(simulation1Coupler);
+		commandProcessor1.addPropertyChangeListener(simulation1Coupler);
 	}
 	
 	public void startCustom(String[] args) {
@@ -85,8 +81,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		ProposalLearnedNotificationReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		ProposedStateSet.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		
-		commandProcessor1.processCommand(command);
-		commandProcessor2.processCommand(command);		
+		commandProcessor1.processCommand(command);	
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
