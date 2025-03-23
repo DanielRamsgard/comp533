@@ -10,6 +10,7 @@ import util.annotations.Tags;
 import util.tags.DistributedTags;
 import util.trace.port.consensus.ProposalMade;
 import util.trace.port.consensus.RemoteProposeRequestSent;
+import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.trickOrTreat.LocalCommandObserved;
 
 @Tags({DistributedTags.CLIENT_OUT_COUPLER, DistributedTags.RMI})
@@ -28,11 +29,10 @@ public class OutCoupler implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent anEvent) {		
 		if (!anEvent.getPropertyName().equals("InputString")) return;
 		String newCommand = (String) anEvent.getNewValue();
-		LocalCommandObserved.newCase(this, newCommand);
 		
-		//
-		ProposalMade.newCase(this, clientName, -1, newCommand);
-		//
+		LocalCommandObserved.newCase(this, newCommand);
+		ProposalMade.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
+		RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		
 		processer.processCommand(newCommand);
 		ICoupledServerSimulation server = configurer.getRemoteServer();
@@ -41,9 +41,7 @@ public class OutCoupler implements PropertyChangeListener {
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		RemoteProposeRequestSent.newCase(this, clientName, -1, newCommand);
+		}		
 		
 	}
 	

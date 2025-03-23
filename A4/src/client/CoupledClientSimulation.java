@@ -17,6 +17,7 @@ import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
 import util.trace.port.consensus.ProposalLearnedNotificationReceived;
 import util.trace.port.consensus.ProposedStateSet;
+import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
@@ -76,12 +77,11 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 
 	@Override
 	public void notifyNewCommand(String command) throws RemoteException {
-		ProposalLearnedNotificationReceived.newCase(this, clientName, -1, command);
+		ProposalLearnedNotificationReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		ProposedStateSet.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		
 		commandProcessor1.processCommand(command);
-		commandProcessor2.processCommand(command);
-		
-		ProposedStateSet.newCase(this, clientName, -1, command);
+		commandProcessor2.processCommand(command);		
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {

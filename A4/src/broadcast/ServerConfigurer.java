@@ -9,6 +9,7 @@ import util.annotations.Tags;
 import util.tags.DistributedTags;
 import util.trace.port.consensus.ProposalLearnedNotificationSent;
 import util.trace.port.consensus.RemoteProposeRequestReceived;
+import util.trace.port.consensus.communication.CommunicationStateNames;
 
 @Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI})
 public class ServerConfigurer {
@@ -23,7 +24,8 @@ public class ServerConfigurer {
 	}
 	
 	public void broadcast(String command, String sendingClientName) {
-		RemoteProposeRequestReceived.newCase(this, sendingClientName, -1, command);
+		RemoteProposeRequestReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		ProposalLearnedNotificationSent.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		
 		for (ICoupledClientSimulation client : clients) {
 			try {
@@ -35,8 +37,6 @@ public class ServerConfigurer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		
-		ProposalLearnedNotificationSent.newCase(this, sendingClientName, -1, command);
+		}		
 	}
 }
