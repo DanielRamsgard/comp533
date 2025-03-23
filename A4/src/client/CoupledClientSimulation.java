@@ -85,10 +85,8 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
-		Registry rmiRegistry = LocateRegistry.getRegistry(clientHost, clientPort);
-		RMIRegistryLocated.newCase(this, clientHost, clientPort, rmiRegistry);
 		
-		return rmiRegistry;
+		return this.configurer.setupConnection(clientHost, clientPort);
 	}
 	
 	public ICoupledServerSimulation performLookup(Registry rmiRegistry) throws AccessException, RemoteException, NotBoundException {
