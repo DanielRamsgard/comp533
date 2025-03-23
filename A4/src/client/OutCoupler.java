@@ -34,7 +34,6 @@ public class OutCoupler implements PropertyChangeListener {
 		ProposalMade.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		
-		processer.processCommand(newCommand);
 		try {
 			server.broadcast(newCommand, clientName);
 		} catch (RemoteException e) {
