@@ -1,21 +1,18 @@
 package broadcast;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
 import client.ICoupledClientSimulation;
-import client.OutCoupler;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
-import coupledsims.Simulation1;
-import coupledsims.Simulation2;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
-import util.trace.port.rpc.rmi.RMIObjectRegistered;
-import util.trace.port.rpc.rmi.RMIRegistryLocated;
+import util.trace.port.consensus.ProposalLearnedNotificationSent;
+import util.trace.port.consensus.RemoteProposeRequestReceived;
+import util.trace.port.consensus.communication.CommunicationStateNames;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
@@ -33,7 +30,21 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	@Override
 	public void broadcast(String command, String sendingClientName) {
-		this.configurer.broadcast(command, sendingClientName);
+		RemoteProposeRequestReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		ProposalLearnedNotificationSent.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		List<ICoupledClientSimulation> clients = this.configurer.getClients();
+		
+		for (ICoupledClientSimulation client : clients) {
+			try {
+				if (!client.getClientName().equals(sendingClientName)) {
+					client.notifyNewCommand(command);
+				}
+				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void processArgsCustom(String[] args) {	
@@ -58,15 +69,11 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {
-		Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
-		RMIRegistryLocated.newCase(this, serverHost, serverPort, rmiRegistry);
-		
-		return rmiRegistry;
+		return this.configurer.setupConnection(serverHost, serverPort);
 	}
 	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation) throws AccessException, RemoteException {
-		rmiRegistry.rebind(SERVER_NAME, iCoupledServerSimulation);
-		RMIObjectRegistered.newCase(this, SERVER_NAME, iCoupledServerSimulation, rmiRegistry);
+		this.configurer.performRebind(rmiRegistry, iCoupledServerSimulation, SERVER_NAME);
 	}
 
 }

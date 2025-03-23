@@ -1,15 +1,17 @@
 package broadcast;
 
+import java.rmi.AccessException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
 import client.ICoupledClientSimulation;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
-import util.trace.port.consensus.ProposalLearnedNotificationSent;
-import util.trace.port.consensus.RemoteProposeRequestReceived;
-import util.trace.port.consensus.communication.CommunicationStateNames;
+import util.trace.port.rpc.rmi.RMIObjectRegistered;
+import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 @Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI})
 public class ServerConfigurer {
@@ -23,20 +25,19 @@ public class ServerConfigurer {
 		clients.add(o);
 	}
 	
-	public void broadcast(String command, String sendingClientName) {
-		RemoteProposeRequestReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
-		ProposalLearnedNotificationSent.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+	public List<ICoupledClientSimulation> getClients() {
+		return clients;
+	}
+	
+	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation, String serverName) throws AccessException, RemoteException {
+		rmiRegistry.rebind(serverName, iCoupledServerSimulation);
+		RMIObjectRegistered.newCase(this, serverName, iCoupledServerSimulation, rmiRegistry);
+	}
+	
+	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {
+		Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
+		RMIRegistryLocated.newCase(this, serverHost, serverPort, rmiRegistry);
 		
-		for (ICoupledClientSimulation client : clients) {
-			try {
-				if (!client.getClientName().equals(sendingClientName)) {
-					client.notifyNewCommand(command);
-				}
-				
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
+		return rmiRegistry;
 	}
 }
