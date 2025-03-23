@@ -7,7 +7,7 @@ import gradingTools.comp533.flexible.PortNumbers;
 import gradingTools.comp533s20.assignment4.Assignment4Suite;
 
 public class Main {
-	public static final int TIME_OUT = 45;
+	public static final int TIME_OUT = 10;
 	public static final int MAX_TRACES = 2000;
 	public static final int MAX_PRINTED_TRACES = 600;
 	
