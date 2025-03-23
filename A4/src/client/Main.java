@@ -33,7 +33,7 @@ public class Main {
 			ICoupledServerSimulation coupledServerSimulation = coupledClientSimulation.performLookup(rmiRegistry);
 			
 			coupledServerSimulation.registerClient(coupledClientSimulationRemote);
-			coupledClientSimulation.setConfigurer(coupledServerSimulation);
+			coupledClientSimulation.setServer(coupledServerSimulation);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

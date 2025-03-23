@@ -16,13 +16,13 @@ import util.trace.trickOrTreat.LocalCommandObserved;
 @Tags({DistributedTags.CLIENT_OUT_COUPLER, DistributedTags.RMI})
 public class OutCoupler implements PropertyChangeListener {
 	private HalloweenCommandProcessor processer;
-	private ClientConfigurer configurer;
 	private String clientName;
+	private ICoupledServerSimulation server;
 
-	public OutCoupler(HalloweenCommandProcessor passedProcesser, ClientConfigurer passedConfigurer, String passedClientName) {
+	public OutCoupler(HalloweenCommandProcessor passedProcesser, String passedClientName, ICoupledServerSimulation passedServer) {
 		this.processer = passedProcesser;
-		this.configurer = passedConfigurer;
 		this.clientName = passedClientName;
+		this.server = passedServer;
 	}
 	
 	@Override
@@ -35,7 +35,6 @@ public class OutCoupler implements PropertyChangeListener {
 		RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		
 		processer.processCommand(newCommand);
-		ICoupledServerSimulation server = configurer.getRemoteServer();
 		try {
 			server.broadcast(newCommand, clientName);
 		} catch (RemoteException e) {

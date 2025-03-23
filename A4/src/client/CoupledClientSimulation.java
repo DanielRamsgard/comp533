@@ -25,8 +25,13 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
 	private String clientName;
 	private ClientConfigurer configurer;
+	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1; 
 	HalloweenCommandProcessor commandProcessor2;
+	
+	public CoupledClientSimulation() {
+		this.configurer = new ClientConfigurer();
+	}
 	
 	@Override
 	public void setClientName(String name) {
@@ -36,10 +41,6 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	@Override
 	public String getClientName() {
 		return clientName;
-	}
-	
-	public void setConfigurer(ICoupledServerSimulation server) {
-		this.configurer = new ClientConfigurer(server);
 	}
 	
 	private void processArgsCustom(String[] args) {	
@@ -54,15 +55,19 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		
 	}
 	
+	public void setServer(ICoupledServerSimulation passedServer) {
+		this.server = passedServer;
+	}
+	
 	
 	private void initCustom (String[] args) {
 		setTracing();
 		processArgsCustom(args);
-		//Ideally the prefixes should be main args
+		//Ideally the prefixes should be main arguments
 		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);	
 		commandProcessor2 = createSimulation2(Simulation2.SIMULATION2_PREFIX);
-		simulation1Coupler = new OutCoupler(commandProcessor1, configurer, clientName);
-		simulation2Coupler = new OutCoupler(commandProcessor2, configurer, clientName);
+		simulation1Coupler = new OutCoupler(commandProcessor1, clientName, server);
+		simulation2Coupler = new OutCoupler(commandProcessor2, clientName, server);
 		commandProcessor1.addPropertyChangeListener(simulation2Coupler);
 		commandProcessor2.addPropertyChangeListener(simulation1Coupler);
 	}
