@@ -2,6 +2,7 @@ package broadcast;
 import client.ICoupledClientSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import util.annotations.Tags;
+import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})

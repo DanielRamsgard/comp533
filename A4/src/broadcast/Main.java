@@ -11,6 +11,7 @@ import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
 import util.annotations.Tags;
+import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
 
 @Tags({DistributedTags.SERVER, DistributedTags.RMI})
