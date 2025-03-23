@@ -32,7 +32,7 @@ public class Main {
 			RMIRegistryLocated.newCase(coupledClientSimulation, clientHost, clientPort, rmiRegistry);
 			ICoupledClientSimulation coupledClientSimulationRemote = (ICoupledClientSimulation) UnicastRemoteObject.exportObject(coupledClientSimulation, 0);
 			ICoupledServerSimulation coupledServerSimulation = (ICoupledServerSimulation) rmiRegistry.lookup(broadcast.Main.SERVER_NAME);
-			
+			coupledClientSimulation.setConfigurer(coupledServerSimulation);
 			//
 			RMIObjectLookedUp.newCase(coupledClientSimulationRemote, coupledServerSimulation, coupledClientSimulation.getClientName(), rmiRegistry);
 			//
@@ -46,7 +46,7 @@ public class Main {
 		}
 		
 		// run the object after exporting it
-		coupledClientSimulation.start(args);
+		coupledClientSimulation.startCustom(args);
 	}
 
 }

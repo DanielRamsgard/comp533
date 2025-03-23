@@ -42,7 +42,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		halloweenCommandProcessorTwo.processCommand(command);		
 	}
 	
-	private void processArgs(String[] args) {	
+	private void processArgsCustom(String[] args) {	
 		System.out.println("Registry host:" + ClientArgsProcessor.getRegistryHost(args));
 		System.out.println("Registry port:" + ClientArgsProcessor.getRegistryPort(args));
 		System.out.println("Server host:" + ClientArgsProcessor.getServerHost(args));
@@ -57,7 +57,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	private void initCustom (String[] args) {
 		setTracing();
-		processArgs(args);
+		processArgsCustom(args);
 		//Ideally the prefixes should be main args
 		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);	
 		commandProcessor2 = createSimulation2(Simulation2.SIMULATION2_PREFIX);
@@ -67,8 +67,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		commandProcessor2.addPropertyChangeListener(simulation1Coupler);
 	}
 	
-	@Override
-	public void start(String[] args) {
+	public void startCustom(String[] args) {
 		initCustom(args);
 		// register a callback to process actions denoted by the user commands
 		SimulationParametersControllerFactory.getSingleton().addSimulationParameterListener(this);

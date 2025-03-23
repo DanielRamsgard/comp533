@@ -16,7 +16,8 @@ public class Main {
 		try {
 			LocateRegistry.createRegistry(port);
 			RMIRegistryCreated.newCase(Main.class, port);
-		} catch (RemoteException e) {
+			Thread.sleep(Long.MAX_VALUE);
+		} catch (RemoteException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
