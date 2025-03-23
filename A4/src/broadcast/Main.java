@@ -40,7 +40,7 @@ public class Main {
 		}
 		
 		// run the object after exporting it
-		coupledServerSimulation.start(args);
+		coupledServerSimulation.startCustom(args);
 	}
 
 }
