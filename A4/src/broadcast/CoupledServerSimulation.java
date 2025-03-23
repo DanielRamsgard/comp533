@@ -14,7 +14,12 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	@Override
 	public void registerClient(ICoupledClientSimulation o) {
-		configurer.addClient(o);
+		this.configurer.addClient(o);
+	}
+	
+	@Override
+	public void broadcast(String command, String sendingClientName) {
+		this.configurer.broadcast(command, sendingClientName);
 	}
 
 }

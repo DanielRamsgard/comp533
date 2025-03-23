@@ -21,4 +21,8 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	public void setConfigurer(ICoupledServerSimulation server) {
 		this.configurer = new ClientConfigurer(server);
 	}
+	
+	public void notifyNewCommand(String command) {
+		// must somehow notify the simulation and process the command
+	}
 }

@@ -10,4 +10,5 @@ import util.tags.DistributedTags;
 @Tags({DistributedTags.SERVER_REMOTE_INTERFACE, DistributedTags.RMI})
 public interface ICoupledServerSimulation extends Remote {
 	void registerClient(ICoupledClientSimulation o) throws RemoteException;
+	void broadcast(String command, String sendingClientName) throws RemoteException;
 }

@@ -10,4 +10,5 @@ import util.tags.DistributedTags;
 public interface ICoupledClientSimulation extends Remote {
 	void setClientName(String name) throws RemoteException;
 	String getClientName() throws RemoteException;
+	void notifyNewCommand(String command) throws RemoteException;
 }
