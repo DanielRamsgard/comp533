@@ -14,6 +14,7 @@ import coupledsims.Simulation2;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
+import util.misc.ThreadSupport;
 import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
@@ -33,6 +34,15 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
+	
+	@Override
+	public void simulationCommand(String aCommand) {
+		long aDelay = getDelay(); 
+		if (aDelay > 0) {
+			ThreadSupport.sleep(aDelay);
+		}
+		commandProcessor1.setInputString(aCommand);
+	}
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
