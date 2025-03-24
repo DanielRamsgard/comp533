@@ -15,11 +15,17 @@ import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.factories.FactoryTraceUtility;
+import util.trace.misc.ThreadDelayed;
+import util.trace.port.PortTraceUtility;
+import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.consensus.ProposalLearnedNotificationReceived;
 import util.trace.port.consensus.ProposedStateSet;
 import util.trace.port.consensus.communication.CommunicationStateNames;
+import util.trace.port.nio.NIOTraceUtility;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
+import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
@@ -28,7 +34,19 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
 	
+	protected void setTracing() {
+		PortTraceUtility.setTracing();
+		RMITraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
+		FactoryTraceUtility.setTracing();		
+		ConsensusTraceUtility.setTracing();
+		ThreadDelayed.enablePrint();
+		trace(true);
+	}
+
+	
 	public CoupledClientSimulation() {
+		setTracing();
 		this.configurer = new ClientConfigurer();
 	}
 	

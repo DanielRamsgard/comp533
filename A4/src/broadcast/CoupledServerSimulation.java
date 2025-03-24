@@ -10,16 +10,33 @@ import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.factories.FactoryTraceUtility;
+import util.trace.misc.ThreadDelayed;
+import util.trace.port.PortTraceUtility;
+import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.consensus.ProposalLearnedNotificationSent;
 import util.trace.port.consensus.RemoteProposeRequestReceived;
 import util.trace.port.consensus.communication.CommunicationStateNames;
+import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	
+	protected void setTracing() {
+		PortTraceUtility.setTracing();
+		RMITraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
+		FactoryTraceUtility.setTracing();		
+		ConsensusTraceUtility.setTracing();
+		ThreadDelayed.enablePrint();
+		trace(true);
+	}
+	
 	public CoupledServerSimulation() {
+		setTracing();
 		this.configurer = new ServerConfigurer();
 	}
 	

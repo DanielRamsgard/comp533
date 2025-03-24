@@ -1,24 +1,18 @@
-package client;
+package registry;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 import assignments.util.inputParameters.SimulationParametersListener;
-import broadcast.ICoupledServerSimulation;
-import util.annotations.Tags;
-import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.nio.NIOTraceUtility;
-import util.trace.port.rpc.rmi.RMIRegistryLocated;
+import util.trace.port.rpc.rmi.RMIRegistryCreated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI})
-public class ClientConfigurer implements SimulationParametersListener {
-	
+public class Registry implements SimulationParametersListener {
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
 		RMITraceUtility.setTracing();
@@ -29,14 +23,11 @@ public class ClientConfigurer implements SimulationParametersListener {
 		trace(true);
 	}
 	
-	public ClientConfigurer() { 
+	public void createRegistry(int port) throws RemoteException, InterruptedException {
 		setTracing();
-	}
-	
-	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
-		Registry rmiRegistry = LocateRegistry.getRegistry(clientHost, clientPort);
-		RMIRegistryLocated.newCase(this, clientHost, clientPort, rmiRegistry);
-		
-		return rmiRegistry;
+		RMITraceUtility.setTracing();
+		LocateRegistry.createRegistry(port);
+		RMIRegistryCreated.newCase(Main.class, port);
+		Thread.sleep(Long.MAX_VALUE);
 	}
 }
