@@ -7,10 +7,12 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
+import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import coupledsims.Simulation1;
 import coupledsims.Simulation2;
+import inputport.rpc.GIPCRegistry;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.IPCMechanism;
@@ -36,6 +38,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
 	private IPCMechanism ipcState;
+	private ICoupledServerSimulation serverGIPC;
 	
 	@Override
 	public void simulationCommand(String aCommand) {
@@ -89,6 +92,9 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		this.server = passedServer;
 	}
 	
+	public void setServerGIPC(ICoupledServerSimulation passedServer) {
+		this.serverGIPC = passedServer;
+	}
 	
 	private void initCustom (String[] args) {
 		setTracing();
@@ -120,6 +126,11 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		return this.configurer.setupConnection(clientHost, clientPort);
 	}
 	
+	public GIPCRegistry setupConnectionGIPC(String clientHost, int gIpcPort, String clientName){
+		
+		return this.configurer.setupConnectionGIPC(clientHost, gIpcPort, clientName);
+	}
+	
 	public ICoupledServerSimulation performLookup(Registry rmiRegistry) throws AccessException, RemoteException, NotBoundException {
 		ICoupledServerSimulation coupledServerSimulation = (ICoupledServerSimulation) rmiRegistry.lookup(broadcast.CoupledServerSimulation.SERVER_NAME);
 		//
@@ -127,6 +138,10 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		//
 		
 		return coupledServerSimulation;
+	}
+	
+	public ICoupledServerSimulation performLookupGIPC(GIPCRegistry gipcRegistry) {
+		return (ICoupledServerSimulation) gipcRegistry.lookup(ICoupledServerSimulation.class, CoupledServerSimulation.SERVER_NAME);
 	}
 	
 	@Override

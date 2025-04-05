@@ -6,6 +6,8 @@ import java.rmi.registry.Registry;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import broadcast.ICoupledServerSimulation;
+import inputport.rpc.GIPCLocateRegistry;
+import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
@@ -38,5 +40,11 @@ public class ClientConfigurer implements SimulationParametersListener {
 		RMIRegistryLocated.newCase(this, clientHost, clientPort, rmiRegistry);
 		
 		return rmiRegistry;
+	}
+	
+	public GIPCRegistry setupConnectionGIPC(String clientHost, int gipcPort, String clientName) {
+		GIPCRegistry gipcRegistry = GIPCLocateRegistry.getRegistry(clientHost, gipcPort, clientName);
+		
+		return gipcRegistry;
 	}
 }

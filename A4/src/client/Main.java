@@ -8,6 +8,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.ICoupledServerSimulation;
+import inputport.rpc.GIPCLocateRegistry;
+import inputport.rpc.GIPCRegistry;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 
@@ -21,6 +23,7 @@ public class Main {
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);
 		String clientName = ClientArgsProcessor.getClientName(args);
+		int gipcPort = ClientArgsProcessor.getGIPCPort(args);
 
 		// initialize object to do work
 		CoupledClientSimulation coupledClientSimulation = new CoupledClientSimulation();
@@ -39,6 +42,12 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// GIPC
+		GIPCRegistry gipcRegistry = coupledClientSimulation.setupConnectionGIPC(clientHost, gipcPort, clientName);
+		ICoupledServerSimulation coupledServerSimulation = coupledClientSimulation.performLookupGIPC(gipcRegistry);
+		coupledClientSimulation.setServerGIPC(coupledServerSimulation);
+
 		
 		// run the object after exporting it
 		coupledClientSimulation.startCustom(args);
