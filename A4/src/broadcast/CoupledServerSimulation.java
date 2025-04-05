@@ -28,6 +28,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
+	private IPCMechanism ipcState;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -120,6 +121,6 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public void performRebindGIPC(GIPCRegistry gipcRegistry) {
 		this.configurer.performRebindGIPC(gipcRegistry, this);
-	}	
+	}
  
 }
