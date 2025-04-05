@@ -28,7 +28,6 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
-	private IPCMechanism ipcState;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -57,8 +56,6 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	@Override
 	public void alterIpc(IPCMechanism ipcState, String sendingClientName) {
 		List<ICoupledClientSimulation> clients = this.configurer.getClients();
-		
-		this.ipcState = ipcState;
 		
 		for (ICoupledClientSimulation client : clients) {
 			try {
@@ -145,7 +142,6 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
-		this.ipcState = newValue;
 		alterIpc(newValue, "This is not a client and should not exist");
 	}
  
