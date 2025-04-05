@@ -122,6 +122,14 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		commandProcessor1.processCommand(command);	
 	}
 	
+	@Override
+	public void notifyNewCommandGIPC(String command) {
+		ProposalLearnedNotificationReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		ProposedStateSet.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		
+		commandProcessor1.processCommand(command);	
+	}
+	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
 		
 		return this.configurer.setupConnection(clientHost, clientPort);
