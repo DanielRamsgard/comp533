@@ -141,5 +141,12 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	public void performRebindGIPC(GIPCRegistry gipcRegistry) {
 		this.configurer.performRebindGIPC(gipcRegistry, this);
 	}
+	
+	// happens locally so not a property change listener
+	@Override
+	public void ipcMechanism(IPCMechanism newValue) {
+		this.ipcState = newValue;
+		alterIpc(newValue, "This is not a client and should not exist");
+	}
  
 }

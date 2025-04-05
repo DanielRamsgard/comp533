@@ -46,32 +46,21 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	}
 	
 	@Override
-	public void propertyChange(PropertyChangeEvent anEvent) {	
-		String name = anEvent.getPropertyName();
-		if (name.equals("InputString")) {
-			String newCommand = (String) anEvent.getNewValue();
-			
-			LocalCommandObserved.newCase(this, newCommand);
-			ProposalMade.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
-			RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
-			
-			try {
-				server.broadcast(newCommand, clientName);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else if (name.equals("ipc_mechanism")) {
-			IPCMechanism newIPC = (IPCMechanism) anEvent.getNewValue();
-			
-			try {
-				server.alterIpc(newIPC, clientName);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
+	public void propertyChange(PropertyChangeEvent anEvent) {
+		if (anEvent.getPropertyName().equals("InputString")) return;
+		
+		String newCommand = (String) anEvent.getNewValue();
+		
+		LocalCommandObserved.newCase(this, newCommand);
+		ProposalMade.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
+		RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
+		
+		try {
+			server.broadcast(newCommand, clientName);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	
 		
 	}
 	

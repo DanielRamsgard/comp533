@@ -157,6 +157,19 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		return ipcState;
 	}
 	
+	// happens locally so not a property change listener
+	@Override
+	public void ipcMechanism(IPCMechanism newValue) {
+		this.ipcState = newValue;
+		try {
+			server.alterIpc(newValue, clientName);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// the server invokes this method
 	@Override
 	public void notifyIPCUpdate(IPCMechanism ipcState) {
 		this.ipcState = ipcState;
