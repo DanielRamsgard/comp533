@@ -3,7 +3,7 @@ package client;
 import util.interactiveMethodInvocation.IPCMechanism;
 
 public interface IGeneralizedIPCClient {
-	void notifyNewCommandGIPC(IPCMechanism ipcState);
-	String getClientName();
+	void notifyIPCUpdate(IPCMechanism ipcState);
 	void notifyNewCommandGIPC(String command);
+	String getClientName();
 }

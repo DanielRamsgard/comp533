@@ -55,16 +55,22 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	@Override
-	public void broadcastGIPC(IPCMechanism ipcState, String sendingClientName) {
-		List<IGeneralizedIPCClient> clients = this.configurer.getClientsGIPC();
+	public void alterIpc(IPCMechanism ipcState, String sendingClientName) {
+		List<ICoupledClientSimulation> clients = this.configurer.getClients();
 		
-		for (IGeneralizedIPCClient client : clients) {
-			if (!client.getClientName().equals(sendingClientName)) {
-				client.notifyNewCommandGIPC(ipcState);
+		this.ipcState = ipcState;
+		
+		for (ICoupledClientSimulation client : clients) {
+			try {
+				if (!client.getClientName().equals(sendingClientName)) {
+					client.notifyIPCUpdate(ipcState);
+				}
+				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		
-		// possibly set new state
 	}
 	
 	@Override
@@ -82,6 +88,19 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public void broadcastGIPC(String command, String sendingClientName) {
+		RemoteProposeRequestReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		ProposalLearnedNotificationSent.newCase(this, CommunicationStateNames.COMMAND, -1, command);
+		List<IGeneralizedIPCClient> clients = this.configurer.getClientsGIPC();
+		
+		for (IGeneralizedIPCClient client : clients) {
+			if (!client.getClientName().equals(sendingClientName)) {
+				client.notifyNewCommandGIPC(command);
 			}
 		}
 	}

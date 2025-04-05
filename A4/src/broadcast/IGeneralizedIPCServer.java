@@ -5,5 +5,5 @@ import util.interactiveMethodInvocation.IPCMechanism;
 
 public interface IGeneralizedIPCServer {
 	void registerClientGIPC(IGeneralizedIPCClient o);
-	void broadcastGIPC(IPCMechanism ipcState, String sendingClientName);
+	void broadcastGIPC(String command, String sendingClientName);
 }

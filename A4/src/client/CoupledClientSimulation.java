@@ -127,7 +127,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		ProposalLearnedNotificationReceived.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		ProposedStateSet.newCase(this, CommunicationStateNames.COMMAND, -1, command);
 		
-		commandProcessor1.processCommand(command);	
+		commandProcessor1.processCommand(command);
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
@@ -153,17 +153,12 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		return (IGeneralizedIPCServer) gipcRegistry.lookup(ICoupledServerSimulation.class, CoupledServerSimulation.SERVER_NAME);
 	}
 	
-	@Override
-	public void ipcMechanism(IPCMechanism newValue) {
-		this.ipcState = newValue;
-	}
-	
 	public IPCMechanism getIpcState() {
 		return ipcState;
 	}
-
+	
 	@Override
-	public void notifyNewCommandGIPC(IPCMechanism ipcState) {
+	public void notifyIPCUpdate(IPCMechanism ipcState) {
 		this.ipcState = ipcState;
 	}
 }
