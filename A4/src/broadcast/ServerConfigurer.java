@@ -23,7 +23,7 @@ import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI})
+@Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
 public class ServerConfigurer implements SimulationParametersListener {
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;

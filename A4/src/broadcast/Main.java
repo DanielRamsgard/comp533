@@ -10,10 +10,25 @@ import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
+import util.trace.bean.BeanTraceUtility;
+import util.trace.factories.FactoryTraceUtility;
+import util.trace.misc.ThreadDelayed;
+import util.trace.port.consensus.ConsensusTraceUtility;
+import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
+import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.SERVER, DistributedTags.RMI})
+@Tags({DistributedTags.SERVER, DistributedTags.RMI, DistributedTags.GIPC})
 public class Main {
 	public static void main (String[] args) {
+		FactoryTraceUtility.setTracing();
+		BeanTraceUtility.setTracing();
+		RMITraceUtility.setTracing();
+		ConsensusTraceUtility.setTracing();
+		ThreadDelayed.enablePrint();
+		GIPCRPCTraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
+		
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
 		int serverPort = ServerArgsProcessor.getRegistryPort(args);

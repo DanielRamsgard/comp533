@@ -18,7 +18,7 @@ import util.trace.port.nio.NIOTraceUtility;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI})
+@Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
 public class ClientConfigurer implements SimulationParametersListener {
 	
 	protected void setTracing() {

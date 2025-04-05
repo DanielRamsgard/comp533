@@ -11,15 +11,30 @@ import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
+import util.trace.bean.BeanTraceUtility;
+import util.trace.factories.FactoryTraceUtility;
+import util.trace.misc.ThreadDelayed;
+import util.trace.port.consensus.ConsensusTraceUtility;
+import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
-
+import util.trace.port.rpc.rmi.RMITraceUtility;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 
-@Tags({DistributedTags.CLIENT, DistributedTags.RMI})
+@Tags({DistributedTags.CLIENT, DistributedTags.RMI, DistributedTags.GIPC})
 public class Main {
 	public static void main (String[] args) throws NotBoundException {
+		FactoryTraceUtility.setTracing();
+		BeanTraceUtility.setTracing();
+		RMITraceUtility.setTracing();
+		ConsensusTraceUtility.setTracing();
+		ThreadDelayed.enablePrint();
+		GIPCRPCTraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
+
+		
 		// initialize variables to work with RMI
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);

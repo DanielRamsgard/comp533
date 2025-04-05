@@ -33,7 +33,7 @@ import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI})
+@Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
 public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation, IGeneralizedIPCClient {
 	private String clientName;
 	private ClientConfigurer configurer;

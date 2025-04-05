@@ -27,7 +27,7 @@ import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.nio.NIOTraceUtility;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
+@Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
