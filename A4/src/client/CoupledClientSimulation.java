@@ -13,6 +13,7 @@ import coupledsims.Simulation1;
 import coupledsims.Simulation2;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
+import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.misc.ThreadSupport;
 import util.tags.DistributedTags;
@@ -34,6 +35,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
+	private IPCMechanism ipcState;
 	
 	@Override
 	public void simulationCommand(String aCommand) {
@@ -57,6 +59,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public CoupledClientSimulation() {
 		setTracing();
+		this.ipcState = IPCMechanism.GIPC;
 		this.configurer = new ClientConfigurer();
 	}
 	
@@ -124,5 +127,14 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		//
 		
 		return coupledServerSimulation;
+	}
+	
+	@Override
+	public void ipcMechanism(IPCMechanism newValue) {
+		this.ipcState = newValue;
+	}
+	
+	public IPCMechanism getIpcState() {
+		return ipcState;
 	}
 }
