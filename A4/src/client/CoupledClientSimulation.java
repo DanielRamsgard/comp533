@@ -102,7 +102,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		processArgsCustom(args);
 		//Ideally the prefixes should be main arguments
 		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);
-		simulation1Coupler = new OutCoupler(commandProcessor1, clientName, server);
+		simulation1Coupler = new OutCoupler(this, commandProcessor1, clientName, server, serverGIPC);
 		commandProcessor1.addPropertyChangeListener(simulation1Coupler);
 	}
 	

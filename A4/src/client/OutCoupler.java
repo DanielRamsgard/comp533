@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import broadcast.ICoupledServerSimulation;
+import broadcast.IGeneralizedIPCServer;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
@@ -26,6 +27,8 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	private HalloweenCommandProcessor processer;
 	private String clientName;
 	private ICoupledServerSimulation server;
+	private IGeneralizedIPCServer serverGIPC;
+	private CoupledClientSimulation client;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -38,11 +41,13 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	}
 
 
-	public OutCoupler(HalloweenCommandProcessor passedProcesser, String passedClientName, ICoupledServerSimulation passedServer) {
+	public OutCoupler(CoupledClientSimulation client, HalloweenCommandProcessor passedProcesser, String passedClientName, ICoupledServerSimulation passedServer, IGeneralizedIPCServer serverGIPC) {
 		setTracing();
 		this.processer = passedProcesser;
 		this.clientName = passedClientName;
 		this.server = passedServer;
+		this.serverGIPC = serverGIPC;
+		this.client = client;
 	}
 	
 	@Override
@@ -55,11 +60,17 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 		ProposalMade.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		RemoteProposeRequestSent.newCase(this, CommunicationStateNames.COMMAND, -1, newCommand);
 		
-		try {
-			server.broadcast(newCommand, clientName);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// do GIPC or do RMI based on value
+		IPCMechanism ipcState = client.getIpcState();
+		if (ipcState == IPCMechanism.RMI) {
+			try {
+				server.broadcast(newCommand, clientName);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (ipcState == IPCMechanism.GIPC) {
+			serverGIPC.broadcastGIPC(newCommand, clientName);
 		}
 		
 	}
