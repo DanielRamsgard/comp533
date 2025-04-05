@@ -63,7 +63,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public CoupledClientSimulation() {
 		setTracing();
-		this.ipcState = IPCMechanism.RMI;
+		this.ipcState = IPCMechanism.GIPC;
 		this.configurer = new ClientConfigurer();
 	}
 	
