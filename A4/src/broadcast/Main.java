@@ -6,7 +6,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import assignments.util.mainArgs.ServerArgsProcessor;
-
+import inputport.rpc.GIPCLocateRegistry;
+import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 
@@ -16,6 +17,7 @@ public class Main {
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
 		int serverPort = ServerArgsProcessor.getRegistryPort(args);
+		int serverGIPCPort = ServerArgsProcessor.getGIPCServerPort(args);
 
 		// initialize object to do work
 		CoupledServerSimulation coupledServerSimulation = new CoupledServerSimulation();
@@ -30,6 +32,10 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// GIPC
+		GIPCRegistry gipcRegistry = coupledServerSimulation.setupConnectionGIPC(serverGIPCPort);
+		coupledServerSimulation.performRebindGIPC(gipcRegistry);
 		
 		// run the object after exporting it
 		coupledServerSimulation.startCustom(args);

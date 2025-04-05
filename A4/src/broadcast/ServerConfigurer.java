@@ -9,6 +9,8 @@ import java.util.List;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import client.ICoupledClientSimulation;
+import inputport.rpc.GIPCLocateRegistry;
+import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
@@ -52,10 +54,20 @@ public class ServerConfigurer implements SimulationParametersListener {
 		RMIObjectRegistered.newCase(this, serverName, iCoupledServerSimulation, rmiRegistry);
 	}
 	
+	public void performRebindGIPC(GIPCRegistry gipcRegistry, ICoupledServerSimulation iCoupledServerSimulation) {
+		gipcRegistry.rebind(CoupledServerSimulation.SERVER_NAME, iCoupledServerSimulation);
+	}
+	
 	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {
 		Registry rmiRegistry = LocateRegistry.getRegistry(serverHost, serverPort);
 		RMIRegistryLocated.newCase(this, serverHost, serverPort, rmiRegistry);
 		
 		return rmiRegistry;
+	}
+	
+	public GIPCRegistry setupConnectionGIPC(int serverPortGIPC) {
+		GIPCRegistry gipcRegistry = GIPCLocateRegistry.createRegistry(serverPortGIPC);
+		
+		return gipcRegistry;
 	}
 }

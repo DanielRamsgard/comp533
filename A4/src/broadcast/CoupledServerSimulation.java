@@ -7,6 +7,8 @@ import java.util.List;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import client.ICoupledClientSimulation;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
+import inputport.rpc.GIPCLocateRegistry;
+import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
@@ -89,8 +91,16 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		return this.configurer.setupConnection(serverHost, serverPort);
 	}
 	
+	public GIPCRegistry setupConnectionGIPC(int serverGIPCPort) {
+		return this.configurer.setupConnectionGIPC(serverGIPCPort);
+	}
+	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation) throws AccessException, RemoteException {
 		this.configurer.performRebind(rmiRegistry, iCoupledServerSimulation, SERVER_NAME);
 	}
-
+	
+	public void performRebindGIPC(GIPCRegistry gipcRegistry) {
+		this.configurer.performRebindGIPC(gipcRegistry, this);
+	}
+ 
 }
