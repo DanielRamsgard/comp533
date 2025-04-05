@@ -63,7 +63,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public CoupledClientSimulation() {
 		setTracing();
-		this.ipcState = IPCMechanism.GIPC;
+		this.ipcState = IPCMechanism.RMI;
 		this.configurer = new ClientConfigurer();
 	}
 	
@@ -150,7 +150,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	public IGeneralizedIPCServer performLookupGIPC(GIPCRegistry gipcRegistry) {
-		return (IGeneralizedIPCServer) gipcRegistry.lookup(ICoupledServerSimulation.class, CoupledServerSimulation.SERVER_NAME);
+		return (IGeneralizedIPCServer) gipcRegistry.lookup(IGeneralizedIPCServer.class, CoupledServerSimulation.SERVER_NAME);
 	}
 	
 	public IPCMechanism getIpcState() {

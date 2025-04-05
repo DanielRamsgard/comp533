@@ -52,7 +52,7 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent anEvent) {
-		if (anEvent.getPropertyName().equals("InputString")) return;
+		if (!anEvent.getPropertyName().equals("InputString")) return;
 		
 		String newCommand = (String) anEvent.getNewValue();
 		
