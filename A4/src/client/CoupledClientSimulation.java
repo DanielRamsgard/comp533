@@ -25,6 +25,7 @@ import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.consensus.ProposalLearnedNotificationReceived;
+import util.trace.port.consensus.ProposalMade;
 import util.trace.port.consensus.ProposedStateSet;
 import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.nio.NIOTraceUtility;
@@ -40,6 +41,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	HalloweenCommandProcessor commandProcessor1;
 	private IPCMechanism ipcState;
 	private IGeneralizedIPCServer serverGIPC;
+	
 	
 	@Override
 	public void simulationCommand(String aCommand) {
@@ -65,6 +67,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		setTracing();
 		this.ipcState = IPCMechanism.GIPC;
 		this.configurer = new ClientConfigurer();
+		super.broadcastMetaState = true;		
 	}
 	
 	@Override
@@ -160,18 +163,24 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
-		this.ipcState = newValue;
+		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
+		
 		try {
 			server.alterIpc(newValue, clientName);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
+		this.ipcState = newValue;
 	}
 	
 	// the server invokes this method
 	@Override
 	public void notifyIPCUpdate(IPCMechanism ipcState) {
+		ProposalLearnedNotificationReceived.newCase(this, "ipc_mechanism", -1, ipcState);
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
 		this.ipcState = ipcState;
 	}
 }

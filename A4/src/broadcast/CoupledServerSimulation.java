@@ -18,7 +18,10 @@ import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
+import util.trace.port.consensus.ProposalLearnedNotificationReceived;
 import util.trace.port.consensus.ProposalLearnedNotificationSent;
+import util.trace.port.consensus.ProposalMade;
+import util.trace.port.consensus.ProposedStateSet;
 import util.trace.port.consensus.RemoteProposeRequestReceived;
 import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.nio.NIOTraceUtility;
@@ -28,6 +31,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
+	private IPCMechanism ipcState;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -42,6 +46,7 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	public CoupledServerSimulation() {
 		setTracing();
 		this.configurer = new ServerConfigurer();
+		super.broadcastMetaState = true;
 	}
 	
 	@Override
@@ -55,6 +60,8 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	@Override
 	public void alterIpc(IPCMechanism ipcState, String sendingClientName) {
+		RemoteProposeRequestReceived.newCase(this, "ipc_mechanism", -1, ipcState);
+		ProposalLearnedNotificationSent.newCase(this, "ipc_mechanism", -1, ipcState);
 		List<ICoupledClientSimulation> clients = this.configurer.getClients();
 		
 		for (ICoupledClientSimulation client : clients) {
@@ -68,6 +75,9 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 				e.printStackTrace();
 			}
 		}
+		
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
+		this.ipcState = ipcState;
 	}
 	
 	@Override
@@ -142,7 +152,21 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
-		alterIpc(newValue, "This is not a client and should not exist");
+		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
+		List<ICoupledClientSimulation> clients = this.configurer.getClients();
+		
+		for (ICoupledClientSimulation client : clients) {
+			try {
+					client.notifyIPCUpdate(ipcState);
+				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
+		this.ipcState = newValue;
 	}
  
 }
