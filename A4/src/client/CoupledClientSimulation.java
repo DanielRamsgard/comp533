@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
+import broadcast.IGeneralizedIPCServer;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import coupledsims.Simulation1;
 import coupledsims.Simulation2;
@@ -32,13 +33,13 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI})
-public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation {
+public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation, IGeneralizedIPCClient {
 	private String clientName;
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
 	private IPCMechanism ipcState;
-	private ICoupledServerSimulation serverGIPC;
+	private IGeneralizedIPCServer serverGIPC;
 	
 	@Override
 	public void simulationCommand(String aCommand) {
@@ -92,7 +93,7 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		this.server = passedServer;
 	}
 	
-	public void setServerGIPC(ICoupledServerSimulation passedServer) {
+	public void setServerGIPC(IGeneralizedIPCServer passedServer) {
 		this.serverGIPC = passedServer;
 	}
 	
@@ -140,8 +141,8 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		return coupledServerSimulation;
 	}
 	
-	public ICoupledServerSimulation performLookupGIPC(GIPCRegistry gipcRegistry) {
-		return (ICoupledServerSimulation) gipcRegistry.lookup(ICoupledServerSimulation.class, CoupledServerSimulation.SERVER_NAME);
+	public IGeneralizedIPCServer performLookupGIPC(GIPCRegistry gipcRegistry) {
+		return (IGeneralizedIPCServer) gipcRegistry.lookup(ICoupledServerSimulation.class, CoupledServerSimulation.SERVER_NAME);
 	}
 	
 	@Override
@@ -151,5 +152,10 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public IPCMechanism getIpcState() {
 		return ipcState;
+	}
+
+	@Override
+	public void notifyNewCommandGIPC(IPCMechanism ipcState) {
+		this.ipcState = ipcState;
 	}
 }

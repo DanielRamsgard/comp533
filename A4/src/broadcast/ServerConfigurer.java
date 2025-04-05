@@ -9,6 +9,7 @@ import java.util.List;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import client.ICoupledClientSimulation;
+import client.IGeneralizedIPCClient;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
@@ -25,6 +26,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 @Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI})
 public class ServerConfigurer implements SimulationParametersListener {
 	private List<ICoupledClientSimulation> clients;
+	private List<IGeneralizedIPCClient> clientsGIPC;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -39,14 +41,23 @@ public class ServerConfigurer implements SimulationParametersListener {
 	public ServerConfigurer() {
 		setTracing();
 		this.clients = new ArrayList<>();
+		this.clientsGIPC = new ArrayList<>();
 	}
 	
 	public void addClient(ICoupledClientSimulation o) {
 		clients.add(o);
 	}
 	
+	public void addClientGIPC(IGeneralizedIPCClient o) {
+		clientsGIPC.add(o);
+	}
+	
 	public List<ICoupledClientSimulation> getClients() {
 		return clients;
+	}
+	
+	public List<IGeneralizedIPCClient> getClientsGIPC() {
+		return clientsGIPC;
 	}
 	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation, String serverName) throws AccessException, RemoteException {

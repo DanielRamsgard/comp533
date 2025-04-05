@@ -6,10 +6,12 @@ import java.util.List;
 
 import assignments.util.mainArgs.ClientArgsProcessor;
 import client.ICoupledClientSimulation;
+import client.IGeneralizedIPCClient;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
+import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
@@ -23,7 +25,7 @@ import util.trace.port.nio.NIOTraceUtility;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI})
-public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation {
+public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	
@@ -45,6 +47,23 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	@Override
 	public void registerClient(ICoupledClientSimulation o) {
 		this.configurer.addClient(o);
+	}
+	
+	public void registerClientGIPC(IGeneralizedIPCClient o) {
+		this.configurer.addClientGIPC(o);
+	}
+	
+	@Override
+	public void broadcastGIPC(IPCMechanism ipcState, String sendingClientName) {
+		List<IGeneralizedIPCClient> clients = this.configurer.getClientsGIPC();
+		
+		for (IGeneralizedIPCClient client : clients) {
+			if (!client.getClientName().equals(sendingClientName)) {
+				client.notifyNewCommandGIPC(ipcState);
+			}
+		}
+		
+		// possibly set new state
 	}
 	
 	@Override
@@ -101,6 +120,6 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public void performRebindGIPC(GIPCRegistry gipcRegistry) {
 		this.configurer.performRebindGIPC(gipcRegistry, this);
-	}
+	}	
  
 }
