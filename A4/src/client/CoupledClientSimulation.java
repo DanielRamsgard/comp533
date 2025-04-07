@@ -6,20 +6,25 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
+import coupledsims.Simulation;
 import coupledsims.Simulation1;
 import coupledsims.Simulation2;
 import inputport.rpc.GIPCRegistry;
+import main.BeauAndersonFinalProject;
+import port.ATracingConnectionListener;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.misc.ThreadSupport;
 import util.tags.DistributedTags;
+import util.trace.bean.BeanTraceUtility;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
@@ -29,18 +34,20 @@ import util.trace.port.consensus.ProposalMade;
 import util.trace.port.consensus.ProposedStateSet;
 import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
 import util.trace.port.rpc.rmi.RMIObjectLookedUp;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
-public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledClientSimulation, IGeneralizedIPCClient {
+public class CoupledClientSimulation extends AnAbstractSimulationParametersBean implements ICoupledClientSimulation, IGeneralizedIPCClient {
 	private String clientName;
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
 	private IPCMechanism ipcState;
 	private IGeneralizedIPCServer serverGIPC;
+	private OutCoupler simulation1Coupler;
 	
 	
 	@Override
@@ -59,6 +66,8 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		FactoryTraceUtility.setTracing();		
 		ConsensusTraceUtility.setTracing();
 		ThreadDelayed.enablePrint();
+		BeanTraceUtility.setTracing();
+		GIPCRPCTraceUtility.setTracing();
 		trace(true);
 	}
 
@@ -98,6 +107,17 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	
 	public void setServerGIPC(IGeneralizedIPCServer passedServer) {
 		this.serverGIPC = passedServer;
+	}
+	
+	protected HalloweenCommandProcessor createSimulation1(String aPrefix) {
+		return 	BeauAndersonFinalProject.createSimulation(
+					aPrefix,
+					Simulation1.SIMULATION1_X_OFFSET, 
+					Simulation.SIMULATION_Y_OFFSET, 
+					Simulation.SIMULATION_WIDTH, 
+					Simulation.SIMULATION_HEIGHT, 
+					Simulation1.SIMULATION1_X_OFFSET, 
+					Simulation.SIMULATION_Y_OFFSET);
 	}
 	
 	private void initCustom (String[] args) {
@@ -153,7 +173,11 @@ public class CoupledClientSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	public IGeneralizedIPCServer performLookupGIPC(GIPCRegistry gipcRegistry) {
-		return (IGeneralizedIPCServer) gipcRegistry.lookup(IGeneralizedIPCServer.class, CoupledServerSimulation.SERVER_NAME);
+		IGeneralizedIPCServer retServer = (IGeneralizedIPCServer) gipcRegistry.lookup(IGeneralizedIPCServer.class, CoupledServerSimulation.SERVER_NAME);
+		
+		gipcRegistry.getInputPort().addConnectionListener(new ATracingConnectionListener(gipcRegistry.getInputPort()));
+		
+		return retServer;
 	}
 	
 	public IPCMechanism getIpcState() {

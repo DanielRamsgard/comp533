@@ -4,7 +4,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.List;
 
+import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.mainArgs.ClientArgsProcessor;
+import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
 import client.IGeneralizedIPCClient;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
@@ -14,6 +16,7 @@ import util.annotations.Tags;
 import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.bean.BeanTraceUtility;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
@@ -25,10 +28,11 @@ import util.trace.port.consensus.ProposedStateSet;
 import util.trace.port.consensus.RemoteProposeRequestReceived;
 import util.trace.port.consensus.communication.CommunicationStateNames;
 import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
-public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimulations implements ICoupledServerSimulation, IGeneralizedIPCServer {
+public class CoupledServerSimulation extends AnAbstractSimulationParametersBean implements ICoupledServerSimulation, IGeneralizedIPCServer {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	private IPCMechanism ipcState;
@@ -39,6 +43,8 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 		NIOTraceUtility.setTracing();
 		FactoryTraceUtility.setTracing();		
 		ConsensusTraceUtility.setTracing();
+		BeanTraceUtility.setTracing();
+		GIPCRPCTraceUtility.setTracing();
 		ThreadDelayed.enablePrint();
 		trace(true);
 	}
@@ -113,15 +119,9 @@ public class CoupledServerSimulation extends AStandAloneTwoCoupledHalloweenSimul
 	}
 	
 	private void processArgsCustom(String[] args) {	
-		System.out.println("Registry host:" + ClientArgsProcessor.getRegistryHost(args));
-		System.out.println("Registry port:" + ClientArgsProcessor.getRegistryPort(args));
-		System.out.println("Server host:" + ClientArgsProcessor.getServerHost(args));
-		System.out.println("Headless:" + ClientArgsProcessor.getHeadless(args));
-		System.out.println("Client name:" + ClientArgsProcessor.getClientName(args));
-
-		// Make sure you set this property when processing args
-		System.setProperty("java.awt.headless", ClientArgsProcessor.getHeadless(args));
-		
+		System.out.println("Registry host:" + ServerArgsProcessor.getRegistryHost(args));
+		System.out.println("Registry port:" + ServerArgsProcessor.getRegistryPort(args));
+		System.out.println("Server host:" + ServerArgsProcessor.getGIPCServerPort(args));
 	}
 	
 	public void startCustom(String[] args) {

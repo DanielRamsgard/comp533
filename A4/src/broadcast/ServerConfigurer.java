@@ -12,6 +12,7 @@ import client.ICoupledClientSimulation;
 import client.IGeneralizedIPCClient;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
+import port.ATracingConnectionListener;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 import util.trace.factories.FactoryTraceUtility;
@@ -19,6 +20,7 @@ import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCRegistryCreated;
 import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
@@ -61,12 +63,12 @@ public class ServerConfigurer implements SimulationParametersListener {
 	}
 	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation, String serverName) throws AccessException, RemoteException {
-		rmiRegistry.rebind(serverName, iCoupledServerSimulation);
-		RMIObjectRegistered.newCase(this, serverName, iCoupledServerSimulation, rmiRegistry);
+		rmiRegistry.rebind(serverName, iCoupledServerSimulation);		
 	}
 	
 	public void performRebindGIPC(GIPCRegistry gipcRegistry, ICoupledServerSimulation iCoupledServerSimulation) {
 		gipcRegistry.rebind(CoupledServerSimulation.SERVER_NAME, iCoupledServerSimulation);
+		gipcRegistry.getInputPort().addConnectionListener(new ATracingConnectionListener(gipcRegistry.getInputPort()));
 	}
 	
 	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {

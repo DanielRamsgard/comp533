@@ -16,6 +16,7 @@ import util.trace.misc.ThreadDelayed;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.nio.NIOTraceUtility;
 import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
+import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER, DistributedTags.RMI, DistributedTags.GIPC})
@@ -28,6 +29,9 @@ public class Main {
 		ThreadDelayed.enablePrint();
 		GIPCRPCTraceUtility.setTracing();
 		NIOTraceUtility.setTracing();
+		
+		System.setProperty("java.awt.headless","true");
+		System.setProperty("java.rmi.server.hostname", "localhost");
 		
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
@@ -43,14 +47,16 @@ public class Main {
 			ICoupledServerSimulation coupledServerSimulationProxy = (ICoupledServerSimulation) UnicastRemoteObject.exportObject(coupledServerSimulation, 0);
 			coupledServerSimulation.performRebind(rmiRegistry, coupledServerSimulationProxy);
 			
+			// GIPC
+			GIPCRegistry gipcRegistry = coupledServerSimulation.setupConnectionGIPC(serverGIPCPort);
+			RMIObjectRegistered.newCase(Main.class, "SERVER", coupledServerSimulationProxy, rmiRegistry);
+			coupledServerSimulation.performRebindGIPC(gipcRegistry);
+			
+			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// GIPC
-		GIPCRegistry gipcRegistry = coupledServerSimulation.setupConnectionGIPC(serverGIPCPort);
-		coupledServerSimulation.performRebindGIPC(gipcRegistry);
 		
 		// run the object after exporting it
 		coupledServerSimulation.startCustom(args);

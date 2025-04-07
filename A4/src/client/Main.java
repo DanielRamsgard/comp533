@@ -33,6 +33,9 @@ public class Main {
 		ThreadDelayed.enablePrint();
 		GIPCRPCTraceUtility.setTracing();
 		NIOTraceUtility.setTracing();
+		
+		System.setProperty("java.awt.headless","true");
+		System.setProperty("java.rmi.server.hostname", "localhost");
 
 		
 		// initialize variables to work with RMI
