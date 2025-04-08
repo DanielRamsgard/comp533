@@ -26,23 +26,11 @@ import util.tags.DistributedTags;
 @Tags({DistributedTags.CLIENT, DistributedTags.RMI, DistributedTags.GIPC})
 public class Main {
 	public static void main (String[] args) throws NotBoundException {
-		FactoryTraceUtility.setTracing();
-		BeanTraceUtility.setTracing();
-		RMITraceUtility.setTracing();
-		ConsensusTraceUtility.setTracing();
-		ThreadDelayed.enablePrint();
-		GIPCRPCTraceUtility.setTracing();
-		NIOTraceUtility.setTracing();
-		
-		System.setProperty("java.awt.headless","true");
-		System.setProperty("java.rmi.server.hostname", "localhost");
-
-		
 		// initialize variables to work with RMI
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);
 		String clientName = ClientArgsProcessor.getClientName(args);
-		int gipcPort = ClientArgsProcessor.getGIPCPort(args);
+		int gipcPort = ClientArgsProcessor.getGIPCPort(args) + 1;
 
 		// initialize object to do work
 		CoupledClientSimulation coupledClientSimulation = new CoupledClientSimulation();

@@ -62,6 +62,7 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 		
 		// do GIPC or do RMI based on value
 		IPCMechanism ipcState = client.getIpcState();
+		
 		if (ipcState == IPCMechanism.RMI) {
 			try {
 				server.broadcast(newCommand, clientName);

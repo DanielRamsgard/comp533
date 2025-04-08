@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
+import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
@@ -24,6 +25,7 @@ import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.misc.ThreadSupport;
 import util.tags.DistributedTags;
+import util.trace.Tracer;
 import util.trace.bean.BeanTraceUtility;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
@@ -40,12 +42,11 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
-public class CoupledClientSimulation extends AnAbstractSimulationParametersBean implements ICoupledClientSimulation, IGeneralizedIPCClient {
+public class CoupledClientSimulation extends AnAbstractSimulationParametersBean implements ICoupledClientSimulation, IGeneralizedIPCClient, SimulationParametersListener {
 	private String clientName;
 	private ClientConfigurer configurer;
 	private ICoupledServerSimulation server;
 	HalloweenCommandProcessor commandProcessor1;
-	private IPCMechanism ipcState;
 	private IGeneralizedIPCServer serverGIPC;
 	private OutCoupler simulation1Coupler;
 	
@@ -59,24 +60,29 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		commandProcessor1.setInputString(aCommand);
 	}
 	
+	@Override
+	public void trace(boolean value) {
+		super.trace(value);
+		Tracer.showInfo(isTrace());
+	}
+	
 	protected void setTracing() {
-		PortTraceUtility.setTracing();
+		FactoryTraceUtility.setTracing();
+		BeanTraceUtility.setTracing();
 		RMITraceUtility.setTracing();
-		NIOTraceUtility.setTracing();
-		FactoryTraceUtility.setTracing();		
 		ConsensusTraceUtility.setTracing();
 		ThreadDelayed.enablePrint();
-		BeanTraceUtility.setTracing();
 		GIPCRPCTraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
 		trace(true);
 	}
 
 	
 	public CoupledClientSimulation() {
 		setTracing();
-		this.ipcState = IPCMechanism.GIPC;
+		setIPCMechanism(IPCMechanism.RMI);
 		this.configurer = new ClientConfigurer();
-		super.broadcastMetaState = true;		
+		broadcastMetaState(true);
 	}
 	
 	@Override
@@ -181,30 +187,40 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public IPCMechanism getIpcState() {
-		return ipcState;
+		return getIPCMechanism();
 	}
 	
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
+		System.out.println("ipcMechanism invoked with value: " + newValue);
+
 		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
 		
-		try {
-			server.alterIpc(newValue, clientName);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (isBroadcastMetaState()) {
+			try {
+				server.alterIpc(newValue, clientName);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
+			setIPCMechanism(newValue);
 		}
-		
-		ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
-		this.ipcState = newValue;
+				
 	}
 	
 	// the server invokes this method
 	@Override
-	public void notifyIPCUpdate(IPCMechanism ipcState) {
-		ProposalLearnedNotificationReceived.newCase(this, "ipc_mechanism", -1, ipcState);
-		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
-		this.ipcState = ipcState;
+	public void notifyIPCUpdate(IPCMechanism newIpcState) {
+		ProposalLearnedNotificationReceived.newCase(this, "ipc_mechanism", -1, newIpcState);
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, newIpcState);
+		setIPCMechanism(newIpcState);
+	}
+	
+	@Override
+	public void broadcastMetaState(boolean newValue) {
+		setBroadcastMetaState(newValue);
 	}
 }

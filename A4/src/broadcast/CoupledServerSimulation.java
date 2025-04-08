@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 import java.util.List;
 
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
+import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
@@ -16,6 +17,7 @@ import util.annotations.Tags;
 import util.interactiveMethodInvocation.IPCMechanism;
 import util.interactiveMethodInvocation.SimulationParametersControllerFactory;
 import util.tags.DistributedTags;
+import util.trace.Tracer;
 import util.trace.bean.BeanTraceUtility;
 import util.trace.factories.FactoryTraceUtility;
 import util.trace.misc.ThreadDelayed;
@@ -32,20 +34,28 @@ import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_REMOTE_OBJECT, DistributedTags.RMI, DistributedTags.GIPC})
-public class CoupledServerSimulation extends AnAbstractSimulationParametersBean implements ICoupledServerSimulation, IGeneralizedIPCServer {
+public class CoupledServerSimulation extends AnAbstractSimulationParametersBean implements ICoupledServerSimulation, IGeneralizedIPCServer, SimulationParametersListener {
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	private IPCMechanism ipcState;
 	
+	@Override
+	public void trace(boolean value) {
+		super.trace(value);
+		Tracer.showInfo(isTrace());
+	}
+	
 	protected void setTracing() {
-		PortTraceUtility.setTracing();
-		RMITraceUtility.setTracing();
-		NIOTraceUtility.setTracing();
-		FactoryTraceUtility.setTracing();		
-		ConsensusTraceUtility.setTracing();
+		FactoryTraceUtility.setTracing();
 		BeanTraceUtility.setTracing();
-		GIPCRPCTraceUtility.setTracing();
+		RMITraceUtility.setTracing();
+		ConsensusTraceUtility.setTracing();
 		ThreadDelayed.enablePrint();
+		GIPCRPCTraceUtility.setTracing();
+		NIOTraceUtility.setTracing();
+		PortTraceUtility.setTracing();
+		System.setProperty("java.awt.headless","true");
+		System.setProperty("java.rmi.server.hostname", "localhost");
 		trace(true);
 	}
 	
@@ -63,6 +73,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	public void registerClientGIPC(IGeneralizedIPCClient o) {
 		this.configurer.addClientGIPC(o);
 	}
+	
+	
 	
 	@Override
 	public void alterIpc(IPCMechanism ipcState, String sendingClientName) {
@@ -83,7 +95,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		}
 		
 		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
-		this.ipcState = ipcState;
+		setIPCMechanism(ipcState);
 	}
 	
 	@Override

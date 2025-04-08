@@ -20,6 +20,7 @@ import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.rpc.gipc.GIPCObjectRegistered;
 import util.trace.port.rpc.gipc.GIPCRegistryCreated;
 import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
@@ -80,6 +81,7 @@ public class ServerConfigurer implements SimulationParametersListener {
 	
 	public GIPCRegistry setupConnectionGIPC(int serverPortGIPC) {
 		GIPCRegistry gipcRegistry = GIPCLocateRegistry.createRegistry(serverPortGIPC);
+		System.out.println("GIPC port: " + serverPortGIPC);
 		
 		return gipcRegistry;
 	}
