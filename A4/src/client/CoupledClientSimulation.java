@@ -82,7 +82,7 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		setTracing();
 		setIPCMechanism(IPCMechanism.RMI);
 		this.configurer = new ClientConfigurer();
-		broadcastMetaState(true);
+		setBroadcastMetaState(true);
 	}
 	
 	@Override
@@ -164,9 +164,9 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		return this.configurer.setupConnection(clientHost, clientPort);
 	}
 	
-	public GIPCRegistry setupConnectionGIPC(String clientHost, int gIpcPort, String clientName){
+	public GIPCRegistry setupConnectionGIPC(String clientHost, String clientName, String[] args){
 		
-		return this.configurer.setupConnectionGIPC(clientHost, gIpcPort, clientName);
+		return this.configurer.setupConnectionGIPC(clientHost,  clientName, args);
 	}
 	
 	public ICoupledServerSimulation performLookup(Registry rmiRegistry) throws AccessException, RemoteException, NotBoundException {
@@ -179,11 +179,7 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public IGeneralizedIPCServer performLookupGIPC(GIPCRegistry gipcRegistry) {
-		IGeneralizedIPCServer retServer = (IGeneralizedIPCServer) gipcRegistry.lookup(IGeneralizedIPCServer.class, CoupledServerSimulation.SERVER_NAME);
-		
-		gipcRegistry.getInputPort().addConnectionListener(new ATracingConnectionListener(gipcRegistry.getInputPort()));
-		
-		return retServer;
+		return this.configurer.performLookupGIPC(gipcRegistry);
 	}
 	
 	public IPCMechanism getIpcState() {
@@ -193,21 +189,9 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
-		System.out.println("ipcMechanism invoked with value: " + newValue);
-
 		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
 		
-		if (isBroadcastMetaState()) {
-			try {
-				server.alterIpc(newValue, clientName);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
-			setIPCMechanism(newValue);
-		}
+		this.configurer.setIPCChild(this, server, newValue);
 				
 	}
 	
@@ -221,6 +205,6 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	
 	@Override
 	public void broadcastMetaState(boolean newValue) {
-		setBroadcastMetaState(newValue);
+		this.configurer.setBroadcastMetaStateChild(this, newValue);
 	}
 }

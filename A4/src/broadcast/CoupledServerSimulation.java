@@ -135,8 +135,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		System.out.println("Registry port:" + ServerArgsProcessor.getRegistryPort(args));
 		System.out.println("Server host:" + ServerArgsProcessor.getGIPCServerPort(args));
 	}
-	
-	public void startCustom(String[] args) {
+		
+	public void start(String[] args) {
 		setTracing();
 		processArgsCustom(args);
 		// register a callback to process actions denoted by the user commands
@@ -149,8 +149,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		return this.configurer.setupConnection(serverHost, serverPort);
 	}
 	
-	public GIPCRegistry setupConnectionGIPC(int serverGIPCPort) {
-		return this.configurer.setupConnectionGIPC(serverGIPCPort);
+	public GIPCRegistry setupConnectionGIPC(String[] args) {
+		return this.configurer.setupConnectionGIPC(args);
 	}
 	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation) throws AccessException, RemoteException {
@@ -167,18 +167,25 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
 		List<ICoupledClientSimulation> clients = this.configurer.getClients();
 		
-		for (ICoupledClientSimulation client : clients) {
-			try {
-					client.notifyIPCUpdate(ipcState);
-				
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (isBroadcastMetaState()) {
+			for (ICoupledClientSimulation client : clients) {
+				try {
+						client.notifyIPCUpdate(ipcState);
+					
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+			ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
+			this.ipcState = newValue;
 		}
-		
-		ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
-		this.ipcState = newValue;
+	}
+	
+	@Override
+	public void broadcastMetaState(boolean newValue) {
+		setBroadcastMetaState(newValue);
 	}
  
 }

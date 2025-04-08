@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import assignments.util.inputParameters.SimulationParametersListener;
+import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
 import client.IGeneralizedIPCClient;
 import inputport.rpc.GIPCLocateRegistry;
@@ -70,6 +71,8 @@ public class ServerConfigurer implements SimulationParametersListener {
 	public void performRebindGIPC(GIPCRegistry gipcRegistry, ICoupledServerSimulation iCoupledServerSimulation) {
 		gipcRegistry.rebind(CoupledServerSimulation.SERVER_NAME, iCoupledServerSimulation);
 		gipcRegistry.getInputPort().addConnectionListener(new ATracingConnectionListener(gipcRegistry.getInputPort()));
+		
+		GIPCObjectRegistered.newCase(this, null, iCoupledServerSimulation, gipcRegistry);
 	}
 	
 	public Registry setupConnection(String serverHost, int serverPort) throws RemoteException {
@@ -79,9 +82,11 @@ public class ServerConfigurer implements SimulationParametersListener {
 		return rmiRegistry;
 	}
 	
-	public GIPCRegistry setupConnectionGIPC(int serverPortGIPC) {
-		GIPCRegistry gipcRegistry = GIPCLocateRegistry.createRegistry(serverPortGIPC);
-		System.out.println("GIPC port: " + serverPortGIPC);
+	public GIPCRegistry setupConnectionGIPC(String[] args) {
+		int port = ServerArgsProcessor.getGIPCServerPort(args) + 1;
+		GIPCRegistry gipcRegistry = GIPCLocateRegistry.createRegistry(port);
+		
+		GIPCRegistryCreated.newCase(gipcRegistry, port);
 		
 		return gipcRegistry;
 	}

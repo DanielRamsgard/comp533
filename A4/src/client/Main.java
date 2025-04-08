@@ -30,7 +30,6 @@ public class Main {
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);
 		String clientName = ClientArgsProcessor.getClientName(args);
-		int gipcPort = ClientArgsProcessor.getGIPCPort(args) + 1;
 
 		// initialize object to do work
 		CoupledClientSimulation coupledClientSimulation = new CoupledClientSimulation();
@@ -51,7 +50,7 @@ public class Main {
 		}
 		
 		// GIPC
-		GIPCRegistry gipcRegistry = coupledClientSimulation.setupConnectionGIPC(clientHost, gipcPort, clientName);
+		GIPCRegistry gipcRegistry = coupledClientSimulation.setupConnectionGIPC(clientHost, clientName, args);
 		IGeneralizedIPCServer coupledServerSimulationGIPC = coupledClientSimulation.performLookupGIPC(gipcRegistry);
 		coupledServerSimulationGIPC.registerClientGIPC(coupledClientSimulation);
 		coupledClientSimulation.setServerGIPC(coupledServerSimulationGIPC);

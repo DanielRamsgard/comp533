@@ -27,7 +27,6 @@ public class Main {
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
 		int serverPort = ServerArgsProcessor.getRegistryPort(args);
-		int serverGIPCPort = ServerArgsProcessor.getGIPCServerPort(args) + 1;
 
 		// initialize object to do work
 		CoupledServerSimulation coupledServerSimulation = new CoupledServerSimulation();
@@ -40,7 +39,7 @@ public class Main {
 			coupledServerSimulation.performRebind(rmiRegistry, coupledServerSimulationProxy);
 			
 			// GIPC
-			GIPCRegistry gipcRegistry = coupledServerSimulation.setupConnectionGIPC(serverGIPCPort);
+			GIPCRegistry gipcRegistry = coupledServerSimulation.setupConnectionGIPC(args);
 			GIPCObjectRegistered.newCase(Main.class, serverHost, coupledServerSimulationProxy, gipcRegistry);
 			coupledServerSimulation.performRebindGIPC(gipcRegistry);
 			
@@ -51,7 +50,7 @@ public class Main {
 		}
 		
 		// run the object after exporting it
-		coupledServerSimulation.startCustom(args);
+		coupledServerSimulation.start(args);
 	}
 
 }
