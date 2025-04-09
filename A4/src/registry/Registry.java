@@ -28,6 +28,5 @@ public class Registry implements SimulationParametersListener {
 		RMITraceUtility.setTracing();
 		LocateRegistry.createRegistry(port);
 		RMIRegistryCreated.newCase(Main.class, port);
-		Thread.sleep(Long.MAX_VALUE);
 	}
 }

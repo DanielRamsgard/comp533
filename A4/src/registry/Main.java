@@ -2,6 +2,7 @@ package registry;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Scanner;
 
 import assignments.util.mainArgs.RegistryArgsProcessor;
 import util.annotations.Tags;
@@ -22,6 +23,8 @@ public class Main {
 		try {
 			Registry registry = new Registry();
 			registry.createRegistry(port);
+			Scanner scanner = new Scanner(System.in);
+			scanner.nextLine();
 		} catch (RemoteException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
