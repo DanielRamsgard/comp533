@@ -83,7 +83,7 @@ public class ServerConfigurer implements SimulationParametersListener {
 	}
 	
 	public GIPCRegistry setupConnectionGIPC(String[] args) {
-		int port = ServerArgsProcessor.getGIPCServerPort(args) + 1;
+		int port = ServerArgsProcessor.getGIPCServerPort(args);
 		GIPCRegistry gipcRegistry = GIPCLocateRegistry.createRegistry(port);
 		
 		GIPCRegistryCreated.newCase(gipcRegistry, port);

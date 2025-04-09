@@ -76,6 +76,11 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		NIOTraceUtility.setTracing();
 		trace(true);
 	}
+	
+	@Override
+	public void quit(int code) {
+		System.exit(code);
+	}
 
 	
 	public CoupledClientSimulation() {

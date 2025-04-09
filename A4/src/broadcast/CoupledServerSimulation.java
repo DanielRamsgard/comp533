@@ -59,6 +59,11 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		trace(true);
 	}
 	
+	@Override
+	public void quit(int code) {
+		System.exit(code);
+	}
+	
 	public CoupledServerSimulation() {
 		setTracing();
 		this.configurer = new ServerConfigurer();
