@@ -1,5 +1,7 @@
 package client;
 
+import java.io.IOException;
+import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -16,6 +18,8 @@ import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import coupledsims.Simulation;
 import coupledsims.Simulation1;
 import coupledsims.Simulation2;
+import inputport.nio.manager.NIOManager;
+import inputport.nio.manager.NIOManagerFactory;
 import inputport.rpc.GIPCRegistry;
 import main.BeauAndersonFinalProject;
 import port.ATracingConnectionListener;
@@ -49,6 +53,8 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	HalloweenCommandProcessor commandProcessor1;
 	private IGeneralizedIPCServer serverGIPC;
 	private OutCoupler simulation1Coupler;
+	private NIOManager nioManager;
+	private SocketChannel socketChannel;
 	
 	
 	@Override
@@ -88,6 +94,7 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		setIPCMechanism(IPCMechanism.RMI);
 		this.configurer = new ClientConfigurer();
 		setBroadcastMetaState(true);
+		this.nioManager = NIOManagerFactory.getSingleton();
 	}
 	
 	@Override
@@ -120,6 +127,10 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		this.serverGIPC = passedServer;
 	}
 	
+	public void setupNIO(String[] args) throws IOException {
+		this.socketChannel = this.configurer.setupNIO(nioManager, args);
+	}
+	
 	protected HalloweenCommandProcessor createSimulation1(String aPrefix) {
 		return 	BeauAndersonFinalProject.createSimulation(
 					aPrefix,
@@ -136,7 +147,7 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		processArgsCustom(args);
 		//Ideally the prefixes should be main arguments
 		commandProcessor1 = createSimulation1(Simulation1.SIMULATION1_PREFIX);
-		simulation1Coupler = new OutCoupler(this, commandProcessor1, clientName, server, serverGIPC);
+		simulation1Coupler = new OutCoupler(configurer, socketChannel, nioManager, this, commandProcessor1, clientName, server, serverGIPC);
 		commandProcessor1.addPropertyChangeListener(simulation1Coupler);
 	}
 	

@@ -1,5 +1,6 @@
 package broadcast;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.rmi.registry.Registry;
@@ -23,7 +24,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER, DistributedTags.RMI, DistributedTags.GIPC})
 public class Main {
-	public static void main (String[] args) {				
+	public static void main (String[] args) throws IOException {				
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
 		int serverPort = ServerArgsProcessor.getRegistryPort(args);		
@@ -48,6 +49,9 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// NIO
+		coupledServerSimulation.setupNIO(args);
 		
 		// run the object after exporting it
 		coupledServerSimulation.start(args);

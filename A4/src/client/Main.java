@@ -1,5 +1,6 @@
 package client;
 
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -25,7 +26,7 @@ import util.tags.DistributedTags;
 
 @Tags({DistributedTags.CLIENT, DistributedTags.RMI, DistributedTags.GIPC})
 public class Main {
-	public static void main (String[] args) throws NotBoundException {
+	public static void main (String[] args) throws NotBoundException, IOException {
 		// initialize variables to work with RMI
 		String clientHost = ClientArgsProcessor.getRegistryHost(args);
 		int clientPort = ClientArgsProcessor.getRegistryPort(args);
@@ -54,6 +55,9 @@ public class Main {
 		IGeneralizedIPCServer coupledServerSimulationGIPC = coupledClientSimulation.performLookupGIPC(gipcRegistry);
 		coupledServerSimulationGIPC.registerClientGIPC(coupledClientSimulation);
 		coupledClientSimulation.setServerGIPC(coupledServerSimulationGIPC);
+		
+		// NIO
+		coupledClientSimulation.setupNIO(args);
 
 		
 		// run the object after exporting it

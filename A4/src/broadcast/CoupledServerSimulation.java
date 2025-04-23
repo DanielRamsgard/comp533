@@ -1,4 +1,6 @@
 package broadcast;
+import java.io.IOException;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
@@ -12,6 +14,8 @@ import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
 import client.IGeneralizedIPCClient;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
+import inputport.nio.manager.NIOManager;
+import inputport.nio.manager.NIOManagerFactory;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
@@ -39,6 +43,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	public static String SERVER_NAME = "SERVER";
 	private ServerConfigurer configurer;
 	private IPCMechanism ipcState;
+	private NIOManager nioManager;
+	private ServerSocketChannel socketChannel;
 	
 	@Override
 	public void trace(boolean value) {
@@ -69,6 +75,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		setTracing();
 		this.configurer = new ServerConfigurer();
 		super.broadcastMetaState = true;
+		this.nioManager = NIOManagerFactory.getSingleton();
 	}
 	
 	@Override
@@ -175,6 +182,10 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	
 	public void performRebindGIPC(GIPCRegistry gipcRegistry) {
 		this.configurer.performRebindGIPC(gipcRegistry, this);
+	}
+	
+	public void setupNIO(String[] args) throws IOException {
+		this.socketChannel = this.configurer.setupNIO(nioManager, args);
 	}
 	
 	// happens locally so not a property change listener
