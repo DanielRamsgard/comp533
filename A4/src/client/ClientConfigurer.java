@@ -106,19 +106,20 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 
 	@Override
 	public void written(SocketChannel arg0, ByteBuffer arg1, int arg2) {
-		// TODO Auto-generated method stub
+		// write to shared ArrayBlockingQueue between client and reading thread
 		
 	}
 
 	@Override
 	public void connected(SocketChannel arg0) {
-		// TODO Auto-generated method stub
+		// no need to do anything on connect
 		
 	}
 
 	@Override
 	public void notConnected(SocketChannel arg0, Exception arg1) {
-		// TODO Auto-generated method stub
+		// log the error
+		arg1.printStackTrace();
 		
 	}
 }
