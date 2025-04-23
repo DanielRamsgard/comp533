@@ -1,10 +1,8 @@
 package grading;
 
 //import grader.basics.execution.BasicProjectExecution;
-import gradingTools.comp533s25.assignment4.S25Assignment4Suite;
-import gradingTools.comp533s25.assignment5.S25Assignment5Suite;
+import gradingTools.comp533s25.assignment6.S25Assignment6Suite;
 import trace.grader.basics.GraderBasicsTraceUtility;
-import gradingTools.comp533.flexible.PortNumbers;
 import gradingTools.comp533s20.assignment4.Assignment4Suite;
 
 public class Main {
@@ -27,6 +25,6 @@ public class Main {
 		// change port numbers
 //		PortNumbers.setTestPortNIOStart(1100);
 		// You need to always call such a method
-		S25Assignment5Suite.main(args);
+		S25Assignment6Suite.main(args);
 	}
 }
