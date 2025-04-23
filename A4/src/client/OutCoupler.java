@@ -2,11 +2,14 @@ package client;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.rmi.RemoteException;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
+import inputport.nio.manager.NIOManager;
 import stringProcessors.HalloweenCommandProcessor;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
@@ -29,6 +32,9 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	private ICoupledServerSimulation server;
 	private IGeneralizedIPCServer serverGIPC;
 	private CoupledClientSimulation client;
+	private NIOManager nioManager;
+	private SocketChannel socketChannel;
+	private ClientConfigurer configurer;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -41,13 +47,16 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 	}
 
 
-	public OutCoupler(CoupledClientSimulation client, HalloweenCommandProcessor passedProcesser, String passedClientName, ICoupledServerSimulation passedServer, IGeneralizedIPCServer serverGIPC) {
+	public OutCoupler(ClientConfigurer configurer, SocketChannel socketChannel, NIOManager nioManager, CoupledClientSimulation client, HalloweenCommandProcessor passedProcesser, String passedClientName, ICoupledServerSimulation passedServer, IGeneralizedIPCServer serverGIPC) {
 		setTracing();
 		this.processer = passedProcesser;
 		this.clientName = passedClientName;
 		this.server = passedServer;
 		this.serverGIPC = serverGIPC;
 		this.client = client;
+		this.nioManager = nioManager;
+		this.socketChannel = socketChannel;
+		this.configurer = configurer;
 	}
 	
 	@Override
@@ -74,6 +83,8 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 			serverGIPC.broadcastGIPC(newCommand, clientName);
 		} else if (ipcState == IPCMechanism.NIO) {
 			// use the socket channel to pass the new command to server for relay
+			ByteBuffer aWriteMessage = ByteBuffer.wrap(newCommand.getBytes());
+			nioManager.write(socketChannel, aWriteMessage, configurer);
 		}
 		
 	}
