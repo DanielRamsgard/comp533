@@ -60,6 +60,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		setTracing();
 		this.clients = new ArrayList<>();
 		this.clientsGIPC = new ArrayList<>();
+		this.clientChannels = new ArrayList<>();
 		this.messagesQueue = messagesQueue;
 	}
 	
