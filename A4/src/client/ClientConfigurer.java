@@ -18,6 +18,7 @@ import broadcast.IGeneralizedIPCServer;
 import broadcast.Intermediate;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.listeners.SocketChannelConnectListener;
+import inputport.nio.manager.listeners.SocketChannelReadListener;
 import inputport.nio.manager.listeners.SocketChannelWriteListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
@@ -37,8 +38,9 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
-public class ClientConfigurer implements SimulationParametersListener, SocketChannelConnectListener, SocketChannelWriteListener {
+public class ClientConfigurer implements SimulationParametersListener, SocketChannelConnectListener, SocketChannelWriteListener, SocketChannelReadListener {
 	private ArrayBlockingQueue<Intermediate> messagesQueue;
+	private NIOManager nioManager;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -50,9 +52,10 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ClientConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue) { 
+	public ClientConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue, NIOManager nioManager) { 
 		setTracing();
 		this.messagesQueue = messagesQueue;
+		this.nioManager = nioManager;
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
@@ -99,7 +102,7 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		return retServer;
 	}
 	
-	public SocketChannel setupNIO(NIOManager nioManager, String[] args) throws IOException {
+	public SocketChannel setupNIO(String[] args) throws IOException {
 		int port = ClientArgsProcessor.getNIOServerPort(args);
 		
 		SocketChannel socketChannel = SocketChannel.open();
@@ -111,17 +114,13 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 
 	@Override
 	public void written(SocketChannel serverChannel, ByteBuffer aMessage, int aLength) {
-		// write to shared ArrayBlockingQueue between client and reading thread
-		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
-		
-		Intermediate intermediate = new Intermediate(newBuffer, serverChannel, aLength);
-		
-		messagesQueue.add(intermediate);
+		// nothing
 	}
 
 	@Override
 	public void connected(SocketChannel arg0) {
-		// no need to do anything on connect
+		// add as read listener
+		nioManager.addReadListener(arg0, this);
 		
 	}
 
@@ -130,5 +129,16 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		// log the error
 		arg1.printStackTrace();
 		
+	}
+
+	@Override
+	public void socketChannelRead(SocketChannel channel, ByteBuffer aMessage, int aLength) {
+		// TODO Auto-generated method stub
+		// write to shared ArrayBlockingQueue between client and reading thread
+		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
+		
+		Intermediate intermediate = new Intermediate(newBuffer, channel, aLength);
+		
+		messagesQueue.add(intermediate);
 	}
 }

@@ -19,6 +19,7 @@ import client.IGeneralizedIPCClient;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.NIOManagerFactory;
+import inputport.nio.manager.listeners.SocketChannelWriteListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import util.annotations.Tags;
@@ -152,13 +153,15 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	@Override
 	public void broadcastNIO(Intermediate intermediate) throws IOException {
 		List<SocketChannel> channels = this.configurer.getClientsNIO();
+		ByteBuffer buf = intermediate.getByteBuffer();
+		SocketChannel sender = intermediate.getSockerChannel();
 		
 		for (SocketChannel channel : channels) {
 			// notify the client of the new data via NIO
 			// create a byte buffer and write it to client using the socket channel
-			if (channel != intermediate.getSockerChannel()) {
-				ByteBuffer current = MiscAssignmentUtils.deepDuplicate(intermediate.getByteBuffer());
-				channel.write(current);
+			if (channel != sender) {
+				buf.rewind();
+				nioManager.write(channel, buf, null);
 			}
 		}
 	}

@@ -98,10 +98,10 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	public CoupledClientSimulation() {
 		setTracing();
 		this.messagesQueue = new ArrayBlockingQueue<>(100000);
-		setIPCMechanism(IPCMechanism.NIO);		
-		this.configurer = new ClientConfigurer(messagesQueue);
+		setIPCMechanism(IPCMechanism.NIO);				
 		setBroadcastMetaState(true);
 		this.nioManager = NIOManagerFactory.getSingleton();
+		this.configurer = new ClientConfigurer(messagesQueue, nioManager);
 	}
 	
 	@Override
@@ -135,7 +135,7 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public void setupNIO(String[] args) throws IOException {
-		this.socketChannel = this.configurer.setupNIO(nioManager, args);
+		this.socketChannel = this.configurer.setupNIO(args);
 	}
 	
 	protected HalloweenCommandProcessor createSimulation1(String aPrefix) {
