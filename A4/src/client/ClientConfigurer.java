@@ -7,12 +7,15 @@ import java.nio.channels.SocketChannel;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.ArrayBlockingQueue;
 
+import assignments.util.MiscAssignmentUtils;
 import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
+import broadcast.Intermediate;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.listeners.SocketChannelConnectListener;
 import inputport.nio.manager.listeners.SocketChannelWriteListener;
@@ -35,6 +38,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
 public class ClientConfigurer implements SimulationParametersListener, SocketChannelConnectListener, SocketChannelWriteListener {
+	private ArrayBlockingQueue<Intermediate> messagesQueue;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -46,8 +50,9 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ClientConfigurer() { 
+	public ClientConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue) { 
 		setTracing();
+		this.messagesQueue = messagesQueue;
 	}
 	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
@@ -105,9 +110,13 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 	}
 
 	@Override
-	public void written(SocketChannel arg0, ByteBuffer arg1, int arg2) {
+	public void written(SocketChannel serverChannel, ByteBuffer aMessage, int aLength) {
 		// write to shared ArrayBlockingQueue between client and reading thread
+		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
 		
+		Intermediate intermediate = new Intermediate(newBuffer, serverChannel, aLength);
+		
+		messagesQueue.add(intermediate);
 	}
 
 	@Override

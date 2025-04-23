@@ -1,12 +1,14 @@
 package client;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.inputParameters.SimulationParametersListener;
@@ -14,6 +16,8 @@ import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
+import broadcast.Intermediate;
+import broadcast.ReadingThread;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import coupledsims.Simulation;
 import coupledsims.Simulation1;
@@ -55,6 +59,8 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	private OutCoupler simulation1Coupler;
 	private NIOManager nioManager;
 	private SocketChannel socketChannel;
+	private ArrayBlockingQueue<Intermediate> messagesQueue;
+	public static final String READ_THREAD_NAME = "Read Thread";
 	
 	
 	@Override
@@ -92,7 +98,8 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	public CoupledClientSimulation() {
 		setTracing();
 		setIPCMechanism(IPCMechanism.RMI);
-		this.configurer = new ClientConfigurer();
+		this.messagesQueue = new ArrayBlockingQueue<>(100000);
+		this.configurer = new ClientConfigurer(messagesQueue);
 		setBroadcastMetaState(true);
 		this.nioManager = NIOManagerFactory.getSingleton();
 	}
@@ -175,6 +182,13 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		commandProcessor1.processCommand(command);
 	}
 	
+	public void notifyNewCommandNIO(Intermediate intermediate) {
+		ByteBuffer aMessage = intermediate.getByteBuffer();
+		String command = new String(aMessage.array(), aMessage.position(), intermediate.getALength());
+		
+		commandProcessor1.processCommand(command);
+	}
+	
 	public Registry setupConnection(String clientHost, int clientPort) throws RemoteException {
 		
 		return this.configurer.setupConnection(clientHost, clientPort);
@@ -223,4 +237,12 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	public void broadcastMetaState(boolean newValue) {
 		this.configurer.setBroadcastMetaStateChild(this, newValue);
 	}
+	
+	public void startReadingThread() {
+		// start the reading thread and give it the references to messagesQueue and this
+		Thread thread = new Thread(new ClientReadingThread(messagesQueue, this));
+		thread.setName(READ_THREAD_NAME);
+		
+		thread.start();
+	} 
 }

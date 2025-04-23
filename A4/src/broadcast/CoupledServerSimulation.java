@@ -226,7 +226,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	
 	public void startReadingThread() {
 		// start the reading thread and give it the references to messagesQueue and this
-		Thread thread = new Thread();
+		Thread thread = new Thread(new ReadingThread(this, messagesQueue));
 		thread.setName(READ_THREAD_NAME);
 		
 		thread.start();

@@ -127,7 +127,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
 		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
 		
-		Intermediate intermediate = new Intermediate(newBuffer, clientChannel);
+		Intermediate intermediate = new Intermediate(newBuffer, clientChannel, aLength);
 		
 		messagesQueue.add(intermediate);
 		
