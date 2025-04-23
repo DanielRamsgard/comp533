@@ -26,7 +26,7 @@ public class Main {
 	public static void main (String[] args) {				
 		// initialize variables to work with RMI
 		String serverHost = ServerArgsProcessor.getRegistryHost(args);
-		int serverPort = ServerArgsProcessor.getRegistryPort(args);
+		int serverPort = ServerArgsProcessor.getRegistryPort(args);		
 
 		// initialize object to do work
 		CoupledServerSimulation coupledServerSimulation = new CoupledServerSimulation();

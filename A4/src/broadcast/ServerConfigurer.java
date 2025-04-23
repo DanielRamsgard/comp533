@@ -1,5 +1,11 @@
 package broadcast;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -11,6 +17,9 @@ import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
 import client.IGeneralizedIPCClient;
+import inputport.nio.manager.NIOManager;
+import inputport.nio.manager.listeners.SocketChannelAcceptListener;
+import inputport.nio.manager.listeners.SocketChannelReadListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import port.ATracingConnectionListener;
@@ -21,6 +30,7 @@ import util.trace.misc.ThreadDelayed;
 import util.trace.port.PortTraceUtility;
 import util.trace.port.consensus.ConsensusTraceUtility;
 import util.trace.port.nio.NIOTraceUtility;
+import util.trace.port.nio.SocketChannelBound;
 import util.trace.port.rpc.gipc.GIPCObjectRegistered;
 import util.trace.port.rpc.gipc.GIPCRegistryCreated;
 import util.trace.port.rpc.rmi.RMIObjectRegistered;
@@ -28,7 +38,7 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
-public class ServerConfigurer implements SimulationParametersListener {
+public class ServerConfigurer implements SimulationParametersListener, SocketChannelAcceptListener, SocketChannelReadListener {
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	
@@ -89,5 +99,29 @@ public class ServerConfigurer implements SimulationParametersListener {
 		GIPCRegistryCreated.newCase(gipcRegistry, port);
 		
 		return gipcRegistry;
+	}
+	
+	public ServerSocketChannel setupNIO(NIOManager nioManager, String[] args) throws IOException {
+		int port = ServerArgsProcessor.getNIOServerPort(args);
+		
+		ServerSocketChannel aServerFactoryChannel = ServerSocketChannel.open();
+		InetSocketAddress anInternetSocketAddress = new InetSocketAddress(port);
+		aServerFactoryChannel.socket().bind(anInternetSocketAddress);
+		SocketChannelBound.newCase(this, aServerFactoryChannel, anInternetSocketAddress);
+		nioManager.enableListenableAccepts(aServerFactoryChannel, SelectionKey.OP_READ, this);
+		
+		return aServerFactoryChannel;
+	}
+
+	@Override
+	public void socketChannelRead(SocketChannel arg0, ByteBuffer arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void socketChannelAccepted(ServerSocketChannel arg0, SocketChannel arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }

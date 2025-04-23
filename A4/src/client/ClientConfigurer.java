@@ -1,5 +1,9 @@
 package client;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -9,6 +13,9 @@ import assignments.util.mainArgs.ClientArgsProcessor;
 import broadcast.CoupledServerSimulation;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
+import inputport.nio.manager.NIOManager;
+import inputport.nio.manager.listeners.SocketChannelConnectListener;
+import inputport.nio.manager.listeners.SocketChannelWriteListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import port.ATracingConnectionListener;
@@ -27,7 +34,7 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
-public class ClientConfigurer implements SimulationParametersListener {
+public class ClientConfigurer implements SimulationParametersListener, SocketChannelConnectListener, SocketChannelWriteListener {
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -85,5 +92,33 @@ public class ClientConfigurer implements SimulationParametersListener {
 		GIPCObjectLookedUp.newCase(this, retServer, getClass(), null, gipcRegistry);
 		
 		return retServer;
+	}
+	
+	public SocketChannel setupNIO(NIOManager nioManager, String[] args) throws IOException {
+		int port = ClientArgsProcessor.getNIOServerPort(args);
+		
+		SocketChannel socketChannel = SocketChannel.open();
+		InetAddress aServerAddress = InetAddress.getByName("localhost");
+		nioManager.connect(socketChannel, aServerAddress, port, 0, this);
+		
+		return socketChannel;
+	}
+
+	@Override
+	public void written(SocketChannel arg0, ByteBuffer arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connected(SocketChannel arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notConnected(SocketChannel arg0, Exception arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
