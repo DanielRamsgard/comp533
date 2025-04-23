@@ -75,11 +75,11 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public CoupledServerSimulation() {
-		setTracing();		
+		setTracing();
+		this.messagesQueue = new ArrayBlockingQueue<>(100000);
 		super.broadcastMetaState = true;
 		this.nioManager = NIOManagerFactory.getSingleton();
-		this.configurer = new ServerConfigurer(messagesQueue, nioManager);
-		this.messagesQueue = new ArrayBlockingQueue<>(100000);
+		this.configurer = new ServerConfigurer(messagesQueue, nioManager);		
 	}
 	
 	@Override

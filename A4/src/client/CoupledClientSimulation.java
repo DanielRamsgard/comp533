@@ -97,8 +97,8 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	
 	public CoupledClientSimulation() {
 		setTracing();
-		setIPCMechanism(IPCMechanism.NIO);
 		this.messagesQueue = new ArrayBlockingQueue<>(100000);
+		setIPCMechanism(IPCMechanism.NIO);		
 		this.configurer = new ClientConfigurer(messagesQueue);
 		setBroadcastMetaState(true);
 		this.nioManager = NIOManagerFactory.getSingleton();
