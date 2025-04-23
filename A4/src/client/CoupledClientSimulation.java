@@ -186,8 +186,6 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 		ByteBuffer aMessage = intermediate.getByteBuffer();
 		String command = new String(aMessage.array(), aMessage.position(), aMessage.limit());
 		
-		System.out.println("COMMAND HERE: " + command);
-		
 		commandProcessor1.processCommand(command);
 	}
 	
