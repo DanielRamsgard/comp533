@@ -110,7 +110,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		return gipcRegistry;
 	}
 	
-	public ServerSocketChannel setupNIO(NIOManager nioManager, String[] args) throws IOException {
+	public void setupNIO(NIOManager nioManager, String[] args) throws IOException {
 		int port = ServerArgsProcessor.getNIOServerPort(args);
 		
 		ServerSocketChannel aServerFactoryChannel = ServerSocketChannel.open();
@@ -118,8 +118,6 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		aServerFactoryChannel.socket().bind(anInternetSocketAddress);
 		SocketChannelBound.newCase(this, aServerFactoryChannel, anInternetSocketAddress);
 		nioManager.enableListenableAccepts(aServerFactoryChannel, SelectionKey.OP_READ, this);
-		
-		return aServerFactoryChannel;
 	}
 
 	@Override

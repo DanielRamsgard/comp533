@@ -46,7 +46,6 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	private ServerConfigurer configurer;
 	private IPCMechanism ipcState;
 	private NIOManager nioManager;
-	private ServerSocketChannel socketChannel;
 	private ArrayBlockingQueue<Intermediate> messagesQueue;
 	public static final String READ_THREAD_NAME = "Read Thread";
 	
@@ -194,7 +193,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public void setupNIO(String[] args) throws IOException {
-		this.socketChannel = this.configurer.setupNIO(nioManager, args);
+		this.configurer.setupNIO(nioManager, args);
 	}
 	
 	// happens locally so not a property change listener
