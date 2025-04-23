@@ -107,7 +107,7 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		
 		SocketChannel socketChannel = SocketChannel.open();
 		InetAddress aServerAddress = InetAddress.getByName("localhost");
-		nioManager.connect(socketChannel, aServerAddress, port, 0, this);
+		nioManager.connect(socketChannel, aServerAddress, port, 0, this);		
 		
 		return socketChannel;
 	}
@@ -118,9 +118,9 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 	}
 
 	@Override
-	public void connected(SocketChannel arg0) {
+	public void connected(SocketChannel connectedChannel) {
 		// add as read listener
-		nioManager.addReadListener(arg0, this);
+		nioManager.addReadListener(connectedChannel, this);
 		
 	}
 
