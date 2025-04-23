@@ -58,6 +58,9 @@ public class Main {
 		
 		// NIO
 		coupledClientSimulation.setupNIO(args);
+		
+		
+		coupledClientSimulation.startReadingThread();
 
 		
 		// run the object after exporting it

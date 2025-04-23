@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import assignments.util.MiscAssignmentUtils;
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ClientArgsProcessor;
@@ -156,7 +157,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 			// notify the client of the new data via NIO
 			// create a byte buffer and write it to client using the socket channel
 			if (channel != intermediate.getSockerChannel()) {
-				channel.write(intermediate.getByteBuffer());
+				ByteBuffer current = MiscAssignmentUtils.deepDuplicate(intermediate.getByteBuffer());
+				channel.write(current);
 			}
 		}
 	}

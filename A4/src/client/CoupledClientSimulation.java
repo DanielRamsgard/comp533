@@ -184,7 +184,9 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	
 	public void notifyNewCommandNIO(Intermediate intermediate) {
 		ByteBuffer aMessage = intermediate.getByteBuffer();
-		String command = new String(aMessage.array(), aMessage.position(), intermediate.getALength());
+		String command = new String(aMessage.array(), aMessage.position(), aMessage.limit());
+		
+		System.out.println("COMMAND HERE: " + command);
 		
 		commandProcessor1.processCommand(command);
 	}
