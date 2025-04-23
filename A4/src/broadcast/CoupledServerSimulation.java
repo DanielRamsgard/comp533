@@ -156,6 +156,9 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		for (SocketChannel channel : channels) {
 			// notify the client of the new data via NIO
 			// create a byte buffer and write it to client using the socket channel
+			if (channel != intermediate.getSockerChannel()) {
+				
+			}
 		}
 	}
 	
