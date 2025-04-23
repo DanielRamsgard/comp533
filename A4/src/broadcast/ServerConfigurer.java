@@ -12,6 +12,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ServerArgsProcessor;
@@ -42,6 +43,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	private List<SocketChannel> clientChannels;
+	private ArrayBlockingQueue messagesQueue;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -53,10 +55,11 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ServerConfigurer() {
+	public ServerConfigurer(ArrayBlockingQueue messagesQueue) {
 		setTracing();
 		this.clients = new ArrayList<>();
 		this.clientsGIPC = new ArrayList<>();
+		this.messagesQueue = messagesQueue;
 	}
 	
 	public void addClient(ICoupledClientSimulation o) {
@@ -119,13 +122,16 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	}
 
 	@Override
-	public void socketChannelRead(SocketChannel arg0, ByteBuffer arg1, int arg2) {
+	public void socketChannelRead(SocketChannel clientChannel, ByteBuffer aMessage, int aLength) {
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
+		String aMessageString = new String(aMessage.array(), aMessage.position(), aLength);
+		messagesQueue.add(aMessageString);
+		
 	}
 
 	@Override
-	public void socketChannelAccepted(ServerSocketChannel arg0, SocketChannel arg1) {
+	public void socketChannelAccepted(ServerSocketChannel serverChannel, SocketChannel clientChannel) {
 		// TODO Auto-generated method stub
-		clientChannels.add(arg1);
+		clientChannels.add(clientChannel);
 	}
 }

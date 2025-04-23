@@ -1,11 +1,13 @@
 package broadcast;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.inputParameters.SimulationParametersListener;
@@ -45,6 +47,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	private IPCMechanism ipcState;
 	private NIOManager nioManager;
 	private ServerSocketChannel socketChannel;
+	private ArrayBlockingQueue messagesQueue;
 	
 	@Override
 	public void trace(boolean value) {
@@ -73,7 +76,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	
 	public CoupledServerSimulation() {
 		setTracing();
-		this.configurer = new ServerConfigurer();
+		this.configurer = new ServerConfigurer(messagesQueue);
 		super.broadcastMetaState = true;
 		this.nioManager = NIOManagerFactory.getSingleton();
 	}
@@ -146,10 +149,11 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	// reading thread will call this method
 	@Override
 	public void broadcastNIO(String command, String sendingClientName) {
-		List<SocketChannel> clients = this.configurer.getClientsNIO();
+		List<SocketChannel> channels = this.configurer.getClientsNIO();
 		
-		for (SocketChannel client : clients) {
+		for (SocketChannel channel : channels) {
 			// notify the client of the new data via NIO
+			// create a byte buffer and write it to client using the socket channel
 		}
 	}
 	
