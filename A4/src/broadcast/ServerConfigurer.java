@@ -41,6 +41,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 public class ServerConfigurer implements SimulationParametersListener, SocketChannelAcceptListener, SocketChannelReadListener {
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
+	private List<SocketChannel> clientChannels;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -72,6 +73,10 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	
 	public List<IGeneralizedIPCClient> getClientsGIPC() {
 		return clientsGIPC;
+	}
+	
+	public List<SocketChannel> getClientsNIO() {
+		return clientChannels;
 	}
 	
 	public void performRebind(Registry rmiRegistry, ICoupledServerSimulation iCoupledServerSimulation, String serverName) throws AccessException, RemoteException {
@@ -115,13 +120,12 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 
 	@Override
 	public void socketChannelRead(SocketChannel arg0, ByteBuffer arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
+		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
 	}
 
 	@Override
 	public void socketChannelAccepted(ServerSocketChannel arg0, SocketChannel arg1) {
 		// TODO Auto-generated method stub
-		
+		clientChannels.add(arg1);
 	}
 }

@@ -1,4 +1,5 @@
 package broadcast;
+import java.nio.channels.SocketChannel;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -132,6 +133,15 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 			if (!client.getClientName().equals(sendingClientName)) {
 				client.notifyNewCommandGIPC(command);
 			}
+		}
+	}
+	
+	@Override
+	public void broadcastNIO(String command, String sendingClientName) {
+		List<SocketChannel> clients = this.configurer.getClientsNIO();
+		
+		for (SocketChannel client : clients) {
+			// notify the client of the new data via NIO
 		}
 	}
 	

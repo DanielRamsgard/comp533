@@ -9,4 +9,5 @@ import util.tags.DistributedTags;
 public interface IGeneralizedIPCServer {
 	void registerClientGIPC(IGeneralizedIPCClient o);
 	void broadcastGIPC(String command, String sendingClientName);
+	void broadcastNIO(String command, String sendingClientName);
 }
