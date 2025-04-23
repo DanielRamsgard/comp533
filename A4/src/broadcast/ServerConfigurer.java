@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import assignments.util.MiscAssignmentUtils;
 import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ServerArgsProcessor;
 import client.ICoupledClientSimulation;
@@ -43,7 +44,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	private List<SocketChannel> clientChannels;
-	private ArrayBlockingQueue messagesQueue;
+	private ArrayBlockingQueue<ByteBuffer> messagesQueue;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -55,7 +56,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ServerConfigurer(ArrayBlockingQueue messagesQueue) {
+	public ServerConfigurer(ArrayBlockingQueue<ByteBuffer> messagesQueue) {
 		setTracing();
 		this.clients = new ArrayList<>();
 		this.clientsGIPC = new ArrayList<>();
@@ -124,8 +125,9 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	@Override
 	public void socketChannelRead(SocketChannel clientChannel, ByteBuffer aMessage, int aLength) {
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
-		String aMessageString = new String(aMessage.array(), aMessage.position(), aLength);
-		messagesQueue.add(aMessageString);
+		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
+		
+		messagesQueue.add(newBuffer);
 		
 	}
 

@@ -47,7 +47,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	private IPCMechanism ipcState;
 	private NIOManager nioManager;
 	private ServerSocketChannel socketChannel;
-	private ArrayBlockingQueue messagesQueue;
+	private ArrayBlockingQueue<ByteBuffer> messagesQueue;
+	public static final String READ_THREAD_NAME = "Read Thread";
 	
 	@Override
 	public void trace(boolean value) {
@@ -217,6 +218,14 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	@Override
 	public void broadcastMetaState(boolean newValue) {
 		setBroadcastMetaState(newValue);
+	}
+	
+	public void startReadingThread() {
+		// start the reading thread and give it the references to messagesQueue and this
+		Thread thread = new Thread();
+		thread.setName(READ_THREAD_NAME);
+		
+		thread.start();
 	}
  
 }
