@@ -75,10 +75,10 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public CoupledServerSimulation() {
-		setTracing();
-		this.configurer = new ServerConfigurer(messagesQueue);
+		setTracing();		
 		super.broadcastMetaState = true;
 		this.nioManager = NIOManagerFactory.getSingleton();
+		this.configurer = new ServerConfigurer(messagesQueue, nioManager);
 		this.messagesQueue = new ArrayBlockingQueue<>(100000);
 	}
 	
@@ -193,7 +193,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public void setupNIO(String[] args) throws IOException {
-		this.configurer.setupNIO(nioManager, args);
+		this.configurer.setupNIO(args);
 	}
 	
 	// happens locally so not a property change listener

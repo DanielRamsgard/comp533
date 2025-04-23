@@ -45,6 +45,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	private List<SocketChannel> clientChannels;
 	private ArrayBlockingQueue<Intermediate> messagesQueue;
+	private NIOManager nioManager;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -56,12 +57,13 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ServerConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue) {
+	public ServerConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue, NIOManager nioManager) {
 		setTracing();
 		this.clients = new ArrayList<>();
 		this.clientsGIPC = new ArrayList<>();
 		this.clientChannels = new ArrayList<>();
 		this.messagesQueue = messagesQueue;
+		this.nioManager = nioManager;
 	}
 	
 	public void addClient(ICoupledClientSimulation o) {
@@ -111,7 +113,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		return gipcRegistry;
 	}
 	
-	public void setupNIO(NIOManager nioManager, String[] args) throws IOException {
+	public void setupNIO(String[] args) throws IOException {
 		int port = ServerArgsProcessor.getNIOServerPort(args);
 		
 		ServerSocketChannel aServerFactoryChannel = ServerSocketChannel.open();
@@ -124,6 +126,8 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	@Override
 	public void socketChannelRead(SocketChannel clientChannel, ByteBuffer aMessage, int aLength) {
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
+		System.out.println("HEREHERE");
+		System.out.println(aMessage);
 		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
 		
 		Intermediate intermediate = new Intermediate(newBuffer, clientChannel, aLength);
@@ -136,5 +140,6 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	public void socketChannelAccepted(ServerSocketChannel serverChannel, SocketChannel clientChannel) {
 		// TODO Auto-generated method stub
 		clientChannels.add(clientChannel);
+		nioManager.addReadListener(clientChannel, this);
 	}
 }
