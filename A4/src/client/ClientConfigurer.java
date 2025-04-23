@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -107,7 +108,7 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		
 		SocketChannel socketChannel = SocketChannel.open();
 		InetAddress aServerAddress = InetAddress.getByName("localhost");
-		nioManager.connect(socketChannel, aServerAddress, port, 0, this);		
+		nioManager.connect(socketChannel, aServerAddress, port, SelectionKey.OP_READ, this);		
 		
 		return socketChannel;
 	}
