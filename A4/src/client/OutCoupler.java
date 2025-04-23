@@ -25,7 +25,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 import util.trace.trickOrTreat.LocalCommandObserved;
 import util.interactiveMethodInvocation.IPCMechanism;
 
-@Tags({DistributedTags.CLIENT_OUT_COUPLER, DistributedTags.RMI, DistributedTags.GIPC})
+@Tags({DistributedTags.CLIENT_OUT_COUPLER, DistributedTags.RMI, DistributedTags.GIPC, DistributedTags.NIO})
 public class OutCoupler implements PropertyChangeListener, SimulationParametersListener {
 	private HalloweenCommandProcessor processer;
 	private String clientName;

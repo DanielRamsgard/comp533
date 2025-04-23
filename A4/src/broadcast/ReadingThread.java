@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ReadingThread implements Runnable {
+import util.annotations.Tags;
+import util.tags.DistributedTags;
+
+@Tags({DistributedTags.SERVER_READ_THREAD, DistributedTags.NIO})
+public class ReadingThread implements IReadingThread {
 	private CoupledServerSimulation coupledServerSimulation;
 	private ArrayBlockingQueue<Intermediate> arrayBlockingQueue;
 	

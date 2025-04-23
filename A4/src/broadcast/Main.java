@@ -22,7 +22,7 @@ import util.trace.port.rpc.gipc.GIPCRPCTraceUtility;
 import util.trace.port.rpc.rmi.RMIObjectRegistered;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.SERVER, DistributedTags.RMI, DistributedTags.GIPC})
+@Tags({DistributedTags.SERVER, DistributedTags.RMI, DistributedTags.GIPC, DistributedTags.NIO})
 public class Main {
 	public static void main (String[] args) throws IOException {				
 		// initialize variables to work with RMI

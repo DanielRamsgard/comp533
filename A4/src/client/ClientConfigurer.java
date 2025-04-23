@@ -38,7 +38,7 @@ import util.trace.port.rpc.gipc.GIPCRegistryLocated;
 import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
-@Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC})
+@Tags({DistributedTags.CLIENT_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC, DistributedTags.NIO})
 public class ClientConfigurer implements SimulationParametersListener, SocketChannelConnectListener, SocketChannelWriteListener, SocketChannelReadListener {
 	private ArrayBlockingQueue<Intermediate> messagesQueue;
 	private NIOManager nioManager;

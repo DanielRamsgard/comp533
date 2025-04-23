@@ -24,7 +24,7 @@ import util.trace.port.rpc.rmi.RMITraceUtility;
 import util.annotations.Tags;
 import util.tags.DistributedTags;
 
-@Tags({DistributedTags.CLIENT, DistributedTags.RMI, DistributedTags.GIPC})
+@Tags({DistributedTags.CLIENT, DistributedTags.RMI, DistributedTags.GIPC, DistributedTags.NIO})
 public class Main {
 	public static void main (String[] args) throws NotBoundException, IOException {
 		// initialize variables to work with RMI
