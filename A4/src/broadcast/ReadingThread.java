@@ -1,5 +1,6 @@
 package broadcast;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -19,7 +20,7 @@ public class ReadingThread implements Runnable {
 				Intermediate intermediate = arrayBlockingQueue.take();
 				coupledServerSimulation.broadcastNIO(intermediate);
 				
-			} catch (InterruptedException e) {
+			} catch (InterruptedException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

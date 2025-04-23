@@ -150,14 +150,14 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	
 	// reading thread will call this method
 	@Override
-	public void broadcastNIO(Intermediate intermediate) {
+	public void broadcastNIO(Intermediate intermediate) throws IOException {
 		List<SocketChannel> channels = this.configurer.getClientsNIO();
 		
 		for (SocketChannel channel : channels) {
 			// notify the client of the new data via NIO
 			// create a byte buffer and write it to client using the socket channel
 			if (channel != intermediate.getSockerChannel()) {
-				
+				channel.write(intermediate.getByteBuffer());
 			}
 		}
 	}

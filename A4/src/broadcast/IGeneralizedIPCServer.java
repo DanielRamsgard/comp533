@@ -1,5 +1,6 @@
 package broadcast;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import client.IGeneralizedIPCClient;
@@ -11,5 +12,5 @@ import util.tags.DistributedTags;
 public interface IGeneralizedIPCServer {
 	void registerClientGIPC(IGeneralizedIPCClient o);
 	void broadcastGIPC(String command, String sendingClientName);
-	void broadcastNIO(Intermediate intermediate);
+	void broadcastNIO(Intermediate intermediate) throws IOException;
 }
