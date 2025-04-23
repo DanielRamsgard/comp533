@@ -126,8 +126,6 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	@Override
 	public void socketChannelRead(SocketChannel clientChannel, ByteBuffer aMessage, int aLength) {
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
-		System.out.println("HEREHERE");
-		System.out.println(aMessage);
 		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
 		
 		Intermediate intermediate = new Intermediate(newBuffer, clientChannel, aLength);
