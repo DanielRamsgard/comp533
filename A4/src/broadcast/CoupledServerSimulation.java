@@ -47,7 +47,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	private IPCMechanism ipcState;
 	private NIOManager nioManager;
 	private ServerSocketChannel socketChannel;
-	private ArrayBlockingQueue<ByteBuffer> messagesQueue;
+	private ArrayBlockingQueue<Intermediate> messagesQueue;
 	public static final String READ_THREAD_NAME = "Read Thread";
 	
 	@Override
@@ -80,6 +80,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		this.configurer = new ServerConfigurer(messagesQueue);
 		super.broadcastMetaState = true;
 		this.nioManager = NIOManagerFactory.getSingleton();
+		this.messagesQueue = new ArrayBlockingQueue<>(100000);
 	}
 	
 	@Override
@@ -149,7 +150,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	
 	// reading thread will call this method
 	@Override
-	public void broadcastNIO(String command, String sendingClientName) {
+	public void broadcastNIO(Intermediate intermediate) {
 		List<SocketChannel> channels = this.configurer.getClientsNIO();
 		
 		for (SocketChannel channel : channels) {

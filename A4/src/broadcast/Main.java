@@ -53,6 +53,9 @@ public class Main {
 		// NIO
 		coupledServerSimulation.setupNIO(args);
 		
+		// start reading thread
+		coupledServerSimulation.startReadingThread();
+		
 		// run the object after exporting it
 		coupledServerSimulation.start(args);
 	}

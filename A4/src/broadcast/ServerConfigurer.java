@@ -44,7 +44,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	private List<SocketChannel> clientChannels;
-	private ArrayBlockingQueue<ByteBuffer> messagesQueue;
+	private ArrayBlockingQueue<Intermediate> messagesQueue;
 	
 	protected void setTracing() {
 		PortTraceUtility.setTracing();
@@ -56,7 +56,7 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		trace(true);
 	}
 	
-	public ServerConfigurer(ArrayBlockingQueue<ByteBuffer> messagesQueue) {
+	public ServerConfigurer(ArrayBlockingQueue<Intermediate> messagesQueue) {
 		setTracing();
 		this.clients = new ArrayList<>();
 		this.clientsGIPC = new ArrayList<>();
@@ -127,7 +127,9 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		// add to ArrayBlockingQueue and read thread will invoke server method to invoke a broadcast to all clients 
 		ByteBuffer newBuffer = MiscAssignmentUtils.deepDuplicate(aMessage);
 		
-		messagesQueue.add(newBuffer);
+		Intermediate intermediate = new Intermediate(newBuffer, clientChannel);
+		
+		messagesQueue.add(intermediate);
 		
 	}
 
