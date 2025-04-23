@@ -136,6 +136,7 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		}
 	}
 	
+	// reading thread will call this method
 	@Override
 	public void broadcastNIO(String command, String sendingClientName) {
 		List<SocketChannel> clients = this.configurer.getClientsNIO();
