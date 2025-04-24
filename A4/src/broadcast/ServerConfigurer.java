@@ -22,6 +22,7 @@ import client.IGeneralizedIPCClient;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.listeners.SocketChannelAcceptListener;
 import inputport.nio.manager.listeners.SocketChannelReadListener;
+import inputport.nio.manager.listeners.SocketChannelWriteListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
 import port.ATracingConnectionListener;
@@ -40,7 +41,7 @@ import util.trace.port.rpc.rmi.RMIRegistryLocated;
 import util.trace.port.rpc.rmi.RMITraceUtility;
 
 @Tags({DistributedTags.SERVER_CONFIGURER, DistributedTags.RMI, DistributedTags.GIPC, DistributedTags.NIO})
-public class ServerConfigurer implements SimulationParametersListener, SocketChannelAcceptListener, SocketChannelReadListener {
+public class ServerConfigurer implements SimulationParametersListener, SocketChannelAcceptListener, SocketChannelReadListener, SocketChannelWriteListener {
 	private List<ICoupledClientSimulation> clients;
 	private List<IGeneralizedIPCClient> clientsGIPC;
 	private List<SocketChannel> clientChannels;
@@ -139,5 +140,11 @@ public class ServerConfigurer implements SimulationParametersListener, SocketCha
 		// TODO Auto-generated method stub
 		clientChannels.add(clientChannel);
 		nioManager.addReadListener(clientChannel, this);
+	}
+
+	@Override
+	public void written(SocketChannel arg0, ByteBuffer arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }

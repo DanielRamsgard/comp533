@@ -3,6 +3,7 @@ package grading;
 //import grader.basics.execution.BasicProjectExecution;
 import gradingTools.comp533s25.assignment6.S25Assignment6Suite;
 import trace.grader.basics.GraderBasicsTraceUtility;
+import gradingTools.comp533.flexible.PortNumbers;
 import gradingTools.comp533s20.assignment4.Assignment4Suite;
 
 public class Main {
@@ -11,6 +12,10 @@ public class Main {
 	public static final int MAX_PRINTED_TRACES = 600;
 	
 	public static void main(final String[] args) {
+		PortNumbers.setTestPortRMIStart(8000);
+		PortNumbers.setTestPortRMIEnd(9000);
+		PortNumbers.setTestPortGIPCStart(7001);
+		PortNumbers.setTestPortNIOStart(1100);
 		// if you set this to false, grader steps will not be traced
 		GraderBasicsTraceUtility.setTracerShowInfo(true);	
 		// if you set this to false, all grader steps will be traced,

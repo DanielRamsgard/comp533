@@ -10,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import assignments.util.MiscAssignmentUtils;
 import assignments.util.inputParameters.AnAbstractSimulationParametersBean;
 import assignments.util.inputParameters.SimulationParametersListener;
 import assignments.util.mainArgs.ClientArgsProcessor;
@@ -24,6 +25,8 @@ import coupledsims.Simulation1;
 import coupledsims.Simulation2;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.NIOManagerFactory;
+import inputport.nio.manager.factories.classes.AConnectCommandFactory;
+import inputport.nio.manager.factories.selectors.ConnectCommandFactorySelector;
 import inputport.rpc.GIPCRegistry;
 import main.BeauAndersonFinalProject;
 import port.ATracingConnectionListener;
@@ -96,10 +99,9 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 
 	
 	public CoupledClientSimulation() {
+		ConnectCommandFactorySelector.setFactory(new AConnectCommandFactory(0));
 		setTracing();
-		this.messagesQueue = new ArrayBlockingQueue<>(100000);
-		setIPCMechanism(IPCMechanism.NIO);				
-		setBroadcastMetaState(true);
+		this.messagesQueue = new ArrayBlockingQueue<>(100000);		
 		this.nioManager = NIOManagerFactory.getSingleton();
 		this.configurer = new ClientConfigurer(messagesQueue, nioManager);
 	}
@@ -183,7 +185,8 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public void notifyNewCommandNIO(Intermediate intermediate) {
-		ByteBuffer aMessage = intermediate.getByteBuffer();
+		ByteBuffer temp = intermediate.getByteBuffer();
+		ByteBuffer aMessage = MiscAssignmentUtils.deepDuplicate(temp);
 		String command = new String(aMessage.array(), aMessage.position(), aMessage.limit());
 		
 		commandProcessor1.processCommand(command);
@@ -218,7 +221,10 @@ public class CoupledClientSimulation extends AnAbstractSimulationParametersBean 
 	
 	// happens locally so not a property change listener
 	@Override
-	public void ipcMechanism(IPCMechanism newValue) {
+	public void ipcMechanism(IPCMechanism newValue) {		
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
+		setIPCMechanism(newValue);
+		
 		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
 		
 		this.configurer.setIPCChild(this, server, newValue);

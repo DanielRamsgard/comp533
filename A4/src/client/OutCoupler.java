@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.rmi.RemoteException;
 
+import assignments.util.MiscAssignmentUtils;
 import assignments.util.inputParameters.SimulationParametersListener;
 import broadcast.ICoupledServerSimulation;
 import broadcast.IGeneralizedIPCServer;
@@ -84,7 +85,8 @@ public class OutCoupler implements PropertyChangeListener, SimulationParametersL
 		} else if (ipcState == IPCMechanism.NIO) {
 			// use the socket channel to pass the new command to server for relay
 			ByteBuffer aWriteMessage = ByteBuffer.wrap(newCommand.getBytes());
-			nioManager.write(socketChannel, aWriteMessage, configurer);
+			ByteBuffer dup = MiscAssignmentUtils.deepDuplicate(aWriteMessage);
+			nioManager.write(socketChannel, dup, configurer);
 		}
 		
 	}

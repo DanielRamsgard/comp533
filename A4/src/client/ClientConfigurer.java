@@ -82,14 +82,11 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 	public void setIPCChild(CoupledClientSimulation coupledClientSimulation, ICoupledServerSimulation server, IPCMechanism newValue) {
 		if (coupledClientSimulation.isBroadcastMetaState()) {
 			try {
-				server.alterIpc(newValue, ClientArgsProcessor.getClientName(null));
+				server.alterIpc(newValue, coupledClientSimulation.getClientName());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);
-			coupledClientSimulation.setIPCMechanism(newValue);
 		}
 	}
 	
@@ -108,7 +105,8 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 		
 		SocketChannel socketChannel = SocketChannel.open();
 		InetAddress aServerAddress = InetAddress.getByName("localhost");
-		nioManager.connect(socketChannel, aServerAddress, port, SelectionKey.OP_READ, this);		
+		nioManager.connect(socketChannel, aServerAddress, port, SelectionKey.OP_READ, this);
+		nioManager.addReadListener(socketChannel, this);
 		
 		return socketChannel;
 	}
@@ -120,8 +118,7 @@ public class ClientConfigurer implements SimulationParametersListener, SocketCha
 
 	@Override
 	public void connected(SocketChannel connectedChannel) {
-		// add as read listener
-		nioManager.addReadListener(connectedChannel, this);
+		// add as read listener		
 		
 	}
 

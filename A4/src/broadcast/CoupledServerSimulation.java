@@ -19,6 +19,8 @@ import client.IGeneralizedIPCClient;
 import coupledsims.AStandAloneTwoCoupledHalloweenSimulations;
 import inputport.nio.manager.NIOManager;
 import inputport.nio.manager.NIOManagerFactory;
+import inputport.nio.manager.factories.classes.AnAcceptCommandFactory;
+import inputport.nio.manager.factories.selectors.AcceptCommandFactorySelector;
 import inputport.nio.manager.listeners.SocketChannelWriteListener;
 import inputport.rpc.GIPCLocateRegistry;
 import inputport.rpc.GIPCRegistry;
@@ -77,9 +79,9 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	}
 	
 	public CoupledServerSimulation() {
+		AcceptCommandFactorySelector.setFactory(new AnAcceptCommandFactory(0));
 		setTracing();
 		this.messagesQueue = new ArrayBlockingQueue<>(100000);
-		super.broadcastMetaState = true;
 		this.nioManager = NIOManagerFactory.getSingleton();
 		this.configurer = new ServerConfigurer(messagesQueue, nioManager);		
 	}
@@ -101,8 +103,10 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 		ProposalLearnedNotificationSent.newCase(this, "ipc_mechanism", -1, ipcState);
 		List<ICoupledClientSimulation> clients = this.configurer.getClients();
 		
+		
 		for (ICoupledClientSimulation client : clients) {
 			try {
+				
 				if (!client.getClientName().equals(sendingClientName)) {
 					client.notifyIPCUpdate(ipcState);
 				}
@@ -160,8 +164,8 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 			// notify the client of the new data via NIO
 			// create a byte buffer and write it to client using the socket channel
 			if (channel != sender) {
-				buf.rewind();
-				nioManager.write(channel, buf, null);
+				ByteBuffer current = MiscAssignmentUtils.deepDuplicate(buf);
+				nioManager.write(channel, current, this.configurer);
 			}
 		}
 	}
@@ -204,22 +208,23 @@ public class CoupledServerSimulation extends AnAbstractSimulationParametersBean 
 	// happens locally so not a property change listener
 	@Override
 	public void ipcMechanism(IPCMechanism newValue) {
+		ProposedStateSet.newCase(this, "ipc_mechanism", -1, newValue);		
+		setIPCMechanism(newValue);
+		
 		ProposalMade.newCase(this, "ipc_mechanism", -1, newValue);
 		List<ICoupledClientSimulation> clients = this.configurer.getClients();
 		
 		if (isBroadcastMetaState()) {
 			for (ICoupledClientSimulation client : clients) {
 				try {
-						client.notifyIPCUpdate(ipcState);
+						client.notifyIPCUpdate(newValue);
 					
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
-			ProposedStateSet.newCase(this, "ipc_mechanism", -1, ipcState);
-			this.ipcState = newValue;
+				
 		}
 	}
 	
